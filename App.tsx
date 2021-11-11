@@ -9,6 +9,7 @@ import {
     AppState,
     NativeEventSubscription,
 } from 'react-native';
+import {Buffer} from 'buffer';
 //DEPENDENCIES
 import HCESession, {NFCContentType, NFCTagType4} from 'react-native-hce';
 import NfcManager, {NfcEvents, NfcTech} from 'react-native-nfc-manager';
@@ -32,6 +33,7 @@ class Fire extends Component {
     state = {
         fire: false,
         appState: AppState.currentState,
+        reading: false,
     };
     contactInfo: contact;
     simulation: HCESession;
@@ -61,7 +63,13 @@ class Fire extends Component {
         return (
             <View style={styles.container}>
                 <Text style={styles.greeting}>
-                    Your flame is {this.state.fire ? 'on' : 'off'}.{' '}
+                    Your flame is{' '}
+                    {this.state.fire
+                        ? 'on'
+                        : this.state.reading
+                        ? 'reading'
+                        : 'off'}
+                    .{' '}
                 </Text>
                 <View style={styles.debug}>
                     <Pressable
@@ -126,6 +134,7 @@ class Fire extends Component {
     };
 
     startRead = async () => {
+        this.state.reading = true;
         await NfcManager.start().catch(function (e) {
             console.log(e);
         });
@@ -136,9 +145,19 @@ class Fire extends Component {
             console.log('Error:', e);
         });
 
-        let msg: customTagInfo | undefined = tag?.ndefMessage;
+        let msg = tag?.ndefMessage;
 
-        if (msg.payload! !== undefined) console.log(msg);
+        let string = '';
+
+        if (msg == undefined) {
+            return 0;
+        }
+
+        msg!.forEach(element => {
+            element.payload.forEach(e => (string += String.fromCharCode(e)));
+        });
+
+        console.log(JSON.parse(string.substr(3, string.length))); //cut off extra values from NFC
 
         NfcManager.cancelTechnologyRequest();
     };
