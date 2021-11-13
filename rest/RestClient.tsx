@@ -1,26 +1,30 @@
-import RestClient from 'react-native-rest-client';
+import axios from 'axios';
+class restClient {
+    constructor(baseUrl: string) {}
 
-class Client extends RestClient {
+    get(route: string, query?: object) {
+        return axios.get(route, query).catch(function (e) {
+            console.warn(e);
+        });
+    }
 
-	constructor(baseUrl: string) {
-		super(baseUrl);
-	}
+    post(route: string, body?: object) {
+        return axios.post(route, body).catch(function (e) {
+            console.warn(e);
+        });
+    }
 
-	get(route: string, query?: object) {
-		return this.GET(route, query);
-	}
+    put(route: string, body?: object) {
+        return axios.put(route, body).catch(function (e) {
+            console.warn(e);
+        });
+    }
 
-	post(route: string, body?: object) {
-		return this.POST(route, body);
-	}
-
-	put(route: string, body?: object) {
-		return this.PUT(route, body);
-	}
-
-	delete(route: string, query?: object) {
-		return this.DELETE(route, query);
-	}
+    delete(route: string, query?: object) {
+        return axios.delete(route, query).catch(function (e) {
+            console.warn(e);
+        });
+    }
 }
 
-export default Client;
+export default restClient;
