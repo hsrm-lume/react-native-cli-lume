@@ -3,6 +3,7 @@ import {StyleSheet, Text, View, Pressable} from 'react-native';
 import {Buffer} from 'buffer';
 //DEPENDENCIES
 import nfcService from './src/services/nfcService';
+import {TagEvent} from 'react-native-nfc-manager';
 
 class Fire extends Component {
     state = {
