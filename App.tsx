@@ -1,56 +1,59 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, Pressable} from 'react-native';
-import {Buffer} from 'buffer';
 //DEPENDENCIES
 import nfcService from './src/services/nfcService';
+import storageService from './src/services/storageService';
 
 class Fire extends Component {
     state = {
         fire: false,
         reading: false,
+        uid: '',
     };
     nService: nfcService;
+    sService: storageService;
     constructor(props: any) {
         super(props);
         this.nService = new nfcService();
+        this.sService = new storageService();
+        this.initUserData();
+    }
+
+    async initUserData() {
+        //this.sService.initializeUserData();
+        //this.sService.removeAllData();
+        let that = this;
+        await this.sService.getUserData().then(async function (r) {
+            if (r == undefined) {
+                await that.sService
+                    .initializeUserData()
+                    .then(function (res) {});
+            }
+            console.log(r);
+        });
     }
 
     render() {
         return (
             <View style={styles.container}>
                 <Text style={styles.greeting}>
-                    Your flame is{' '}
-                    {this.state.fire
-                        ? 'on'
-                        : this.state.reading
-                        ? 'reading'
-                        : 'off'}
-                    .{' '}
+                    Your uuid is {this.state.uid}
                 </Text>
                 <View style={styles.debug}>
                     <Pressable
                         style={styles.button}
                         onPress={() => {
-                            this.nService.startHCE();
-                            this.setState({fire: true});
+                            this.sService.removeAllData();
                         }}>
-                        <Text style={styles.buttonText}>Fire On</Text>
+                        <Text style={styles.buttonText}>RemoveAllData</Text>
                     </Pressable>
                     <Pressable
                         style={styles.button}
                         onPress={async () => {
-                            let l = await this.nService
-                                .readNfcTag()
-                                .catch(function (e) {
-                                    console.log(e);
-                                });
-                            let tag: TagEvent = l as TagEvent;
-                            console.log(this.nService.processNfcTag(tag));
-
-                            this.setState({fire: false});
-                            this.setState({reading: true});
+                            let l = this.sService.initializeUserData();
+                            console.log();
                         }}>
-                        <Text style={styles.buttonText}>Fire Off</Text>
+                        <Text style={styles.buttonText}>init Data</Text>
                     </Pressable>
                     <Pressable
                         style={styles.button}
