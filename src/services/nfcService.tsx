@@ -53,6 +53,7 @@ class nfcService {
     }
 
     processNfcTag(tag: TagEvent): string {
+        // Add error handling if ndefMessage is undefined
         let msg = tag.ndefMessage;
 
         let res = '';

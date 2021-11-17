@@ -1,8 +1,8 @@
-const userDataSchema = {
+const userDataSchema: Realm.ObjectSchema = {
     name: 'userData',
     properties: {
         uid: 'string',
-        firestatus: 'bool',
+        fireStatus: 'bool',
     },
     primaryKey: 'uid',
 };

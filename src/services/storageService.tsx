@@ -1,61 +1,65 @@
 import 'react-native-get-random-values';
 import {v4 as uuid} from 'uuid';
-import Realm from 'realm';
+import Realm, {User} from 'realm';
 import {userDataSchema} from '../types/userDataSchema';
 import {userData} from '../types/userData';
 class storageService {
-    constructor() {}
-
-    async initializeUserData() {
-        const realm = await Realm.open({
+    realm?: Realm;
+    async initRealm() {
+        this.realm = await Realm.open({
             path: 'userOptions',
             schema: [userDataSchema],
-        }).then(function (r) {
-            r.write(() => {
-                r.create('userData', {
-                    uid: uuid(),
-                    firestatus: false,
-                });
+            schemaVersion: 1,
+        });
+    }
+
+    async closeRealm() {
+        // use when main component gets unmounted
+        return this.realm!.close();
+    }
+    async initializeUserData(): Promise<userData | undefined> {
+        if (this.realm?.objects<userData>('userData')[0] != undefined)
+            return {} as userData;
+        return this.realm?.write(() => {
+            this.realm!.create<userData>('userData', {
+                uid: uuid(),
+                fireStatus: false,
             });
-            return r.objects('userData');
+            return this.realm?.objects<userData>('userData')[0] as userData;
         });
     }
 
     async getUserData(): Promise<userData> {
-        const realm = await Realm.open({
-            path: 'userOptions',
-            schema: [userDataSchema],
-        });
-        let data: userData = {
-            fireStatus: realm.objects('userData')[0].firestatus,
-            uid: realm.objects('userData')[0].uid,
-        };
-        console.log(data);
-        return data;
+        let l = this.realm?.objects<userData>('userData')[0] as userData;
+        return l == undefined ? ({} as userData) : l;
     }
 
     async removeAllData() {
-        const realm = await Realm.open({
-            path: 'userOptions',
-            schema: [userDataSchema],
-        }).then(function (r) {
-            let data = r.objects('userData');
-
-            r.write(() => {
-                r.deleteAll();
-            });
+        this.realm?.write(() => {
+            this.realm!.deleteAll();
         });
-
-        //realm.close();
     }
 
     async openRealm() {
-        const realm = await Realm.open({
+        this.realm = await Realm.open({
             path: 'userOptions',
             schema: [userDataSchema],
         });
     }
 
-    async writeUserData() {}
+    async writeUserData(data: userData) {
+        const users = this.realm!.objects<userData>(
+            userDataSchema.name
+        ).filtered('uid == "' + data.uid + '"');
+        console.log(users);
+        this.realm!.write(() => {
+            users[0].fireStatus = data.fireStatus;
+        });
+    }
+
+    debug() {
+        console.log('Full Realm');
+        console.log(this.realm?.objects('userData'));
+    }
 }
 export default storageService;
