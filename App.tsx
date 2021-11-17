@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, Pressable} from 'react-native';
-import {Buffer} from 'buffer';
 //DEPENDENCIES
 import nfcService from './src/services/nfcService';
 import {TagEvent} from 'react-native-nfc-manager';
+import {GeoLocation} from './src/services/geoService';
 
 class Fire extends Component {
     state = {
@@ -40,16 +40,26 @@ class Fire extends Component {
                     <Pressable
                         style={styles.button}
                         onPress={async () => {
-                            let l = await this.nService
+                            let that = this;
+                            this.setState({reading: true});
+                            this.setState({fire: false});
+                            await this.nService
                                 .readNfcTag()
+                                .then(function (r) {
+                                    if (r == undefined && r == null) {
+                                        return;
+                                    } else if ((r.type = 'Ndef')) {
+                                        r = r as TagEvent;
+                                    }
+                                    let res = JSON.parse(
+                                        that.nService.processNfcTag(r)
+                                    ) as GeoLocation;
+                                    if (res.lat != '')
+                                        that.setState({fire: true});
+                                })
                                 .catch(function (e) {
                                     console.log(e);
                                 });
-                            let tag: TagEvent = l as TagEvent;
-                            console.log(this.nService.processNfcTag(tag));
-
-                            this.setState({fire: false});
-                            this.setState({reading: true});
                         }}>
                         <Text style={styles.buttonText}>Fire Off</Text>
                     </Pressable>
@@ -57,6 +67,7 @@ class Fire extends Component {
                         style={styles.button}
                         onPress={() => {
                             console.log('Debug');
+                            this.nService.stopHCE();
                         }}>
                         <Text style={styles.buttonText}>Make Debug</Text>
                     </Pressable>

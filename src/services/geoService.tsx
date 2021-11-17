@@ -1,7 +1,7 @@
 import {resolveObjectURL} from 'buffer';
 import Geolocation from 'react-native-geolocation-service';
 
-interface GeoLocation {
+export interface GeoLocation {
     lng: string;
     lat: string;
 }
