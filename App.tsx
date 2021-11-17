@@ -83,7 +83,6 @@ class Fire extends Component {
                         onPress={() => {
                             console.log('Debug');
                             console.log(this.state);
-
                             this.sService.debug();
                         }}>
                         <Text style={styles.buttonText}>Make Debug</Text>

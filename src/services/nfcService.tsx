@@ -34,6 +34,7 @@ class nfcService {
     }
 
     async stopHCE() {
+        console.log();
         if (this.session?.active) {
             await this.session.terminate().catch(function (e) {
                 console.log(e);
