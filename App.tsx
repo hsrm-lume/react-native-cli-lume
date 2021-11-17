@@ -2,74 +2,120 @@ import React, {Component} from 'react';
 import {StyleSheet, Text, View, Pressable} from 'react-native';
 //DEPENDENCIES
 import nfcService from './src/services/nfcService';
-import {TagEvent} from 'react-native-nfc-manager';
-import {GeoLocation} from './src/services/geoService';
+import storageService from './src/services/storageService';
+import {userData} from './src/types/userData';
 
 class Fire extends Component {
     state = {
         fire: false,
         reading: false,
+        uid: '',
     };
-    nService: nfcService;
+    sService: storageService;
     constructor(props: any) {
         super(props);
-        this.nService = new nfcService();
+        this.sService = new storageService();
+        this.initUserData();
+    }
+
+    async initUserData() {
+        let that = this;
+        await this.sService.initRealm().then(async function (result) {
+            await that.sService.getUserData().then(async function (res) {
+                console.log(that.sService.realm);
+                if (res.uid == undefined && res.fireStatus == undefined) {
+                    await that.sService.initializeUserData().then(function (r) {
+                        //console.log(r);
+                        that.assignData(r as userData);
+                    });
+                } else {
+                    //console.log(res);
+                    that.assignData(res);
+                }
+            });
+        });
+    }
+
+    assignData(data: userData) {
+        this.setState({uid: data.uid, fire: data.fireStatus});
+    }
+    async updateData() {
+        let that = this;
+        await this.sService.getUserData().then(function (r) {
+            if (r.uid == undefined && r.fireStatus != undefined) {
+                that.setState({uid: '', fire: false});
+                return;
+            }
+            that.setState({uid: r.uid, fire: r.fireStatus});
+        });
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.greeting}>
-                    Your flame is{' '}
-                    {this.state.fire
-                        ? 'on'
-                        : this.state.reading
-                        ? 'reading'
-                        : 'off'}
-                    .{' '}
-                </Text>
+                <View style={styles.status}>
+                    <Text style={styles.headline}>
+                        Your uuid is {this.state.uid}
+                    </Text>
+                    <Text style={styles.headline}>
+                        Your fire is {this.state.fire ? 'on' : 'off'}
+                    </Text>
+                </View>
                 <View style={styles.debug}>
                     <Pressable
                         style={styles.button}
                         onPress={() => {
-                            this.nService.startHCE();
-                            this.setState({fire: true});
+                            this.sService.removeAllData();
+                            this.updateData();
                         }}>
-                        <Text style={styles.buttonText}>Fire On</Text>
+                        <Text style={styles.buttonText}>RemoveAllData</Text>
                     </Pressable>
                     <Pressable
                         style={styles.button}
                         onPress={async () => {
-                            let that = this;
-                            this.setState({reading: true});
-                            this.setState({fire: false});
-                            await this.nService
-                                .readNfcTag()
-                                .then(function (r) {
-                                    if (r == undefined && r == null) {
-                                        return;
-                                    } else if ((r.type = 'Ndef')) {
-                                        r = r as TagEvent;
-                                    }
-                                    let res = JSON.parse(
-                                        that.nService.processNfcTag(r)
-                                    ) as GeoLocation;
-                                    if (res.lat != '')
-                                        that.setState({fire: true});
-                                })
-                                .catch(function (e) {
-                                    console.log(e);
-                                });
+                            let l = this.sService.initializeUserData();
+                            console.log(typeof l);
                         }}>
-                        <Text style={styles.buttonText}>Fire Off</Text>
+                        <Text style={styles.buttonText}>init Data</Text>
                     </Pressable>
                     <Pressable
                         style={styles.button}
                         onPress={() => {
                             console.log('Debug');
-                            this.nService.stopHCE();
+                            console.log(this.state);
+                            this.sService.debug();
                         }}>
                         <Text style={styles.buttonText}>Make Debug</Text>
+                    </Pressable>
+                    <Pressable
+                        style={styles.button}
+                        onPress={async () => {
+                            this.assignData(await this.sService.getUserData());
+                        }}>
+                        <Text style={styles.buttonText}>getData</Text>
+                    </Pressable>
+
+                    <Pressable
+                        style={styles.button}
+                        onPress={async () => {
+                            this.sService.writeUserData({
+                                fireStatus: true,
+                                uid: this.state.uid,
+                            });
+                            this.assignData(await this.sService.getUserData());
+                        }}>
+                        <Text style={styles.buttonText}>Activate Fire</Text>
+                    </Pressable>
+                    <Pressable
+                        style={styles.button}
+                        onPress={async () => {
+                            this.sService.writeUserData({
+                                fireStatus: false,
+                                uid: this.state.uid,
+                            });
+                            this.assignData(await this.sService.getUserData());
+                        }}>
+                        <Text style={styles.buttonText}>Deactivate Fire</Text>
                     </Pressable>
                 </View>
             </View>
@@ -87,19 +133,22 @@ const styles = StyleSheet.create({
         height: '100%',
         backgroundColor: '#fff',
     },
-    greeting: {
-        fontSize: 20,
-        fontWeight: 'bold',
+    status: {
         margin: 16,
         height: '80%',
+    },
+    headline: {
+        fontSize: 20,
+        fontWeight: 'bold',
         color: '#000',
     },
     debug: {
         backgroundColor: '#11111155',
         width: '100%',
-        height: '10%',
+        height: '20%',
         justifyContent: 'space-evenly',
         flexDirection: 'row',
+        flexWrap: 'wrap',
         alignContent: 'center',
         marginBottom: 30,
     },
