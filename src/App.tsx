@@ -1,13 +1,5 @@
 import React, {useCallback, useDebugValue, useState} from 'react';
-import {
-    StyleSheet,
-    View,
-    Image,
-    Button,
-    Pressable,
-    Text,
-    useWindowDimensions,
-} from 'react-native';
+import {StyleSheet, View, Pressable, Text} from 'react-native';
 import CustomWebView from './components/webView';
 import Menubar from './components/menubar';
 import DebugBar from './components/debugBar';
@@ -15,12 +7,10 @@ import FireView from './components/fire';
 import nfcService from './services/nfcService';
 import storageService from './services/storageService';
 import {userData} from './types/userData';
-import {TagEvent} from 'react-native-nfc-manager';
 import {transmissionData} from './types/tranmissionData';
-import {GeoLocation} from './types/geoLocation';
 import {apiData} from './types/apiData';
-
-const webPage = 'https://lume.m-ptr.de';
+import restClient from './services/RestClient';
+import {environment} from './env/environment';
 
 export default function App() {
     var [fireState, setFire] = useState(false);
@@ -56,23 +46,35 @@ export default function App() {
         nService.startHCE(uid);
     };
     const startNFCRead = async () => {
-        console.log('Reading');
-        await nService.readNfcTag().then(function (r) {
-            if (r == undefined || r == null) return;
-            console.log(r);
-            let jTag = nService.processNfcTag(r);
-            if (!testJSON(jTag)) return;
-            let tagInfo = JSON.parse(jTag) as transmissionData;
-            console.log(tagInfo);
-            setFire(true);
-            sService.writeUserData({fireStatus: true, uid: uid});
-            //Contact Server
-            let apiD: apiData = {
-                uuidChild: uid,
-                uuidParent: tagInfo.uid,
-                position: tagInfo.location,
-            };
-        });
+        try {
+            console.log('Reading');
+            await nService.readNfcTag().then(async function (r) {
+                if (r == undefined || r == null) return;
+                let jTag = nService.processNfcTag(r);
+                if (!testJSON(jTag)) return;
+                let tagInfo = JSON.parse(jTag) as transmissionData;
+
+                //setFire(true);
+                //sService.writeUserData({fireStatus: true, uid: uid});
+                //Contact Server
+                let apiD: apiData = {
+                    uuidChild: uid,
+                    uuidParent: tagInfo.uid,
+                    position: tagInfo.location,
+                };
+                if (
+                    (await restClient.postContact(
+                        environment.API_BASE_DOMAIN + 'new',
+                        apiD
+                    )) < 300
+                ) {
+                    setFire(true);
+                    sService.writeUserData({fireStatus: true, uid: uid});
+                }
+            });
+        } catch (e) {
+            console.warn(e);
+        }
     };
 
     //ugly JSON Test
@@ -123,7 +125,8 @@ export default function App() {
     } else {
         return (
             <View style={styles.container2}>
-                <CustomWebView url={webPage + '?uid=' + uid}></CustomWebView>
+                <CustomWebView
+                    url={environment.WEBVIEW_BASE_DOMAIN + uid}></CustomWebView>
                 <Menubar webHandler={startWeb} fireHandler={startFire} />
             </View>
         );
@@ -144,7 +147,7 @@ const styles = StyleSheet.create({
 
     fire: {
         width: '90%',
-        height: '75%',
+        height: '85%',
         resizeMode: 'center',
     },
 

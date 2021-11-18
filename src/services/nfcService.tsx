@@ -5,6 +5,8 @@ import NfcManager, {
     NfcTech,
     TagEvent,
 } from 'react-native-nfc-manager';
+import {GeoLocation} from '../types/geoLocation';
+import {transmissionData} from '../types/tranmissionData';
 import GeoService from './geoService';
 import PermissonsService from './permissonsService';
 
@@ -28,7 +30,8 @@ class nfcService {
         );
         let that = this;
         await this.GService.getLocation().then(async function (r) {
-            let transmissionData = {uid, r};
+            let res = r as GeoLocation;
+            let transmissionData: transmissionData = {uid: uid, location: res};
             let tag = new NFCTagType4(
                 NFCContentType.Text,
                 JSON.stringify(transmissionData)

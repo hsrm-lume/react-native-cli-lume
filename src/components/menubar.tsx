@@ -28,6 +28,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#555555',
         height: '10%',
         width: '100%',
+        position: 'absolute',
+        bottom: 0,
     },
     pressableRow: {height: '100%', flex: 1, flexDirection: 'row'},
     pressable: {
