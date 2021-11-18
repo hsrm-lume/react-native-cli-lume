@@ -20,21 +20,24 @@ class nfcService {
         this.GService = new GeoService();
     }
 
-    async startHCE() {
+    async startHCE(uid: string) {
         this.PService.getPermissions(
             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
             'Location',
             'Hey, lume needs your Location to function correctly. We will not publish any of this data '
         );
-        let l = await this.GService.getLocation();
-        //console.log('lol');
-        console.log(l);
-        let tag = new NFCTagType4(NFCContentType.Text, JSON.stringify(l));
-        this.session = await new HCESession(tag).start();
+        let that = this;
+        await this.GService.getLocation().then(async function (r) {
+            let transmissionData = {uid, r};
+            let tag = new NFCTagType4(
+                NFCContentType.Text,
+                JSON.stringify(transmissionData)
+            );
+            that.session = await new HCESession(tag).start();
+        });
     }
 
     async stopHCE() {
-        console.log();
         if (this.session?.active) {
             await this.session.terminate().catch(function (e) {
                 console.log(e);
@@ -70,6 +73,9 @@ class nfcService {
         res = res.substr(3, res.length);
 
         return res;
+    }
+    cancelTechReqs() {
+        NfcManager.cancelTechnologyRequest();
     }
 }
 

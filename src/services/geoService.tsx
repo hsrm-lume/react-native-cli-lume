@@ -1,10 +1,7 @@
 import {resolveObjectURL} from 'buffer';
 import Geolocation from 'react-native-geolocation-service';
+import {GeoLocation} from '../types/geoLocation';
 
-export interface GeoLocation {
-    lng: string;
-    lat: string;
-}
 class GeoService {
     constructor() {}
 
