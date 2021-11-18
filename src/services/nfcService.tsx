@@ -1,10 +1,6 @@
 import {PermissionsAndroid} from 'react-native';
 import HCESession, {NFCContentType, NFCTagType4} from 'react-native-hce';
-import NfcManager, {
-    NfcEvents,
-    NfcTech,
-    TagEvent,
-} from 'react-native-nfc-manager';
+import NfcManager, {NfcTech, TagEvent} from 'react-native-nfc-manager';
 import {GeoLocation} from '../types/geoLocation';
 import {transmissionData} from '../types/tranmissionData';
 import GeoService from './geoService';
@@ -28,15 +24,14 @@ class nfcService {
             'Location',
             'Hey, lume needs your Location to function correctly. We will not publish any of this data '
         );
-        let that = this;
-        await this.GService.getLocation().then(async function (r) {
+        await this.GService.getLocation().then(async (r) => {
             let res = r as GeoLocation;
             let transmissionData: transmissionData = {uid: uid, location: res};
             let tag = new NFCTagType4(
                 NFCContentType.Text,
                 JSON.stringify(transmissionData)
             );
-            that.session = await new HCESession(tag).start();
+            this.session = await new HCESession(tag).start();
         });
     }
 
@@ -61,7 +56,7 @@ class nfcService {
 
     processNfcTag(tag: TagEvent): string {
         // Add error handling if ndefMessage is undefined
-        let msg = tag.ndefMessage;
+        const msg = tag.ndefMessage;
 
         let res = '';
 
