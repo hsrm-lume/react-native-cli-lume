@@ -1,6 +1,6 @@
-import 'react-native-get-random-values';
 import {v4 as uuid} from 'uuid';
-import Realm, {User} from 'realm';
+import 'react-native-get-random-values';
+import Realm from 'realm';
 import {userDataSchema} from '../types/userDataSchema';
 import {userData} from '../types/userData';
 class storageService {
@@ -30,7 +30,7 @@ class storageService {
     }
 
     async getUserData(): Promise<userData> {
-        let l = this.realm?.objects<userData>('userData')[0] as userData;
+        const l = this.realm?.objects<userData>('userData')[0] as userData;
         return l == undefined ? ({} as userData) : l;
     }
 
@@ -51,7 +51,6 @@ class storageService {
         const users = this.realm!.objects<userData>(
             userDataSchema.name
         ).filtered('uid == "' + data.uid + '"');
-        console.log(users);
         this.realm!.write(() => {
             users[0].fireStatus = data.fireStatus;
         });
@@ -60,6 +59,16 @@ class storageService {
     debug() {
         console.log('Full Realm');
         console.log(this.realm?.objects('userData'));
+    }
+    createAdmin(data: userData) {
+        this.removeAllData();
+        return this.realm?.write(() => {
+            this.realm?.create<userData>('userData', {
+                fireStatus: data.fireStatus,
+                uid: data.uid,
+            });
+            return this.realm?.objects<userData>('userData')[0] as userData;
+        });
     }
 }
 export default storageService;
