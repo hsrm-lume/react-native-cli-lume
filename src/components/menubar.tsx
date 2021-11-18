@@ -8,14 +8,16 @@ const Menubar = (props: {webHandler: Function; fireHandler: Function}) => {
                     style={styles.pressable}
                     onPress={() => {
                         props.webHandler();
-                    }}>
+                    }}
+                >
                     <Text style={styles.black}>WebView</Text>
                 </Pressable>
                 <Pressable
                     style={styles.pressable}
                     onPress={() => {
                         props.fireHandler();
-                    }}>
+                    }}
+                >
                     <Text style={styles.black}>FireView</Text>
                 </Pressable>
             </View>

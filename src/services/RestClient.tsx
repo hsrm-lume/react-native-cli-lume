@@ -1,6 +1,5 @@
 import axios from 'axios';
 import {apiData} from '../types/apiData';
-import {transmissionData} from '../types/tranmissionData';
 class restClient {
     static get(route: string, query?: object) {
         return axios.get(route, query).catch(function (e) {

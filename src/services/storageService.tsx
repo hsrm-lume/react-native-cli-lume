@@ -1,6 +1,6 @@
 import {v4 as uuid} from 'uuid';
 import 'react-native-get-random-values';
-import Realm, {User} from 'realm';
+import Realm from 'realm';
 import {userDataSchema} from '../types/userDataSchema';
 import {userData} from '../types/userData';
 class storageService {
@@ -30,7 +30,7 @@ class storageService {
     }
 
     async getUserData(): Promise<userData> {
-        let l = this.realm?.objects<userData>('userData')[0] as userData;
+        const l = this.realm?.objects<userData>('userData')[0] as userData;
         return l == undefined ? ({} as userData) : l;
     }
 

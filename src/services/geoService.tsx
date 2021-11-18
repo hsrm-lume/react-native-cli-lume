@@ -1,11 +1,10 @@
-import {resolveObjectURL} from 'buffer';
 import Geolocation from 'react-native-geolocation-service';
 import {GeoLocation} from '../types/geoLocation';
 
 class GeoService {
     constructor() {}
 
-    async getLocation(): Promise<GeoLocation | void> {
+    getLocation(): Promise<GeoLocation | void> {
         const res = {} as GeoLocation;
         return new Promise(resolve => {
             Geolocation.getCurrentPosition(

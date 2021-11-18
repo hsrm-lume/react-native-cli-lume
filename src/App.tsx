@@ -1,4 +1,4 @@
-import React, {useCallback, useDebugValue, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {StyleSheet, View, Pressable, Text} from 'react-native';
 import CustomWebView from './components/webView';
 import Menubar from './components/menubar';
@@ -19,8 +19,8 @@ export default function App() {
 
     //init data
 
-    let nService = new nfcService();
-    let sService = new storageService();
+    const nService = new nfcService();
+    const sService = new storageService();
 
     const initUser = async () => {
         await sService.initRealm().then(async function (result) {
@@ -114,7 +114,8 @@ export default function App() {
                 <FireView fire={fireState} />
                 <Pressable
                     style={styles.share}
-                    onPress={() => (fireState ? startHCE() : startNFCRead())}>
+                    onPress={() => (fireState ? startHCE() : startNFCRead())}
+                >
                     <Text style={{color: '#ff7200'}}>
                         {fireState ? 'Feuer teilen' : 'Feuer empfangen'}
                     </Text>
@@ -126,7 +127,8 @@ export default function App() {
         return (
             <View style={styles.container2}>
                 <CustomWebView
-                    url={environment.WEBVIEW_BASE_DOMAIN + uid}></CustomWebView>
+                    url={environment.WEBVIEW_BASE_DOMAIN + uid}
+                ></CustomWebView>
                 <Menubar webHandler={startWeb} fireHandler={startFire} />
             </View>
         );
