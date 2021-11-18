@@ -31,6 +31,7 @@ class restClient {
                     lat: parseFloat(data.position.lat),
                     lng: parseFloat(data.position.lng),
                 },
+                date: new Date().getTime(),
             })
             .then(function (r) {
                 return r.status;
