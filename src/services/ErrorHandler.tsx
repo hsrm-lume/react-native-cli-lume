@@ -1,30 +1,31 @@
 import {Alert} from 'react-native';
 
+
 class ErrorHandler {
-    static handleError(msg: string) {
-        Alert.alert(
-            "Error",  // title
-            msg,  // message
-            [  // buttons
-                {  // left button
-                    text: "Later",
-                    onPress: () => Alert.alert("Later Pressed")
-                },
-                {  // middle button
-                    text: "Cancel",
-                    onPress: () => Alert.alert("Cancel Pressed")
-                },
-                {  // right button
-                    text: "OK",
-                    onPress: () => Alert.alert("OK Pressed")
-                }
-            ],
-            {  // options
-                cancelable: true,
-                onDismiss: () => Alert.alert("alert dismissed by tapping outside")
-            }
-        );
+
+    static handleError(title: string, msg: string, twoButtons: boolean,
+        callbackOk: () => void = () => {}, callbackCancel: () => void = () => {}) {
+        
+        var buttonCancel = {
+            text: "Cancel",
+            onPress: callbackCancel
+        };
+
+        var buttonOk = {
+            text: "Ok",
+            onPress: callbackOk
+        };
+
+        if (twoButtons) {
+            var buttons = [buttonCancel, buttonOk];
+        } else {
+            var buttons = [buttonOk];
+        }
+
+        Alert.alert(title, msg, buttons);
+
     }
+
 }
 
 export default ErrorHandler;
