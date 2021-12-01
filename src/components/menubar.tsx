@@ -1,47 +1,77 @@
 import React from 'react';
-import {View, Text, StyleSheet, Pressable} from 'react-native';
-const Menubar = (props: {webHandler: Function; fireHandler: Function}) => {
+import {View, Text, StyleSheet, Pressable, Image, TouchableHighlight, TextPropTypes} from 'react-native';
+const Menubar = (props: {webHandler: Function; fireHandler: Function, web: boolean}) => {
     return (
         <View style={styles.bar}>
-            <View style={styles.pressableRow}>
-                <Pressable
-                    style={styles.pressable}
-                    onPress={() => {
-                        props.webHandler();
-                    }}
+                <TouchableHighlight 
+                    style={props.web ? styles.barElement : styles.barElementActive} 
+                    onPress={() => {props.fireHandler();}} 
+                    underlayColor="#ffffff" 
+                    activeOpacity={0.5}
                 >
-                    <Text style={styles.black}>WebView</Text>
-                </Pressable>
-                <Pressable
-                    style={styles.pressable}
-                    onPress={() => {
-                        props.fireHandler();
-                    }}
+                    <Image
+                        source={require('../assets/fire.png')}
+                        style={{
+                            resizeMode: 'contain',
+                            height: '100%',
+                            width: '100%',
+                        }}
+                    />
+                </TouchableHighlight>
+                <View style={styles.line}/>
+                <TouchableHighlight 
+                    style={props.web ? styles.barElementActive : styles.barElement} 
+                    onPress={() => {props.webHandler();}}
+                    underlayColor="#ffffff" 
+                    activeOpacity={0.5}
                 >
-                    <Text style={styles.black}>FireView</Text>
-                </Pressable>
-            </View>
+                    <Image
+                        source={require('../assets/map.png')}
+                        style={{
+                            resizeMode: 'contain',
+                            height: '100%',
+                            width: '100%',
+                        }}
+                    />   
+                </TouchableHighlight>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     bar: {
-        backgroundColor: '#555555',
-        height: '10%',
+        backgroundColor: '#ffffff',
+        height: '9%',
         width: '100%',
         position: 'absolute',
         bottom: 0,
+        flex: 1, 
+        flexDirection: 'row',
     },
-    pressableRow: {height: '100%', flex: 1, flexDirection: 'row'},
-    pressable: {
+
+    barElementActive: {
         height: '100%',
-        width: '49.9%',
-        textAlign: 'center',
-        backgroundColor: '#f0f0f0',
-        borderLeftColor: '#000000',
+        width: '49.5%',
+        backgroundColor: '#ffffff',
+        alignSelf: 'flex-end',
     },
-    black: {color: '#ff0000'},
+
+    barElement: {
+        height: '70%',
+        width: '49.5%',
+        backgroundColor: '#ffffff',
+        alignSelf: 'flex-end',
+        opacity: 0.7,
+    },
+
+    line: {
+        alignSelf: 'center',
+        height: '55%',
+        width: '1%',
+        backgroundColor: '#EEEEEE',
+        borderRadius: 10,
+    },
+
 });
 
 export default Menubar;
