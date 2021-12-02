@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {StyleSheet, View, Pressable, Text} from 'react-native';
+import {StyleSheet, View, Pressable, Text, TouchableHighlight} from 'react-native';
 import CustomWebView from './components/webView';
 import Menubar from './components/menubar';
 import DebugBar from './components/debugBar';
@@ -11,6 +11,7 @@ import {transmissionData} from './types/tranmissionData';
 import {apiData} from './types/apiData';
 import restClient from './services/RestClient';
 import {environment} from './env/environment';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default function App() {
     var [fireState, setFire] = useState(false);
@@ -95,8 +96,10 @@ export default function App() {
 
     const adminHandler = useCallback(() => {
         console.log('making Admin');
+        fireState = !fireState;
+
         let data: userData = {
-            fireStatus: true,
+            fireStatus: fireState,
             uid: '00000000-0000-4000-A000-000000000000',
         };
         let l = sService.createAdmin(data);
@@ -106,30 +109,33 @@ export default function App() {
     }, []);
 
     initUser();
-
+    const onPress = () => setCount(count + 1);
+    const [count, setCount] = useState(0);
     if (!startWebView) {
         return (
-            <View style={styles.container}>
+            <LinearGradient colors={fireState ? ['#ffffff', '#FF3A3A'] : ['#ffffff', '#6F3FAF']} style={styles.container}>
                 <DebugBar adminHandler={adminHandler} />
                 <FireView fire={fireState} />
-                <Pressable
-                    style={styles.share}
+                <TouchableHighlight
+                    style={styles.button}
+                    //activeOpacity={0.85}
+                    underlayColor="#dddddd" 
                     onPress={() => (fireState ? startHCE() : startNFCRead())}
                 >
-                    <Text style={{color: '#ff7200'}}>
+                    <Text style={styles.text1}>
                         {fireState ? 'Feuer teilen' : 'Feuer empfangen'}
-                    </Text>
-                </Pressable>
-                <Menubar webHandler={startWeb} fireHandler={startFire} />
-            </View>
+                    </Text>   
+                </TouchableHighlight>
+                <Menubar webHandler={startWeb} fireHandler={startFire} web={false} />
+            </LinearGradient>
         );
     } else {
         return (
-            <View style={styles.container2}>
+            <View style={styles.containerMap}>
                 <CustomWebView
                     url={environment.WEBVIEW_BASE_DOMAIN + uid}
                 ></CustomWebView>
-                <Menubar webHandler={startWeb} fireHandler={startFire} />
+                <Menubar webHandler={startWeb} fireHandler={startFire} web={true} />
             </View>
         );
     }
@@ -138,34 +144,25 @@ export default function App() {
 const styles = StyleSheet.create({
     container: {
         height: '100%',
-        backgroundColor: '#ffffff',
         alignItems: 'center',
     },
-    container2: {
-        backgroundColor: '#001000',
+
+    containerMap: {
         width: '100%',
         height: '100%',
     },
 
-    fire: {
-        width: '90%',
-        height: '85%',
-        resizeMode: 'center',
-    },
-
-    share: {
+    button: {
         height: '10%',
-        width: '40%',
-        backgroundColor: '#000000',
-        zIndex: 5,
-    },
-
-    menu: {
-        flex: 0.1,
-        backgroundColor: 'red',
-        width: '100%',
-        height: 70,
+        width: '70%',
+        backgroundColor: '#abb0ba',
+        borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+
+    text1: {
+      fontSize: 30,
+      color: '#000000',
     },
 });

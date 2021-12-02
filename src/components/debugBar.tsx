@@ -20,9 +20,9 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: 50,
         height: 50,
-        right: '30%',
+        right: '10%',
         backgroundColor: '#000000',
-        zIndex: 5,
+        zIndex: 1,
     },
     black: {
         color: '#000000',
