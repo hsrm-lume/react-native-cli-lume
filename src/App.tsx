@@ -13,6 +13,7 @@ import restClient from './services/RestClient';
 import {environment} from './env/environment';
 import LinearGradient from 'react-native-linear-gradient';
 
+
 export default function App() {
     var [fireState, setFire] = useState(false);
     var [uid, setUid] = useState('');

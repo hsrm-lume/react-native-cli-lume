@@ -30,8 +30,7 @@ ___
     export PATH=$PATH:$ANDROID_HOME/platform-tools
     printf "\n\nexport ANDROID_HOME=$HOME/Android\nexport PATH=\$PATH:\$ANDROID_HOME/tools\nexport PATH=\$PATH:\$ANDROID_HOME/platform-tools" >> ~/.bashrc
     android update sdk --no-ui
-    sudo apt-get install gradle
-    gradle -v
+    echo "export REACT_EDITOR=code" >> ~/.bashrc
     ```
 
 2. clone the repo
