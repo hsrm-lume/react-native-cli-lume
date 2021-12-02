@@ -1,5 +1,8 @@
 import React from 'react';
 import {View, Text, StyleSheet, Pressable, Image, TouchableHighlight, TextPropTypes} from 'react-native';
+import Fire from '../assets/fire.svg';
+import Map from '../assets/map.svg';
+
 const Menubar = (props: {webHandler: Function; fireHandler: Function, web: boolean}) => {
     return (
         <View style={styles.bar}>
@@ -9,14 +12,7 @@ const Menubar = (props: {webHandler: Function; fireHandler: Function, web: boole
                     underlayColor="#ffffff" 
                     activeOpacity={0.5}
                 >
-                    <Image
-                        source={require('../assets/fire.png')}
-                        style={{
-                            resizeMode: 'contain',
-                            height: '100%',
-                            width: '100%',
-                        }}
-                    />
+                    <Fire width={'100%'} height={'100%'} />
                 </TouchableHighlight>
                 <View style={styles.line}/>
                 <TouchableHighlight 
@@ -25,14 +21,7 @@ const Menubar = (props: {webHandler: Function; fireHandler: Function, web: boole
                     underlayColor="#ffffff" 
                     activeOpacity={0.5}
                 >
-                    <Image
-                        source={require('../assets/map.png')}
-                        style={{
-                            resizeMode: 'contain',
-                            height: '100%',
-                            width: '100%',
-                        }}
-                    />   
+                    <Map width={'100%'} height={'100%'} />  
                 </TouchableHighlight>
         </View>
     );

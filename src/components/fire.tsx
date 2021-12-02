@@ -1,6 +1,8 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import Torch from '../assets/torch.svg';
+import TorchOff from '../assets/torchOff.svg';
 
 const FireView = (props: {fire: boolean}) => {
     if (props.fire) {
@@ -12,14 +14,7 @@ const FireView = (props: {fire: boolean}) => {
                     </Text>
                 </View>    
                 <View style={styles.fire}>
-                    <Image
-                        source={require('../assets/torch.png')}
-                        style={{
-                            resizeMode: 'contain',
-                            height: '100%',
-                            width: '100%',
-                        }}  
-                    />
+                    <Torch width={'100%'} height={'100%'} />
                 </View>
             </View>
         );
@@ -32,14 +27,7 @@ const FireView = (props: {fire: boolean}) => {
                     </Text>
                 </View>
                 <View style={styles.fire}>
-                    <Image
-                        source={require('../assets/torchOff.png')}
-                        style={{
-                            resizeMode: 'contain',
-                            height: '100%',
-                            width: '100%',
-                        }}
-                    />
+                <TorchOff width={'100%'} height={'100%'} />
                 </View>
             </View>
         );
