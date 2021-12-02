@@ -35,7 +35,7 @@
         "@types/react-native": "^0.66.2",
         "@types/react-test-renderer": "^17.0.1",
         "babel-jest": "^27.3.1",
-        "eslint": "^8.1.0",
+        "eslint": "^7.32.0",
         "jest": "^27.3.1",
         "metro-react-native-babel-preset": "^0.66.2",
         "react-native-svg-transformer": "^0.14.3",
@@ -43,6 +43,17 @@
         "typescript": "^4.4.4"
     },
     "jest": {
-        "preset": "react-native"
+        "preset": "react-native",
+        "moduleFileExtensions": [
+            "ts",
+            "tsx",
+            "js",
+            "jsx",
+            "json",
+            "node"
+        ],
+        "transformIgnorePatterns": [
+            "node_modules/(?!(jest-)?@react-native|react-native|react-(native|universal|navigation)-(.*)|@react-native-community/(.*)|@react-navigation/(.*)|bs-platform|(@[a-zA-Z]+/)?(bs|reason|rescript)-(.*)+)"
+        ]
     }
 }
