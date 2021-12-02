@@ -8,12 +8,11 @@ yarn run start   # <- this shell will be blocked
 yarn run android
 ```
 
-___
+---
 
 ## Installation (on WSL)
 
-1. 
-    ```bash
+1.  ```bash
     cd $HOME
     sudo apt-get install unzip
     wget https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip
@@ -33,19 +32,21 @@ ___
     echo "export REACT_EDITOR=code" >> ~/.bashrc
     ```
 
-2. clone the repo
+2.  clone the repo
+
     ```bash
     git clone git@github.com:hsrm-lume/react-native-cli-lume.git
     ```
 
-3. install sdk
+3.  install sdk
+
     ```bash
     ~/Android/tools/bin/sdkmanager
     ~/Android/tools/bin/sdkmanager "platform-tools" "platforms;android-31"
     yes | ~/Android/tools/bin/sdkmanager --licenses
     ```
 
-4. establish connection via ADB (Android >= 11 only)
+4.  establish connection via ADB (Android >= 11 only)
     ```bash
     adb pair <ip>:<port>     # from wifi adb PAIR menu in dev options
     adb connect <ip>:<port>  # from wifi adb in dev options
