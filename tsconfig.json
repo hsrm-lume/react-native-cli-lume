@@ -2,6 +2,7 @@
 	"compilerOptions": {
 		"allowJs": true,
 		"allowSyntheticDefaultImports": true,
+		"noImplicitOverride": true,
 		"esModuleInterop": true,
 		"isolatedModules": true,
 		"jsx": "react-native",
