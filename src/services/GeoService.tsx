@@ -38,7 +38,7 @@ const internalCallback = (
 	position: Geolocation.GeoPosition,
 	cb: (pos: GeoLocation) => void
 ) => {
-	if (position.coords.accuracy < environment.GEO_THRESHOLD) return; // TODO error handler
+	if (position.coords.accuracy > environment.GEO_THRESHOLD) return; // TODO error handler
 	cb({
 		accuracy: position.coords.accuracy,
 		lat: position.coords.latitude,
@@ -50,18 +50,18 @@ const internalCallback = (
  * @param callback callback accepting the detected position
  * @returns GeoServiceSubscription to unsubscribe later
  */
-const subscribe = (
+const subscribePosition = (
 	callback: (pos: GeoLocation) => void
 ): GeoServiceSubscription => {
 	const n = Geolocation.watchPosition(
 		pos => internalCallback(pos, callback),
-		() => {
+		e => {
 			// TODO error handler
-			console.warn('Geolocation.watchPosition error');
+			console.warn('Geolocation.watchPosition error', e);
 		},
 		watchOptions
 	);
 	return new GeoServiceSubscription(n);
 };
 
-export default subscribe;
+export default subscribePosition;

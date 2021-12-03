@@ -39,12 +39,12 @@ const getRationale = (p: Permission): Rationale | undefined => {
  * @returns Promise that resolves if permission is granted
  */
 const getPermission = async (p: Permission) =>
-	new HandledPromise((resolve, reject) =>
+	new HandledPromise<void>((resolve, reject) =>
 		PermissionsAndroid.check(p).then(b => {
-			if (b) return resolve(true);
+			if (b) return resolve();
 			PermissionsAndroid.request(p, getRationale(p))
 				.then(g => {
-					if (g === 'granted') return resolve(true);
+					if (g === 'granted') return resolve();
 					reject('Permission ' + g + ': ' + p);
 				})
 				.catch(reject);
