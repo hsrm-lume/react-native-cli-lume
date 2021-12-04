@@ -4,6 +4,7 @@ import CustomWebView from './components/webView';
 import Menubar from './components/menubar';
 import DebugBar from './components/debugBar';
 import FireView from './components/fire';
+import ErrorBar from './components/errorBar';
 import nfcService from './services/nfcService';
 import storageService from './services/storageService';
 import {userData} from './types/userData';
@@ -12,6 +13,7 @@ import {apiData} from './types/apiData';
 import restClient from './services/RestClient';
 import {environment} from './env/environment';
 import LinearGradient from 'react-native-linear-gradient';
+import ErrorHandler from './services/ErrorHandler';
 
 
 export default function App() {
@@ -23,6 +25,7 @@ export default function App() {
 
     const nService = new nfcService();
     const sService = new storageService();
+    const errorHandler = new ErrorHandler();
 
     const initUser = async () => {
         await sService.initRealm().then(async function (result) {
@@ -109,14 +112,19 @@ export default function App() {
         console.log(l);
     }, []);
 
+    
+
     initUser();
     const onPress = () => setCount(count + 1);
     const [count, setCount] = useState(0);
     if (!startWebView) {
+
+        ErrorHandler.handleError({icon: 'general', message: "Das 6. Message", dissmisable: true});
         return (
             <LinearGradient colors={fireState ? ['#ffffff', '#FF3A3A'] : ['#ffffff', '#6F3FAF']} style={styles.container}>
                 <DebugBar adminHandler={adminHandler} />
                 <FireView fire={fireState} />
+                <ErrorBar/>
                 <TouchableHighlight
                     style={styles.button}
                     //activeOpacity={0.85}
