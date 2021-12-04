@@ -18,8 +18,10 @@ import ErrorHandler from './services/ErrorHandler';
 
 export default function App() {
     var [fireState, setFire] = useState(false);
+    var [bigSize, setBigSize] = useState(false);
     var [uid, setUid] = useState('');
     var [startWebView, setWeb] = useState(false);
+    var countMsg = 0;
 
     //init data
 
@@ -50,6 +52,12 @@ export default function App() {
         console.log('HCE');
         nService.startHCE(uid);
     };
+
+    const switchBigSize = () => {
+        bigSize = !bigSize
+        setBigSize(bigSize);
+    };
+
     const startNFCRead = async () => {
         try {
             console.log('Reading');
@@ -110,6 +118,9 @@ export default function App() {
         setFire(l!.fireStatus);
         setUid(l!.uid);
         console.log(l);
+        ErrorHandler.handleError({icon: 'wifi', message: "Das ist Massage" + countMsg, dissmisable: true});
+        //ErrorHandler.errorList.pop();
+        countMsg += 1;
     }, []);
 
     
@@ -119,12 +130,15 @@ export default function App() {
     const [count, setCount] = useState(0);
     if (!startWebView) {
 
-        ErrorHandler.handleError({icon: 'general', message: "Das 6. Message", dissmisable: true});
+        //ErrorHandler.handleError({icon: 'general', message: "Das 8. Message", dissmisable: true});
+        ErrorHandler.handleError({icon: 'wifi', message: "Das 9. Message", dissmisable: true});
+        ErrorHandler.handleError({icon: 'wifi', message: "Das 10. Message", dissmisable: true});
+        ErrorHandler.handleError({icon: 'wifi', message: "Das 11. Message", dissmisable: true});
         return (
             <LinearGradient colors={fireState ? ['#ffffff', '#FF3A3A'] : ['#ffffff', '#6F3FAF']} style={styles.container}>
                 <DebugBar adminHandler={adminHandler} />
                 <FireView fire={fireState} />
-                <ErrorBar/>
+                <ErrorBar bigSize={bigSize} switchBigSize = {switchBigSize}/>
                 <TouchableHighlight
                     style={styles.button}
                     //activeOpacity={0.85}
