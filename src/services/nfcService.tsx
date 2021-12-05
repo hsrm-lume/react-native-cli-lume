@@ -24,7 +24,8 @@ class nfcService {
 			'Location',
 			'Hey, lume needs your Location to function correctly. We will not publish any of this data '
 		);
-		await this.GService.getLocation().then(async r => {
+		this.GService.watchLocation();
+		/*await this.GService.watchLocation().then(async r => {
 			let res = r as GeoLocation;
 			let transmissionData: transmissionData = {uid: uid, location: res};
 			let tag = new NFCTagType4(
@@ -32,7 +33,7 @@ class nfcService {
 				JSON.stringify(transmissionData)
 			);
 			this.session = await new HCESession(tag).start();
-		});
+		});*/
 	}
 
 	async stopHCE() {

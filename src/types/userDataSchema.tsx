@@ -1,3 +1,4 @@
+import Realm from 'realm';
 const userDataSchema: Realm.ObjectSchema = {
 	name: 'userData',
 	properties: {
