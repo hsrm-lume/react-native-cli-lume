@@ -2,10 +2,10 @@ import Realm from 'realm';
 const userDataSchema: Realm.ObjectSchema = {
 	name: 'userData',
 	properties: {
-		uid: 'string',
+		uuid: 'string',
 		fireStatus: 'bool',
 	},
-	primaryKey: 'uid',
+	primaryKey: 'uuid',
 };
 
 export {userDataSchema};
