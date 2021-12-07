@@ -1,12 +1,12 @@
 import HCESession, {NFCContentType, NFCTagType4} from 'react-native-hce';
-import NfcManager, {NfcTech, TagEvent} from 'react-native-nfc-manager';
+import NfcManager, {Ndef, NfcTech, TagEvent} from 'react-native-nfc-manager';
 import {HandledPromise} from '../types/HandledPromise';
 import {TransmissionData} from '../types/TranmissionData';
 
 /**
  * Wrapper class to close a HCE session
  */
-class CloseableHCESession {
+export class CloseableHCESession {
 	constructor(private session: HCESession) {}
 	close(): HandledPromise<void> {
 		return new HandledPromise(this.session.terminate());
@@ -52,12 +52,15 @@ export const nfcReadNext = (): HandledPromise<TransmissionData> =>
 const processNfcTag = (tag: TagEvent): TransmissionData => {
 	const msg = tag.ndefMessage;
 	// TODO: Error service
-	if (msg == undefined) console.warn('NFC tag is empty');
+	if (msg === undefined) console.warn('NFC tag is empty');
 
 	const res = msg
 		.flatMap(element => element.payload as number[])
 		.reduce((acc, curr) => (acc += String.fromCharCode(curr)), '')
 		.substr(3);
+	console.log(
+		Ndef.uri.decodePayload(tag.ndefMessage[0].payload as unknown as Uint8Array)
+	);
 
 	return JSON.parse(res) as TransmissionData;
 };

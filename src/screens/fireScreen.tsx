@@ -1,75 +1,73 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableHighlight} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {PermissionsAndroid, StyleSheet} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import DebugBar from '../components/debugBar';
 import FireView from '../components/fire';
-import {userData} from '../types/userData';
-import storageService from '../services/storageService';
-import nfcService from '../services/nfcService';
-import {transmissionData} from '../types/tranmissionData';
-import {apiData} from '../types/apiData';
-import restClient from '../services/RestClient';
-import {environment} from '../env/environment';
+import {
+	CloseableHCESession,
+	nfcReadNext,
+	nfcStartWrite,
+} from '../services/NfcUtil';
+import subscribePosition, {
+	GeoServiceSubscription,
+} from '../services/GeoService';
+import StorageService from '../services/StorageService';
+import getPermission from '../services/PermissionsUtil';
+import {GeoLocation} from '../types/GeoLocation';
 
 export default function FireScreen() {
-	var [fireState, setFire] = useState(false);
-	var [uid, setUid] = useState('');
-	const sService = new storageService();
-	const nService = new nfcService();
+	var [uuid, setUuid] = useState('');
+	var [firestate, setFirestate] = useState(false);
+	const sService = new StorageService();
+	var geoLocationSub: GeoServiceSubscription;
+	var nfcWriteSession: CloseableHCESession;
 
-	const initUser = async () => {
-		await sService.initRealm().then(async function () {
-			await sService.getUserData().then(async function (res) {
-				if (res.uid === undefined && res.fireStatus === undefined)
-					await sService.initializeUserData().then(function (r) {
-						assignData(r as userData);
-					});
-				else assignData(res);
+	/**
+	 *  initializes the userdata with the Data from the storage Service
+	 */
+
+	useEffect(() => {
+		async function initializeUser() {
+			await sService.openRealm().then(() => {
+				sService.getUserData().then(r => {
+					setUuid(r.uuid);
+					setFirestate(r.fireStatus);
+					firestate ? startWritingNFCData() : startNFCRead();
+				});
 			});
-		});
-	};
-
-	const assignData = (data: userData) => {
-		setUid(data.uid);
-		setFire(data.fireStatus);
-	};
-
-	const startHCE = () => {
-		console.log('HCE');
-		nService.startHCE(uid);
-	};
-
-	const startNFCRead = async () => {
-		try {
-			console.log('Reading');
-			await nService.readNfcTag().then(async function (r) {
-				if (r === undefined || r === null) return;
-				let jTag = nService.processNfcTag(r);
-				if (!testJSON(jTag)) return;
-				let tagInfo = JSON.parse(jTag) as transmissionData;
-
-				let apiD: apiData = {
-					uuidChild: uid,
-					uuidParent: tagInfo.uid,
-					position: tagInfo.location,
-				};
-				if (
-					(await restClient.postContact(
-						environment.API_BASE_DOMAIN + 'new',
-						apiD
-					)) < 300
-				) {
-					setFire(true);
-					sService.writeUserData({fireStatus: true, uid: uid});
-				}
-			});
-		} catch (e) {
-			console.warn(e);
 		}
+		initializeUser();
+		return function cleanup() {
+			if (firestate && geoLocationSub !== undefined)
+				geoLocationSub.unsubscribe();
+			console.log(geoLocationSub);
+		};
+	});
+
+	/**
+	 * @param tmd TransmissionData to be written to NFC tag
+	 * @returns Promise of Session, which has to be closed afterwards
+	 */
+	const startWritingNFCData = async () => {
+		await getPermission(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+			.then(() => {
+				geoLocationSub = subscribePosition((position: GeoLocation) => {
+					console.log(position);
+					if (nfcWriteSession !== undefined) nfcWriteSession.close();
+					nfcStartWrite({uid: uuid, location: position});
+				});
+			})
+			.catch(e => {
+				console.warn('Error');
+				console.warn(e);
+			});
 	};
 
-	//ugly JSON Test
-	const testJSON = (test: string) => {
+	/**
+	 * @param test JSON formatted String, to be tested
+	 * @returns boolean if the JSON formatted String is correctly formatted as a JSON Object
+	 */
+	const testJSON = (test: string): boolean => {
 		try {
 			return JSON.parse(test) && !!test;
 		} catch (e) {
@@ -77,35 +75,49 @@ export default function FireScreen() {
 		}
 	};
 
-	const adminHandler = () => {
-		console.log('making Admin');
-		fireState = !fireState;
-
-		let data: userData = {
-			fireStatus: fireState,
-			uid: '00000000-0000-4000-A000-000000000000',
-		};
-		let l = sService.createAdmin(data);
-		setFire(l!.fireStatus);
-		setUid(l!.uid);
-		console.log(l);
+	const startNFCRead = async () => {
+		//try to incorporate this: https://github.com/revtel/react-native-nfc-manager/issues/153#issuecomment-943704701
+		try {
+			var tagData = await nfcReadNext();
+			console.log(tagData);
+		} catch (e) {
+			console.warn(e);
+			console.log('retrying NFC');
+			startNFCRead();
+			return;
+		}
 	};
 
-	initUser();
+	console.log('Render');
+
+	/**
+	 * USED FOR DDEV PURPOSES ONLY: Assusmes, that the realm is open! and reloades the userdata
+	 * subsequently forcing a re-render through setState()
+	 */
+	const reloadData = async () => {
+		sService.getUserData().then(r => {
+			setUuid(r.uuid);
+			setFirestate(r.fireStatus);
+		});
+	};
+
 	return (
 		<LinearGradient
-			colors={fireState ? ['#ffffff', '#FF3A3A'] : ['#ffffff', '#6F3FAF']}
+			colors={firestate ? ['#ffffff', '#FF3A3A'] : ['#ffffff', '#6F3FAF']}
 			style={styles.container}>
-			<DebugBar adminHandler={adminHandler} />
-			<FireView fire={fireState} />
-			<TouchableHighlight
+			<DebugBar reload={reloadData} />
+			<FireView fire={firestate} />
+			{/*<TouchableHighlight
 				style={styles.button}
 				underlayColor="#dddddd"
-				onPress={() => (fireState ? startHCE() : startNFCRead())}>
+				onPress={() => {
+					console.group('press');
+					firestate ? startWritingNFCData() : startNFCRead();
+				}}>
 				<Text style={styles.text1}>
-					{fireState ? 'Feuer teilen' : 'Feuer empfangen'}
+					{firestate ? 'Feuer teilen' : 'Feuer empfangen'}
 				</Text>
-			</TouchableHighlight>
+			</TouchableHighlight>*/}
 		</LinearGradient>
 	);
 }

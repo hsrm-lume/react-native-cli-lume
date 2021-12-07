@@ -62,7 +62,7 @@ class StorageService {
 			this.realm!.write(() => {
 				u.fireStatus = data.fireStatus;
 				// allow uuid change only in dev mode
-				if (environment.STAGE == 'dev') u.uuid = data.uuid;
+				if (environment.STAGE === 'dev') u.uuid = data.uuid;
 			});
 			if (u) return resolve(u);
 		});

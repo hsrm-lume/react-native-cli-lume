@@ -5,7 +5,7 @@ import {GeoLocation} from '../types/GeoLocation';
 /**
  * Wrapper class to unsubscribe from the GeoLocation watch
  */
-class GeoServiceSubscription {
+export class GeoServiceSubscription {
 	constructor(private n: number) {}
 	public unsubscribe() {
 		Geolocation.clearWatch(this.n);

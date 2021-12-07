@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {userData} from '../types/userData';
-import storageService from '../services/storageService';
+import storageService from '../services/StorageService';
 import CustomWebView from '../components/webView';
 import {environment} from '../env/environment';
 
@@ -10,19 +9,9 @@ export default function WebScreen({}) {
 	const sService = new storageService();
 
 	const initUid = async () => {
-		await sService.initRealm().then(async function () {
-			await sService.getUserData().then(async function (res) {
-				if (res.uid === undefined && res.fireStatus === undefined)
-					await sService.initializeUserData().then(function (r) {
-						assignData(r as userData);
-					});
-				else assignData(res);
-			});
+		await sService.openRealm().then(async () => {
+			setUid((await sService.getUserData()).uuid);
 		});
-	};
-
-	const assignData = (data: userData) => {
-		setUid(data.uid);
 	};
 
 	initUid();
