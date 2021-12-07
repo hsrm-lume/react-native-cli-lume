@@ -5,7 +5,8 @@ import {userDataSchema} from '../types/UserDataSchema';
 import {UserData} from '../types/UserData';
 import {environment} from '../env/environment';
 import {HandledPromise} from '../types/HandledPromise';
-class StorageService {
+
+export class StorageService {
 	realm?: Realm;
 
 	async openRealm() {
@@ -94,4 +95,3 @@ class StorageService {
 		console.log(this.realm?.objects('userData'));
 	}
 }
-export default StorageService;

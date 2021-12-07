@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import storageService from '../services/StorageService';
+import {StorageService} from '../services';
 import CustomWebView from '../components/webView';
 import {environment} from '../env/environment';
 
 export default function WebScreen({}) {
 	var [uid, setUid] = useState('');
-	const sService = new storageService();
+	const sService = new StorageService();
 
 	const initUid = async () => {
 		await sService.openRealm().then(async () => {

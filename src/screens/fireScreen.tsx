@@ -5,27 +5,37 @@ import DebugBar from '../components/debugBar';
 import FireView from '../components/fire';
 import {
 	CloseableHCESession,
+	GeoServiceSubscription,
+	getPermission,
 	nfcReadNext,
 	nfcStartWrite,
-} from '../services/NfcUtil';
-import subscribePosition, {
-	GeoServiceSubscription,
-} from '../services/GeoService';
-import StorageService from '../services/StorageService';
-import getPermission from '../services/PermissionsUtil';
+	StorageService,
+	subscribePosition,
+} from '../services';
 import {GeoLocation} from '../types/GeoLocation';
 
+/**
+ * @param test JSON formatted String, to be tested
+ * @returns boolean if the JSON formatted String is correctly formatted as a JSON Object
+ */
+const testJSON = (test: string): boolean => {
+	try {
+		return JSON.parse(test) && !!test;
+	} catch (e) {
+		return false;
+	}
+};
+
 export default function FireScreen() {
-	var [uuid, setUuid] = useState('');
-	var [firestate, setFirestate] = useState(false);
+	let [uuid, setUuid] = useState('');
+	let [firestate, setFirestate] = useState(false);
 	const sService = new StorageService();
-	var geoLocationSub: GeoServiceSubscription;
-	var nfcWriteSession: CloseableHCESession;
+	let geoLocationSub: GeoServiceSubscription;
+	let nfcWriteSession: CloseableHCESession;
 
 	/**
 	 *  initializes the userdata with the Data from the storage Service
 	 */
-
 	useEffect(() => {
 		async function initializeUser() {
 			await sService.openRealm().then(() => {
@@ -48,8 +58,8 @@ export default function FireScreen() {
 	 * @param tmd TransmissionData to be written to NFC tag
 	 * @returns Promise of Session, which has to be closed afterwards
 	 */
-	const startWritingNFCData = async () => {
-		await getPermission(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+	const startWritingNFCData = () =>
+		getPermission(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
 			.then(() => {
 				geoLocationSub = subscribePosition((position: GeoLocation) => {
 					console.log(position);
@@ -61,24 +71,11 @@ export default function FireScreen() {
 				console.warn('Error');
 				console.warn(e);
 			});
-	};
-
-	/**
-	 * @param test JSON formatted String, to be tested
-	 * @returns boolean if the JSON formatted String is correctly formatted as a JSON Object
-	 */
-	const testJSON = (test: string): boolean => {
-		try {
-			return JSON.parse(test) && !!test;
-		} catch (e) {
-			return false;
-		}
-	};
 
 	const startNFCRead = async () => {
 		//try to incorporate this: https://github.com/revtel/react-native-nfc-manager/issues/153#issuecomment-943704701
 		try {
-			var tagData = await nfcReadNext();
+			const tagData = await nfcReadNext();
 			console.log(tagData);
 		} catch (e) {
 			console.warn(e);
@@ -94,12 +91,11 @@ export default function FireScreen() {
 	 * USED FOR DDEV PURPOSES ONLY: Assusmes, that the realm is open! and reloades the userdata
 	 * subsequently forcing a re-render through setState()
 	 */
-	const reloadData = async () => {
+	const reloadData = () =>
 		sService.getUserData().then(r => {
 			setUuid(r.uuid);
 			setFirestate(r.fireStatus);
 		});
-	};
 
 	return (
 		<LinearGradient

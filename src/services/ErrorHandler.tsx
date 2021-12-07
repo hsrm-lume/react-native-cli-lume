@@ -1,6 +1,6 @@
 import {Alert} from 'react-native';
 
-class ErrorHandler {
+export class ErrorHandler {
 	static handleError(
 		title: string,
 		msg: string,
@@ -27,5 +27,3 @@ class ErrorHandler {
 		Alert.alert(title, msg, buttons);
 	}
 }
-
-export default ErrorHandler;

@@ -50,7 +50,7 @@ const internalCallback = (
  * @param callback callback accepting the detected position
  * @returns GeoServiceSubscription to unsubscribe later
  */
-const subscribePosition = (
+export const subscribePosition = (
 	callback: (pos: GeoLocation) => void
 ): GeoServiceSubscription => {
 	const n = Geolocation.watchPosition(
@@ -63,5 +63,3 @@ const subscribePosition = (
 	);
 	return new GeoServiceSubscription(n);
 };
-
-export default subscribePosition;

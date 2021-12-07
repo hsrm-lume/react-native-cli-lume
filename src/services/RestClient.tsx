@@ -2,7 +2,7 @@ import axios from 'axios';
 import {ApiData} from '../types/ApiData';
 import {HandledPromise} from '../types/HandledPromise';
 
-class RestClient {
+export class RestClient {
 	/*
     "uuidParent": <uuid>,  // UUID of the already lit device
     "uuidChild":  <uuid>,  // UUID of the device to light
@@ -28,5 +28,3 @@ class RestClient {
 		return axios.delete(route, query);
 	}
 }
-
-export default RestClient;

@@ -38,7 +38,7 @@ const getRationale = (p: Permission): Rationale | undefined => {
  * @param p Permission to request
  * @returns Promise that resolves if permission is granted
  */
-const getPermission = async (p: Permission) =>
+export const getPermission = (p: Permission) =>
 	new HandledPromise<void>((resolve, reject) =>
 		PermissionsAndroid.check(p).then(b => {
 			if (b) return resolve();
@@ -50,5 +50,3 @@ const getPermission = async (p: Permission) =>
 				.catch(reject);
 		})
 	);
-
-export default getPermission;
