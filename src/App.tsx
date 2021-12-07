@@ -118,27 +118,54 @@ export default function App() {
         setFire(l!.fireStatus);
         setUid(l!.uid);
         console.log(l);
-        ErrorHandler.handleError({icon: 'wifi', message: "Das ist Massage" + countMsg, dissmisable: true});
-        //ErrorHandler.errorList.pop();
+    }, []);
+
+    const addError = useCallback(() => {
+        setFire(!fireState);
+        switch (countMsg%4){
+            case 0: {
+                ErrorHandler.handleError({icon: 'internetWarning', message: "Das ist die ganz besonders lange Test-Massage " 
+                + countMsg + " um zu zeigen wie sich die App bei Zeilenumbrüchen verhält", dissmisable: true});
+                break;
+            }
+                
+            case 1: {
+                ErrorHandler.handleError({icon: 'locationWarning', message: "Das ist Massage " + countMsg, dissmisable: true});
+                //Test: shouldnt insert two same errors
+                ErrorHandler.handleError({icon: 'locationWarning', message: "Das ist Massage " + countMsg, dissmisable: true});
+                break;
+            }
+                
+            case 2: {
+                ErrorHandler.handleError({icon: 'locationError', message: "Das ist Massage " + countMsg, dissmisable: true});
+                break;
+            }
+                
+            case 3: {
+                ErrorHandler.handleError({icon: 'warning', message: "Das ist Massage " + countMsg, dissmisable: true});
+                break;
+            }
+                
+        }        
         countMsg += 1;
+    }, []);
+
+    const remError = useCallback(() => {
+        setFire(!fireState);
+        //ErrorHandler.remError(ErrorHandler.errorList[1])
+        ErrorHandler.errorList.pop();
+        countMsg -= 1;
+        
     }, []);
 
     
 
     initUser();
-    const onPress = () => setCount(count + 1);
-    const [count, setCount] = useState(0);
-    if (!startWebView) {
-
-        //ErrorHandler.handleError({icon: 'general', message: "Das 8. Message", dissmisable: true});
-        ErrorHandler.handleError({icon: 'wifi', message: "Das 9. Message", dissmisable: true});
-        ErrorHandler.handleError({icon: 'wifi', message: "Das 10. Message", dissmisable: true});
-        ErrorHandler.handleError({icon: 'wifi', message: "Das 11. Message", dissmisable: true});
+    if (!startWebView) {    
         return (
             <LinearGradient colors={fireState ? ['#ffffff', '#FF3A3A'] : ['#ffffff', '#6F3FAF']} style={styles.container}>
-                <DebugBar adminHandler={adminHandler} />
+                <DebugBar adminHandler={addError} />
                 <FireView fire={fireState} />
-                <ErrorBar bigSize={bigSize} switchBigSize = {switchBigSize}/>
                 <TouchableHighlight
                     style={styles.button}
                     //activeOpacity={0.85}
@@ -149,6 +176,7 @@ export default function App() {
                         {fireState ? 'Feuer teilen' : 'Feuer empfangen'}
                     </Text>   
                 </TouchableHighlight>
+                <ErrorBar bigSize={bigSize} switchBigSize = {switchBigSize}/>
                 <Menubar webHandler={startWeb} fireHandler={startFire} web={false} />
             </LinearGradient>
         );
@@ -175,17 +203,20 @@ const styles = StyleSheet.create({
         height: '100%',
     },
 
-    button: {
-        height: '10%',
-        width: '70%',
+    button: { //smaller button
+        height: 'auto',
+        width: '20%',
         backgroundColor: '#abb0ba',
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
+        left: '5%',
+        bottom: '10%',
+        position: 'absolute',
     },
 
     text1: {
-      fontSize: 30,
+      fontSize: 20,
       color: '#000000',
     },
 });
