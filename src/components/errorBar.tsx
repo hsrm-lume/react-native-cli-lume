@@ -15,11 +15,11 @@ const ErrorBar = (props: {bigSize: boolean; switchBigSize: Function} ) => {
                     <Close width={'100%'} height={'100%'}/>
                 </TouchableHighlight>
                 <ScrollView>
-                    {ErrorHandler.errorList.map(function(item) {
+                    {ErrorHandler.errorList.map(function(item, i) {
                         switch(item.icon){
                             case "internetWarning":
                                 return(
-                                    <View style={styles.message}>
+                                    <View style={styles.message} key = {i}>
                                         <View style={styles.icon}>
                                             <InternetWarning width={'100%'} height={'100%'}/>
                                         </View>
@@ -30,7 +30,7 @@ const ErrorBar = (props: {bigSize: boolean; switchBigSize: Function} ) => {
                                 );
                             case "locationError":
                                 return(
-                                    <View style={styles.message}>
+                                    <View style={styles.message} key = {i}>
                                         <View style={styles.icon}>
                                             <LocationError width={'100%'} height={'100%'}/>
                                         </View>
@@ -41,7 +41,7 @@ const ErrorBar = (props: {bigSize: boolean; switchBigSize: Function} ) => {
                                 );
                             case "locationWarning":
                                 return(
-                                    <View style={styles.message}>
+                                    <View style={styles.message} key = {i}>
                                         <View style={styles.icon}>
                                             <LocationWarning width={'100%'} height={'100%'}/>
                                         </View>
@@ -52,7 +52,7 @@ const ErrorBar = (props: {bigSize: boolean; switchBigSize: Function} ) => {
                                 );
                             default:
                                 return(
-                                    <View style={styles.message}>
+                                    <View style={styles.message} key = {i}>
                                         <View style={styles.icon}>
                                             <Warning width={'100%'} height={'100%'}/>
                                         </View>
@@ -70,29 +70,29 @@ const ErrorBar = (props: {bigSize: boolean; switchBigSize: Function} ) => {
         return (
             <View style={ErrorHandler.errorList.length > 3 ? styles.barSmall2 : styles.barSmall}>
                 <ScrollView horizontal>
-                    {ErrorHandler.errorList.map(function(item) {
+                    {ErrorHandler.errorList.map(function(item, i) {
                         switch(item.icon){
                             case "internetWarning":
                                 return(
-                                    <TouchableHighlight style={styles.icon} underlayColor="#ffffff" onPress={() => {props.switchBigSize();}} >  
+                                    <TouchableHighlight style={styles.icon} underlayColor="#ffffff" onPress={() => {props.switchBigSize();}} key = {i}>  
                                             <InternetWarning width={'100%'} height={'100%'}/>
                                     </TouchableHighlight>
                                 );
                             case "locationError":
                                 return(
-                                    <TouchableHighlight style={styles.icon} underlayColor="#ffffff" onPress={() => {props.switchBigSize();}} > 
+                                    <TouchableHighlight style={styles.icon} underlayColor="#ffffff" onPress={() => {props.switchBigSize();}} key = {i}> 
                                         <LocationError width={'100%'} height={'100%'}/>
                                     </TouchableHighlight>
                                 );
                             case "locationWarning":
                                 return(
-                                    <TouchableHighlight style={styles.icon} underlayColor="#ffffff" onPress={() => {props.switchBigSize();}} > 
+                                    <TouchableHighlight style={styles.icon} underlayColor="#ffffff" onPress={() => {props.switchBigSize();}} key = {i}> 
                                         <LocationWarning width={'100%'} height={'100%'}/>
                                     </TouchableHighlight>
                                 );
                             default:
                                 return(
-                                    <TouchableHighlight style={styles.icon} underlayColor="#ffffff" onPress={() => {props.switchBigSize();}} > 
+                                    <TouchableHighlight style={styles.icon} underlayColor="#ffffff" onPress={() => {props.switchBigSize();}} key = {i}> 
                                         <Warning width={'100%'} height={'100%'}/>
                                     </TouchableHighlight>
                                 );
@@ -163,8 +163,8 @@ const styles = StyleSheet.create({
 
     textBox:{
         justifyContent: 'center',
-        paddingRight: 40,
-        paddingLeft: 10,
+        paddingRight: '10%',
+        paddingLeft: '5%',
     },
 
     text: {
