@@ -18,20 +18,19 @@ export default function WebScreen({}) {
 
 	initUid();
 
-	const userOffline = ErrorHandler.errorList.some(
-		x => x.icon == "internetWarning" && x.message == "Du bist offline"
-	);
+	const offline = ErrorHandler.errorList.some(x => x.icon == 'internetWarning');
 
-	const lumeOffline = ErrorHandler.errorList.some(
-		x => x.icon == "internetWarning" 
-		&& x.message == "Die Kartenansicht ist momentan nicht zu erreichen"
-	);
-
-	if (userOffline || lumeOffline) { 
+	if (offline) {
 		// start WebErrorView
+		const errorMessage = ErrorHandler.errorList.find(x => x.icon == 'internetWarning');
+		if (typeof errorMessage === 'undefined') {
+			var message = 'Keine Internetverbindung';
+		} else {
+			var message = errorMessage.message;
+		}
 		return (
 			<View style={styles.containerMap}>
-				<WebErrorView userOffline={userOffline} />
+				<WebErrorView msg={message} />
 			</View>
 		);
 	} else {

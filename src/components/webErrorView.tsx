@@ -2,18 +2,9 @@ import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import InternetWarning from '../assets/internetWarning.svg';
 
-const WebErrorView = (props: {userOffline: boolean}) => {
-	var title: string;
-	var message: string;
-
-	if (props.userOffline) {
-		title = 'DU BIST OFFLINE!';
-		message =
-			'Du bist offline. Bitte gehe Online um lume vollständig nutzen zu können';
-	} else {
-		title = 'LUME IST OFFLINE!';
-		message = 'Die Kartenansicht ist momentan nicht zu erreichen';
-	}
+const WebErrorView = (props: {msg: string}) => {
+	const title = 'KEINE VERBINDUNG!';
+	const message = props.msg;
 
 	return (
 		<View style={styles.ErrorView}>
