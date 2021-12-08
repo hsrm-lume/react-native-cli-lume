@@ -1,8 +1,4 @@
-interface ErrorMessage{
-    icon: "warning"|"locationWarning"|"locationError"|"internetWarning";
-    message: string;
-    dissmisable: boolean;
-}
+import ErrorMessage from './ErrorMessage';
 
 class ErrorHandler {
 

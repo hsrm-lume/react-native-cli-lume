@@ -14,6 +14,7 @@ import restClient from './services/RestClient';
 import {environment} from './env/environment';
 import LinearGradient from 'react-native-linear-gradient';
 import ErrorHandler from './services/ErrorHandler';
+import ErrorMessage from './services/ErrorMessage';
 
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
     var [bigSize, setBigSize] = useState(false);
     var [uid, setUid] = useState('');
     var [startWebView, setWeb] = useState(false);
+    var [render, setRender] = useState(1);
     var countMsg = 0;
 
     //init data
@@ -121,8 +123,9 @@ export default function App() {
     }, []);
 
     const addError = useCallback(() => {
-        setFire(!fireState);
-        switch (countMsg%4){
+        render = render + 1;
+        setRender(render);
+        switch (countMsg%5){
             case 0: {
                 ErrorHandler.handleError({icon: 'internetWarning', message: "Das ist die ganz besonders lange Test-Massage " 
                 + countMsg + " um zu zeigen wie sich die App bei Zeilenumbrüchen verhält", dissmisable: true});
@@ -145,15 +148,19 @@ export default function App() {
                 ErrorHandler.handleError({icon: 'warning', message: "Das ist Massage " + countMsg, dissmisable: true});
                 break;
             }
+            case 4: {
+                ErrorHandler.handleError({icon: 'apiConnection', message: "Das ist Api-Massage " + countMsg, dissmisable: true});
+                break;
+            }
                 
         }        
         countMsg += 1;
     }, []);
 
-    const remError = useCallback(() => {
-        setFire(!fireState);
-        //ErrorHandler.remError(ErrorHandler.errorList[1])
-        ErrorHandler.errorList.pop();
+    const remError = useCallback((msg: ErrorMessage) => {
+        render = render -1;
+        setRender(render);
+        ErrorHandler.remError(msg)
         countMsg -= 1;
         
     }, []);
@@ -176,7 +183,7 @@ export default function App() {
                         {fireState ? 'Feuer teilen' : 'Feuer empfangen'}
                     </Text>   
                 </TouchableHighlight>
-                <ErrorBar bigSize={bigSize} switchBigSize = {switchBigSize}/>
+                <ErrorBar bigSize={bigSize} switchBigSize = {switchBigSize} remMsg = {remError}/>
                 <Menubar webHandler={startWeb} fireHandler={startFire} web={false} />
             </LinearGradient>
         );

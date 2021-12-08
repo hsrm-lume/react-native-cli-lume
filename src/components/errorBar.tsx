@@ -6,17 +6,19 @@ import LocationWarning from '../assets/locationWarning.svg';
 import LocationError from '../assets/locationError.svg';
 import InternetWarning from '../assets/internetWarning.svg';
 import Close from '../assets/close.svg';
+import CloseMsg from '../assets/smallClose.svg';
 
-const ErrorBar = (props: {bigSize: boolean; switchBigSize: Function} ) => {
+const ErrorBar = (props: {bigSize: boolean; switchBigSize: Function; remMsg: Function} ) => {
     if (props.bigSize){
         return (
             <View style={styles.barBig}>
                 <TouchableHighlight style={styles.closeWindow} underlayColor="#ffffff" onPress={() => {props.switchBigSize();}} >
-                    <Close width={'100%'} height={'100%'}/>
+                    <Close width={50} height={50}/>
                 </TouchableHighlight>
                 <ScrollView>
                     {ErrorHandler.errorList.map(function(item, i) {
                         switch(item.icon){
+                            case "apiConnection":
                             case "internetWarning":
                                 return(
                                     <View style={styles.message} key = {i}>
@@ -26,6 +28,9 @@ const ErrorBar = (props: {bigSize: boolean; switchBigSize: Function} ) => {
                                         <View style={styles.textBox}>
                                             <Text style={styles.text}>{item.message}</Text>
                                         </View>
+                                        <TouchableHighlight style={styles.closeMsg} underlayColor="#ffffff" onPress={() => {props.remMsg(item)}} >
+                                            <CloseMsg width={15} height={15}/>
+                                        </TouchableHighlight>
                                     </View>
                                 );
                             case "locationError":
@@ -37,6 +42,9 @@ const ErrorBar = (props: {bigSize: boolean; switchBigSize: Function} ) => {
                                         <View style={styles.textBox}>
                                             <Text style={styles.text}>{item.message}</Text>
                                         </View>
+                                        <TouchableHighlight style={styles.closeMsg} underlayColor="#ffffff" onPress={() => {props.remMsg(item)}} >
+                                            <CloseMsg width={15} height={15}/>
+                                        </TouchableHighlight>
                                     </View>
                                 );
                             case "locationWarning":
@@ -48,6 +56,9 @@ const ErrorBar = (props: {bigSize: boolean; switchBigSize: Function} ) => {
                                         <View style={styles.textBox}>
                                             <Text style={styles.text}>{item.message}</Text>
                                         </View>
+                                        <TouchableHighlight style={styles.closeMsg} underlayColor="#ffffff" onPress={() => {props.remMsg(item)}} >
+                                            <CloseMsg width={15} height={15}/>
+                                        </TouchableHighlight>
                                     </View>
                                 );
                             default:
@@ -59,6 +70,9 @@ const ErrorBar = (props: {bigSize: boolean; switchBigSize: Function} ) => {
                                         <View style={styles.textBox}>
                                             <Text style={styles.text}>{item.message}</Text>
                                         </View>
+                                        <TouchableHighlight style={styles.closeMsg} underlayColor="#ffffff" onPress={() => {props.remMsg(item)}} >
+                                            <CloseMsg width={15} height={15}/>
+                                        </TouchableHighlight>
                                     </View>
                                 );
                         }
@@ -72,6 +86,7 @@ const ErrorBar = (props: {bigSize: boolean; switchBigSize: Function} ) => {
                 <ScrollView horizontal>
                     {ErrorHandler.errorList.map(function(item, i) {
                         switch(item.icon){
+                            case "apiConnection":
                             case "internetWarning":
                                 return(
                                     <TouchableHighlight style={styles.icon} underlayColor="#ffffff" onPress={() => {props.switchBigSize();}} key = {i}>  
@@ -145,10 +160,12 @@ const styles = StyleSheet.create({
     },
 
     closeWindow:{
+        alignItems: 'flex-end',
+    },
+
+    closeMsg:{
         height: 50,
-        width: 50,
-        left: '83%',
-        top: 10,
+        justifyContent: 'center',
     },
 
     message:{
@@ -163,8 +180,9 @@ const styles = StyleSheet.create({
 
     textBox:{
         justifyContent: 'center',
-        paddingRight: '10%',
-        paddingLeft: '5%',
+        paddingLeft: '2%',
+        paddingRight: '2%',
+        width: '75%',
     },
 
     text: {
