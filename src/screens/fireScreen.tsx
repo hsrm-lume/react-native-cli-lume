@@ -5,6 +5,7 @@ import DebugBar from '../components/debugBar';
 import FireView from '../components/fire';
 import {
 	CloseableHCESession,
+	nfcCleanupRead,
 	nfcReadNext,
 	nfcStartWrite,
 } from '../services/NfcUtil';
@@ -14,10 +15,15 @@ import subscribePosition, {
 import StorageService from '../services/StorageService';
 import getPermission from '../services/PermissionsUtil';
 import {GeoLocation} from '../types/GeoLocation';
+import RestClient from '../services/RestClient';
+import {environment} from '../env/environment';
+import {TransmissionData} from '../types/TranmissionData';
 
 export default function FireScreen() {
 	var [uuid, setUuid] = useState('');
 	var [firestate, setFirestate] = useState(false);
+	const [nfcReader, updateNfc] = useState(false);
+	var position: GeoLocation;
 	const sService = new StorageService();
 	var geoLocationSub: GeoServiceSubscription;
 	var nfcWriteSession: CloseableHCESession;
@@ -30,65 +36,75 @@ export default function FireScreen() {
 		async function initializeUser() {
 			await sService.openRealm().then(() => {
 				sService.getUserData().then(r => {
-					setUuid(r.uuid);
+					uuid = r.uuid; // uuid would not trigger a rerender here
 					setFirestate(r.fireStatus);
-					firestate ? startWritingNFCData() : startNFCRead();
+					console.log(uuid);
+					if (r.fireStatus === false) startNFCRead();
 				});
 			});
+			await getPermission(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+				.then(() => {
+					geoLocationSub = subscribePosition((pos: GeoLocation) => {
+						position = pos;
+						if (firestate === true)
+							updateNfcData({uid: uuid, location: position});
+					});
+				})
+				.catch(e => {
+					console.warn('Error');
+					console.warn(e);
+				});
 		}
 		initializeUser();
 		return function cleanup() {
+			console.log('cleanup');
 			if (firestate && geoLocationSub !== undefined)
 				geoLocationSub.unsubscribe();
-			console.log(geoLocationSub);
+			else nfcCleanupRead();
 		};
-	});
+	}, [nfcReader]);
 
 	/**
 	 * @param tmd TransmissionData to be written to NFC tag
 	 * @returns Promise of Session, which has to be closed afterwards
 	 */
-	const startWritingNFCData = async () => {
-		await getPermission(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-			.then(() => {
-				geoLocationSub = subscribePosition((position: GeoLocation) => {
-					console.log(position);
-					if (nfcWriteSession !== undefined) nfcWriteSession.close();
-					nfcStartWrite({uid: uuid, location: position});
-				});
-			})
-			.catch(e => {
-				console.warn('Error');
-				console.warn(e);
-			});
-	};
-
-	/**
-	 * @param test JSON formatted String, to be tested
-	 * @returns boolean if the JSON formatted String is correctly formatted as a JSON Object
-	 */
-	const testJSON = (test: string): boolean => {
-		try {
-			return JSON.parse(test) && !!test;
-		} catch (e) {
-			return false;
-		}
+	const updateNfcData = async (tmd: TransmissionData) => {
+		if (nfcWriteSession !== undefined) nfcWriteSession.close();
+		nfcWriteSession = await nfcStartWrite(tmd);
 	};
 
 	const startNFCRead = async () => {
+		console.log('read mode');
 		//try to incorporate this: https://github.com/revtel/react-native-nfc-manager/issues/153#issuecomment-943704701
 		try {
 			var tagData = await nfcReadNext();
-			console.log(tagData);
+			if (tagData.uid === undefined || tagData.location === undefined)
+				throw new Error('TagData incomplete');
+
+			RestClient.postContact(
+				environment.API_BASE_DOMAIN + environment.API_CONTACT_PATH,
+				{
+					uuidChild: uuid,
+					uuidParent: tagData.uid,
+					position:
+						position.accuracy < tagData.location.accuracy
+							? position
+							: tagData.location,
+				}
+			)
+				.then(r => {
+					if (r > 300) setFirestate(true);
+				})
+				.catch(e => {
+					console.warn(e);
+				});
+			updateNfc(!nfcReader);
 		} catch (e) {
 			console.warn(e);
-			console.log('retrying NFC');
-			startNFCRead();
+			updateNfc(!nfcReader);
 			return;
 		}
 	};
-
-	console.log('Render');
 
 	/**
 	 * USED FOR DDEV PURPOSES ONLY: Assusmes, that the realm is open! and reloades the userdata
@@ -107,17 +123,6 @@ export default function FireScreen() {
 			style={styles.container}>
 			<DebugBar reload={reloadData} />
 			<FireView fire={firestate} />
-			{/*<TouchableHighlight
-				style={styles.button}
-				underlayColor="#dddddd"
-				onPress={() => {
-					console.group('press');
-					firestate ? startWritingNFCData() : startNFCRead();
-				}}>
-				<Text style={styles.text1}>
-					{firestate ? 'Feuer teilen' : 'Feuer empfangen'}
-				</Text>
-			</TouchableHighlight>*/}
 		</LinearGradient>
 	);
 }

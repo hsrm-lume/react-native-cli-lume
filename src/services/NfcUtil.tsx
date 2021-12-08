@@ -1,5 +1,5 @@
 import HCESession, {NFCContentType, NFCTagType4} from 'react-native-hce';
-import NfcManager, {Ndef, NfcTech, TagEvent} from 'react-native-nfc-manager';
+import NfcManager, {NfcTech, TagEvent} from 'react-native-nfc-manager';
 import {HandledPromise} from '../types/HandledPromise';
 import {TransmissionData} from '../types/TranmissionData';
 
@@ -32,8 +32,8 @@ export const nfcStartWrite = (
 /**
  * @returns Promise of TransmissionData recieved from NFC tag
  */
-export const nfcReadNext = (): HandledPromise<TransmissionData> =>
-	new HandledPromise((resolve, reject) =>
+export const nfcReadNext = (): HandledPromise<TransmissionData> => {
+	return new HandledPromise((resolve, reject) =>
 		NfcManager.requestTechnology([NfcTech.Ndef])
 			.then(() => NfcManager.getTag())
 			.then(tag => {
@@ -44,6 +44,13 @@ export const nfcReadNext = (): HandledPromise<TransmissionData> =>
 			.then(resolve)
 			.catch(reject)
 	);
+};
+/**
+ * reading Cleanup function, to be run whe the "parent" component is unmounted
+ */
+export const nfcCleanupRead = (): void => {
+	NfcManager.cancelTechnologyRequest();
+};
 
 /**
  * @param tag NFC-Tag data to be processed
@@ -58,9 +65,6 @@ const processNfcTag = (tag: TagEvent): TransmissionData => {
 		.flatMap(element => element.payload as number[])
 		.reduce((acc, curr) => (acc += String.fromCharCode(curr)), '')
 		.substr(3);
-	console.log(
-		Ndef.uri.decodePayload(tag.ndefMessage[0].payload as unknown as Uint8Array)
-	);
 
 	return JSON.parse(res) as TransmissionData;
 };

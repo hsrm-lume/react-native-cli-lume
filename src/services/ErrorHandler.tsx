@@ -18,11 +18,8 @@ class ErrorHandler {
 			onPress: callbackOk,
 		};
 
-		if (twoButtons) {
-			var buttons = [buttonCancel, buttonOk];
-		} else {
-			var buttons = [buttonOk];
-		}
+		if (twoButtons) var buttons = [buttonCancel, buttonOk];
+		else var buttons = [buttonOk];
 
 		Alert.alert(title, msg, buttons);
 	}
