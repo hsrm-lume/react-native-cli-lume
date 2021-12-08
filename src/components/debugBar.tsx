@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
-import StorageService from '../services/StorageService';
+import {StorageService} from '../services/StorageService';
 const DebugBar = (props: {reload: Function}) => {
 	const sService = new StorageService();
 	sService.openRealm();

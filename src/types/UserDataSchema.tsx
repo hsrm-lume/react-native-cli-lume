@@ -1,5 +1,6 @@
 import Realm from 'realm';
-const userDataSchema: Realm.ObjectSchema = {
+
+export const userDataSchema: Realm.ObjectSchema = {
 	name: 'userData',
 	properties: {
 		uuid: 'string',
@@ -7,5 +8,3 @@ const userDataSchema: Realm.ObjectSchema = {
 	},
 	primaryKey: 'uuid',
 };
-
-export {userDataSchema};

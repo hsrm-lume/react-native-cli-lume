@@ -5,33 +5,43 @@ import DebugBar from '../components/debugBar';
 import FireView from '../components/fire';
 import {
 	CloseableHCESession,
+	GeoServiceSubscription,
+	getPermission,
 	nfcCleanupRead,
 	nfcReadNext,
 	nfcStartWrite,
-} from '../services/NfcUtil';
-import subscribePosition, {
-	GeoServiceSubscription,
-} from '../services/GeoService';
-import StorageService from '../services/StorageService';
-import getPermission from '../services/PermissionsUtil';
+	StorageService,
+	subscribePosition,
+} from '../services';
 import {GeoLocation} from '../types/GeoLocation';
-import RestClient from '../services/RestClient';
+import {RestClient} from '../services/RestClient';
 import {environment} from '../env/environment';
 import {TransmissionData} from '../types/TranmissionData';
 
+/**
+ * @param test JSON formatted String, to be tested
+ * @returns boolean if the JSON formatted String is correctly formatted as a JSON Object
+ */
+const testJSON = (test: string): boolean => {
+	try {
+		return JSON.parse(test) && !!test;
+	} catch (e) {
+		return false;
+	}
+};
+
 export default function FireScreen() {
-	var [uuid, setUuid] = useState('');
-	var [firestate, setFirestate] = useState(false);
+	let [uuid, setUuid] = useState('');
+	let [firestate, setFirestate] = useState(false);
 	const [nfcReader, updateNfc] = useState(false);
-	var position: GeoLocation;
+	let position: GeoLocation;
 	const sService = new StorageService();
-	var geoLocationSub: GeoServiceSubscription;
-	var nfcWriteSession: CloseableHCESession;
+	let geoLocationSub: GeoServiceSubscription;
+	let nfcWriteSession: CloseableHCESession;
 
 	/**
 	 *  initializes the userdata with the Data from the storage Service
 	 */
-
 	useEffect(() => {
 		async function initializeUser() {
 			await sService.openRealm().then(() => {
@@ -110,12 +120,11 @@ export default function FireScreen() {
 	 * USED FOR DDEV PURPOSES ONLY: Assusmes, that the realm is open! and reloades the userdata
 	 * subsequently forcing a re-render through setState()
 	 */
-	const reloadData = async () => {
+	const reloadData = () =>
 		sService.getUserData().then(r => {
 			setUuid(r.uuid);
 			setFirestate(r.fireStatus);
 		});
-	};
 
 	return (
 		<LinearGradient
