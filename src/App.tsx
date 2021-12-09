@@ -19,6 +19,7 @@ import {apiData} from './types/apiData';
 import restClient from './services/RestClient';
 import {environment} from './env/environment';
 import LinearGradient from 'react-native-linear-gradient';
+
 import ErrorHandler from './services/ErrorHandler';
 import ErrorMessage from './services/ErrorMessage';
 
@@ -30,11 +31,13 @@ export default function App() {
 	var [render, setRender] = useState(1);
 	var countMsg = 0;
 
+
 	//init data
 
 	const nService = new nfcService();
 	const sService = new storageService();
 	const errorHandler = new ErrorHandler();
+
 
 	const initUser = async () => {
 		await sService.initRealm().then(async function (result) {
@@ -194,7 +197,6 @@ export default function App() {
 		countMsg -= 1;
 	}, []);
 
-	initUser();
 	if (!startWebView) {
 		return (
 			<LinearGradient
@@ -202,15 +204,6 @@ export default function App() {
 				style={styles.container}>
 				<DebugBar adminHandler={addError} />
 				<FireView fire={fireState} />
-				<TouchableHighlight
-					style={styles.button}
-					//activeOpacity={0.85}
-					underlayColor="#dddddd"
-					onPress={() => (fireState ? startHCE() : startNFCRead())}>
-					<Text style={styles.text1}>
-						{fireState ? 'Feuer teilen' : 'Feuer empfangen'}
-					</Text>
-				</TouchableHighlight>
 				<ErrorBar
 					bigSize={bigSize}
 					switchBigSize={switchBigSize}
@@ -223,7 +216,8 @@ export default function App() {
 		return (
 			<View style={styles.containerMap}>
 				<CustomWebView
-					url={environment.WEBVIEW_BASE_DOMAIN + uid}></CustomWebView>
+					url={environment.WEBVIEW_BASE_DOMAIN + uid}
+				></CustomWebView>
 				<Menubar webHandler={startWeb} fireHandler={startFire} web={true} />
 			</View>
 		);
