@@ -2,9 +2,9 @@ import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import InternetWarning from '../assets/internetWarning.svg';
 
-const WebErrorView = (props: {msg: string}) => {
-	const title = 'KEINE VERBINDUNG!';
-	const message = props.msg;
+const WebErrorView = (props: {msg?: string; title?: string}) => {
+	const message = props.msg || '';
+	const title = props.title || 'KEINE VERBINDUNG!';
 
 	return (
 		<View style={styles.ErrorView}>

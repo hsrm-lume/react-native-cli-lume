@@ -10,8 +10,8 @@ export class CloseableHCESession {
 	constructor(private session: HCESession) {}
 	close(): HandledPromise<void> {
 		if (this.session.active)
-			return new HandledPromise(this.session.terminate());
-		else return new HandledPromise(Promise.resolve());
+			return HandledPromise.from(this.session.terminate());
+		else return HandledPromise.from(Promise.resolve());
 	}
 	isOpen(): boolean {
 		return this.session.active;
@@ -28,7 +28,7 @@ export const nfcStartWrite = (
 ): HandledPromise<CloseableHCESession> =>
 	new HandledPromise((resolve, reject) => {
 		const tag = new NFCTagType4(NFCContentType.Text, JSON.stringify(tmd));
-		new HandledPromise<void>((resolve, reject) => {
+		new Promise<void>((resolve, reject) => {
 			if (!oldSession || !oldSession.isOpen()) resolve();
 			else oldSession.close().then(resolve, reject);
 		})
@@ -52,7 +52,7 @@ export const nfcReadNext = (): HandledPromise<TransmissionData> =>
 				const tag = processNfcTag(data);
 
 				if (tag.uuid === undefined || tag.location === undefined)
-					throw new Error('NFC-Tag invalidddd');
+					throw new Error('NFC-Tag invalid');
 
 				return tag;
 			})
@@ -79,7 +79,7 @@ const processNfcTag = (tag: TagEvent): TransmissionData => {
 	const res = msg
 		.flatMap(element => element.payload as number[])
 		.reduce((acc, curr) => (acc += String.fromCharCode(curr)), '')
-		.substr(3);
+		.substring(3);
 
 	return JSON.parse(res) as TransmissionData;
 };

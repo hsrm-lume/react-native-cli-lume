@@ -1,8 +1,6 @@
-import {resolveObjectURL} from 'buffer';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {PermissionsAndroid, StyleSheet} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import DebugBar from '../components/debugBar';
 import ErrorBar from '../components/errorBar';
 import FireView from '../components/fire';
 import {environment} from '../env/environment';
@@ -17,8 +15,6 @@ import {
 	subscribePosition,
 	writeUserData,
 } from '../services';
-import ErrorHandler from '../services/ErrorHandler';
-import ErrorMessage from '../services/ErrorMessage';
 import {GeoLocation} from '../types/GeoLocation';
 import {HandledPromise} from '../types/HandledPromise';
 import {TransmissionData} from '../types/TranmissionData';
@@ -26,21 +22,6 @@ import {useOnDepUpdate} from '../types/useOnDepUpdate';
 import {useOnInit} from '../types/useOnInit';
 
 export default function FireScreen() {
-	var [bigSize, setBigSize] = useState(false);
-	var [render, setRender] = useState(1);
-	var countMsg = 0;
-
-	const switchBigSize = () => {
-		bigSize = !bigSize;
-		setBigSize(bigSize);
-	};
-	const remError = useCallback((msg: ErrorMessage) => {
-		render = render - 1;
-		setRender(render);
-		ErrorHandler.remError(msg);
-		countMsg -= 1;
-	}, []);
-	/***************************************************************************************************************************************************************************************************** */
 	const [nfcReaderLoop, updateRead] = useState(false); // used to refresh NFC reader loop
 	const reReadNfc = () => {
 		updateRead(!nfcReaderLoop);
@@ -83,8 +64,7 @@ export default function FireScreen() {
 				// fs -> realm
 				writeUserData({fireStatus: true});
 			})
-			.catch(e => console.log('error reading next nfc:', e))
-			.finally(async () => {
+			.finally(() => {
 				getUserData().then(ud => {
 					console.log(ud.fireStatus);
 					console.log(nfcReaderLoop);
@@ -127,7 +107,7 @@ export default function FireScreen() {
 	let uuid = useRef<string | undefined>(undefined);
 	let firestate = useRef(false);
 	// kinda constructor
-	useOnInit(() => {
+	useOnInit(() =>
 		getUserData().then(r => {
 			uuid.current = r.uuid; // uuid would not trigger a rerender here
 			firestate.current = r.fireStatus;
@@ -139,37 +119,23 @@ export default function FireScreen() {
 				console.log('start WRITING');
 				reWriteNfc();
 			}
-		});
-	});
+		})
+	);
 
 	// collects updates on location data
 	let location = useRef<GeoLocation | undefined>(undefined);
 	// Effect to update location data
 	let geoLocationSub: GeoServiceSubscription;
 	useOnInit(() =>
-		getPermission(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-			.then(() => {
+		getPermission(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(
+			() => {
 				geoLocationSub?.unsubscribe();
 				geoLocationSub = subscribePosition(async (pos: GeoLocation) => {
 					location.current = pos;
 				});
-			})
-			.catch(e => {
-				/*console.warn('Error');
-				console.warn(e);*/
-			})
+			}
+		)
 	);
-
-	/**
-	 * USED FOR DEV PURPOSES ONLY: reloades the userdata
-	 * subsequently forcing a re-render through setState()
-	 */
-	const reloadData = () => {
-		getUserData().then(ud => {
-			uuid.current = ud.uuid;
-			firestate.current = ud.fireStatus;
-		});
-	};
 
 	return (
 		<LinearGradient
@@ -177,13 +143,8 @@ export default function FireScreen() {
 				firestate.current ? ['#ffffff', '#FF3A3A'] : ['#ffffff', '#6F3FAF']
 			}
 			style={styles.container}>
-			<DebugBar reload={reloadData} />
 			<FireView fire={firestate.current} />
-			<ErrorBar
-				bigSize={bigSize}
-				switchBigSize={switchBigSize}
-				remMsg={remError}
-			/>
+			<ErrorBar />
 		</LinearGradient>
 	);
 }
