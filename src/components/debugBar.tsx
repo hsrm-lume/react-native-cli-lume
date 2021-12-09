@@ -1,15 +1,26 @@
 import React from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
-const DebugBar = (props: {adminHandler: Function}) => {
+import {getUserData, writeUserData} from '../services';
+const DebugBar = (props: {reload: Function}) => {
+	/**
+	 *  creates an new user with a set admin userdata and toggles the fireState
+	 */
+	const adminHandler = async () => {
+		console.log('Toggling Fire');
+		getUserData().then(async ud => {
+			await writeUserData({fireStatus: !ud.fireStatus});
+			props.reload();
+		});
+	};
+
 	return (
 		<View>
 			<Pressable
 				style={styles.pressable}
 				onPress={() => {
-					props.adminHandler();
-				}}
-			>
-				<Text>MAKE first ADMIN</Text>
+					adminHandler();
+				}}>
+				<Text>Toggle Fire</Text>
 			</Pressable>
 		</View>
 	);

@@ -1,8 +1,8 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {WebView} from 'react-native-webview';
 const CustomWebView = (props: {url: string}) => {
-	return <WebView source={{uri: props.url}} style={styles.WebView}></WebView>;
+	return <WebView source={{uri: props.url}} style={styles.WebView} />;
 };
 
 const styles = StyleSheet.create({

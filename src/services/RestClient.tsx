@@ -1,57 +1,31 @@
 import axios from 'axios';
-import {apiData} from '../types/apiData';
-class restClient {
-	static get(route: string, query?: object) {
-		return axios.get(route, query).catch(function (e) {
-			console.warn(e);
-		});
-	}
+import {ApiData} from '../types/ApiData';
+import {HandledPromise} from '../types/HandledPromise';
+
+export class RestClient {
 	/*
     "uuidParent": <uuid>,  // UUID of the already lit device
     "uuidChild":  <uuid>,  // UUID of the device to light
     "position": {
         "lat": <float>,    // Latitude  between - 90 & + 90
         "lng": <float>     // Longitude between -180 & +180*/
-
-	static post(route: string, body?: object) {
-		return axios.post(route, body).catch(function (e) {
-			console.warn(e);
-		});
-	}
-
-	static postContact(route: string, data: apiData) {
+	static postContact(route: string, data: ApiData): HandledPromise<number> {
+		// TODO reject on > 300
 		console.log(route);
 		console.log(data);
-		return axios
-			.post(route, {
-				uuidParent: data.uuidParent,
-				uuidChild: data.uuidChild,
-				position: {
-					lat: parseFloat(data.position.lat),
-					lng: parseFloat(data.position.lng),
-				},
-				date: new Date().getTime(),
-			})
-			.then(function (r) {
-				return r.status;
-			})
-			.catch(function (e) {
-				console.warn(e);
-			});
+		return new HandledPromise(this.post(route, data).then(r => r.status));
 	}
 
-	static put(route: string, body?: object) {
-		return axios({method: 'post', url: route});
-		return axios.put(route, body).catch(function (e) {
-			console.warn(e);
-		});
+	private static post(route: string, body?: object) {
+		return axios.post(route, body);
 	}
-
-	static delete(route: string, query?: object) {
-		return axios.delete(route, query).catch(function (e) {
-			console.warn(e);
-		});
+	private static get(route: string, query?: object) {
+		return axios.get(route, query);
+	}
+	private static put(route: string, body?: object) {
+		return axios.put(route, body);
+	}
+	private static delete(route: string, query?: object) {
+		return axios.delete(route, query);
 	}
 }
-
-export default restClient;
