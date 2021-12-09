@@ -52,6 +52,8 @@ export const writeUserData = (
 		// fetch user to change
 		let u = r.objects<UserData>('userData')[0];
 
+		console.trace('show');
+
 		// modify user
 		r.write(() => {
 			if (data.fireStatus !== undefined) u.fireStatus = data.fireStatus;

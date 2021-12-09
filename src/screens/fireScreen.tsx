@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {PermissionsAndroid, StyleSheet} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import DebugBar from '../components/debugBar';
@@ -18,14 +18,16 @@ import {
 import {GeoLocation} from '../types/GeoLocation';
 import {HandledPromise} from '../types/HandledPromise';
 import {TransmissionData} from '../types/TranmissionData';
-import {useOnDepsUpdate} from '../types/useOnDepsUpdate';
+import {useOnDepUpdate} from '../types/useOnDepUpdate';
 import {useOnInit} from '../types/useOnInit';
 
 export default function FireScreen() {
-	const nfcReaderLoop = useRef(false); // used to refresh NFC reader loop
-	const reReadNfc = () => (nfcReaderLoop.current = !nfcReaderLoop.current);
+	const [nfcReaderLoop, updateRead] = useState(false); // used to refresh NFC reader loop
+	const reReadNfc = () => {
+		updateRead(!nfcReaderLoop);
+	};
 	// NFC read
-	useOnDepsUpdate(() => {
+	useOnDepUpdate(() => {
 		console.log('nfc read');
 		nfcReadNext()
 			.then(
@@ -64,30 +66,33 @@ export default function FireScreen() {
 			})
 			.catch(e => console.log('error reading next nfc:', e))
 			.finally(async () => {
-				await writeUserData({fireStatus: true});
+				console.log('reread next iter');
 				getUserData().then(ud => {
+					console.log(ud.fireStatus);
+					console.log(nfcReaderLoop);
 					if (ud.fireStatus === false) {
-						console.log('start READING');
 						reReadNfc();
 					} else {
-						console.log('start WRITING');
 						reWriteNfc();
 					}
 				});
 			});
+		return () => {};
 	}, [nfcReaderLoop]);
 
 	let nfcWriteSession: CloseableHCESession | undefined;
-	const nfcWriterLoop = useRef(false); // used to refresh NFC data
-	const reWriteNfc = () => (nfcWriterLoop.current = !nfcWriterLoop.current);
+	const [nfcWriterLoop, updateWrite] = useState(false); // used to refresh NFC data
+	const reWriteNfc = () => {
+		updateWrite(!nfcWriterLoop);
+	};
 	// NFC write
-	useOnDepsUpdate(() => {
+	useOnDepUpdate(() => {
 		console.log('nfc write');
 		new HandledPromise()
 			.then(() => {
 				// validation
-				if (!uuid) throw new Error('Torch not yet ready');
-				if (!location) throw new Error('Position not accurate enough');
+				if (!uuid.current) throw new Error('Torch not yet ready');
+				if (!location.current) throw new Error('Position not accurate enough');
 				return {
 					uuid: uuid.current,
 					location: location.current,
@@ -95,7 +100,8 @@ export default function FireScreen() {
 			})
 			.then(tmd => nfcStartWrite(tmd, nfcWriteSession))
 			.then(x => (nfcWriteSession = x))
-			.catch(e => console.warn('Err writing nfc:', e));
+			.catch(e => console.warn('Err writing nfc:', e))
+			.finally(() => setTimeout(reWriteNfc, 1000));
 
 		return () => {
 			nfcWriteSession?.close();
@@ -103,17 +109,16 @@ export default function FireScreen() {
 	}, [nfcWriterLoop]);
 
 	let uuid = useRef<string | undefined>(undefined);
-	let [firestate, setFirestate] = useState(false);
+	let firestate = useRef(false);
 	// kinda constructor
 	useOnInit(() => {
 		getUserData().then(r => {
 			uuid.current = r.uuid; // uuid would not trigger a rerender here
-			setFirestate(r.fireStatus);
+			firestate.current = r.fireStatus;
 			console.log(`fetched user ${uuid.current} with fire ${r.fireStatus}`);
 			if (r.fireStatus === false) {
 				console.log('start READING');
 				reReadNfc();
-				reWriteNfc();
 			} else {
 				console.log('start WRITING');
 				reWriteNfc();
@@ -146,16 +151,18 @@ export default function FireScreen() {
 	const reloadData = () => {
 		getUserData().then(ud => {
 			uuid.current = ud.uuid;
-			setFirestate(ud.fireStatus);
+			firestate.current = ud.fireStatus;
 		});
 	};
 
 	return (
 		<LinearGradient
-			colors={firestate ? ['#ffffff', '#FF3A3A'] : ['#ffffff', '#6F3FAF']}
+			colors={
+				firestate.current ? ['#ffffff', '#FF3A3A'] : ['#ffffff', '#6F3FAF']
+			}
 			style={styles.container}>
 			<DebugBar reload={reloadData} />
-			<FireView fire={firestate} />
+			<FireView fire={firestate.current} />
 		</LinearGradient>
 	);
 }
