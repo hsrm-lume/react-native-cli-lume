@@ -1,6 +1,7 @@
 import Geolocation, {GeoWatchOptions} from 'react-native-geolocation-service';
 import {environment} from '../env/environment';
 import {GeoLocation} from '../types/GeoLocation';
+import ErrorHandler from './ErrorHandler';
 
 /**
  * Wrapper class to unsubscribe from the GeoLocation watch
@@ -57,6 +58,11 @@ export const subscribePosition = (
 		pos => internalCallback(pos, callback),
 		e => {
 			// TODO error handler
+			ErrorHandler.handleError({
+				icon: 'locationWarning',
+				message: 'Error @ Location determination',
+				dissmisable: true,
+			});
 			console.warn('Geolocation.watchPosition error', e);
 		},
 		watchOptions

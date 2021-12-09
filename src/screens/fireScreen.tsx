@@ -1,7 +1,9 @@
-import React, {useEffect, useRef, useState} from 'react';
+import {resolveObjectURL} from 'buffer';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {PermissionsAndroid, StyleSheet} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import DebugBar from '../components/debugBar';
+import ErrorBar from '../components/errorBar';
 import FireView from '../components/fire';
 import {environment} from '../env/environment';
 import {
@@ -15,6 +17,8 @@ import {
 	subscribePosition,
 	writeUserData,
 } from '../services';
+import ErrorHandler from '../services/ErrorHandler';
+import ErrorMessage from '../services/ErrorMessage';
 import {GeoLocation} from '../types/GeoLocation';
 import {HandledPromise} from '../types/HandledPromise';
 import {TransmissionData} from '../types/TranmissionData';
@@ -22,6 +26,21 @@ import {useOnDepUpdate} from '../types/useOnDepUpdate';
 import {useOnInit} from '../types/useOnInit';
 
 export default function FireScreen() {
+	var [bigSize, setBigSize] = useState(false);
+	var [render, setRender] = useState(1);
+	var countMsg = 0;
+
+	const switchBigSize = () => {
+		bigSize = !bigSize;
+		setBigSize(bigSize);
+	};
+	const remError = useCallback((msg: ErrorMessage) => {
+		render = render - 1;
+		setRender(render);
+		ErrorHandler.remError(msg);
+		countMsg -= 1;
+	}, []);
+	/***************************************************************************************************************************************************************************************************** */
 	const [nfcReaderLoop, updateRead] = useState(false); // used to refresh NFC reader loop
 	const reReadNfc = () => {
 		updateRead(!nfcReaderLoop);
@@ -66,7 +85,6 @@ export default function FireScreen() {
 			})
 			.catch(e => console.log('error reading next nfc:', e))
 			.finally(async () => {
-				console.log('reread next iter');
 				getUserData().then(ud => {
 					console.log(ud.fireStatus);
 					console.log(nfcReaderLoop);
@@ -88,19 +106,17 @@ export default function FireScreen() {
 	// NFC write
 	useOnDepUpdate(() => {
 		console.log('nfc write');
-		new HandledPromise()
-			.then(() => {
-				// validation
-				if (!uuid.current) throw new Error('Torch not yet ready');
-				if (!location.current) throw new Error('Position not accurate enough');
-				return {
-					uuid: uuid.current,
-					location: location.current,
-				} as TransmissionData;
-			})
+		new HandledPromise<TransmissionData>(resolve => {
+			// validation
+			if (!uuid.current) throw new Error('Torch not yet ready');
+			if (!location.current) throw new Error('Position not accurate enough');
+			resolve({
+				uuid: uuid.current,
+				location: location.current,
+			});
+		})
 			.then(tmd => nfcStartWrite(tmd, nfcWriteSession))
 			.then(x => (nfcWriteSession = x))
-			.catch(e => console.warn('Err writing nfc:', e))
 			.finally(() => setTimeout(reWriteNfc, 1000));
 
 		return () => {
@@ -139,8 +155,8 @@ export default function FireScreen() {
 				});
 			})
 			.catch(e => {
-				console.warn('Error');
-				console.warn(e);
+				/*console.warn('Error');
+				console.warn(e);*/
 			})
 	);
 
@@ -163,6 +179,11 @@ export default function FireScreen() {
 			style={styles.container}>
 			<DebugBar reload={reloadData} />
 			<FireView fire={firestate.current} />
+			<ErrorBar
+				bigSize={bigSize}
+				switchBigSize={switchBigSize}
+				remMsg={remError}
+			/>
 		</LinearGradient>
 	);
 }

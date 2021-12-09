@@ -1,3 +1,5 @@
+import ErrorHandler from '../services/ErrorHandler';
+
 /**
  * A promise where rejections are treated with an error handler
  * If the HandledPromise is rejected, the error handler is called
@@ -33,7 +35,11 @@ export class HandledPromise<T> extends Promise<T> {
 		this.promise.then(
 			v => v,
 			err => {
-				console.warn('DEFAULT WARNING CATCHER', err);
+				ErrorHandler.handleError({
+					icon: 'warning',
+					message: err.message || err,
+					dissmisable: true,
+				});
 			}
 		);
 	}

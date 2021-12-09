@@ -35,8 +35,5 @@ const styles = StyleSheet.create({
 		backgroundColor: '#000000',
 		zIndex: 1,
 	},
-	black: {
-		color: '#000000',
-	},
 });
 export default DebugBar;

@@ -6,7 +6,7 @@ export const useOnDepUpdate = (
 ) => {
 	const ref = React.useRef(false);
 	React.useEffect(() => {
-		console.log(ref.current !== dependency[0] ? 'pass' : 'block');
+		//console.log(ref.current !== dependency[0] ? 'pass' : 'block');
 		if (ref.current !== dependency[0]) callback();
 		ref.current = dependency[0];
 	}, [dependency, callback]);

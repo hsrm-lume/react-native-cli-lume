@@ -5,6 +5,8 @@ import FireScreen from './screens/fireScreen';
 import WebScreen from './screens/webScreen';
 import Fire from './assets/fire.svg';
 import Map from './assets/map.svg';
+import ErrorHandler from './services/ErrorHandler';
+import ErrorMessage from './services/ErrorMessage';
 
 export default function App() {
 	const bottomNav = createBottomTabNavigator();
