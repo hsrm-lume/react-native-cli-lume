@@ -7,8 +7,7 @@ const DebugBar = (props: {adminHandler: Function}) => {
 				style={styles.pressable}
 				onPress={() => {
 					props.adminHandler();
-				}}
-			>
+				}}>
 				<Text>MAKE first ADMIN</Text>
 			</Pressable>
 		</View>
