@@ -1,130 +1,154 @@
-import React, {useEffect, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {PermissionsAndroid, StyleSheet} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import DebugBar from '../components/debugBar';
 import FireView from '../components/fire';
+import {environment} from '../env/environment';
 import {
 	CloseableHCESession,
 	GeoServiceSubscription,
 	getPermission,
-	nfcCleanupRead,
+	getUserData,
 	nfcReadNext,
 	nfcStartWrite,
-	StorageService,
+	RestClient,
 	subscribePosition,
+	writeUserData,
 } from '../services';
 import {GeoLocation} from '../types/GeoLocation';
-import {RestClient} from '../services/RestClient';
-import {environment} from '../env/environment';
+import {HandledPromise} from '../types/HandledPromise';
 import {TransmissionData} from '../types/TranmissionData';
-
-/**
- * @param test JSON formatted String, to be tested
- * @returns boolean if the JSON formatted String is correctly formatted as a JSON Object
- */
-const testJSON = (test: string): boolean => {
-	try {
-		return JSON.parse(test) && !!test;
-	} catch (e) {
-		return false;
-	}
-};
+import {useOnDepsUpdate} from '../types/useOnDepsUpdate';
+import {useOnInit} from '../types/useOnInit';
 
 export default function FireScreen() {
-	let [uuid, setUuid] = useState('');
-	let [firestate, setFirestate] = useState(false);
-	const [nfcReader, updateNfc] = useState(false);
-	let position: GeoLocation;
-	const sService = new StorageService();
-	let geoLocationSub: GeoServiceSubscription;
-	let nfcWriteSession: CloseableHCESession;
-
-	/**
-	 *  initializes the userdata with the Data from the storage Service
-	 */
-	useEffect(() => {
-		async function initializeUser() {
-			await sService.openRealm().then(() => {
-				sService.getUserData().then(r => {
-					uuid = r.uuid; // uuid would not trigger a rerender here
-					setFirestate(r.fireStatus);
-					console.log(uuid);
-					if (r.fireStatus === false) startNFCRead();
+	const nfcReaderLoop = useRef(false); // used to refresh NFC reader loop
+	const reReadNfc = () => (nfcReaderLoop.current = !nfcReaderLoop.current);
+	// NFC read
+	useOnDepsUpdate(() => {
+		console.log('nfc read');
+		nfcReadNext()
+			.then(
+				tmd =>
+					// validation
+					new HandledPromise<[TransmissionData, TransmissionData]>(resolve => {
+						if (!uuid.current) throw new Error('Torch not yet ready');
+						if (!location.current)
+							throw new Error('Position not accurate enough');
+						resolve([
+							tmd,
+							{
+								uuid: uuid.current,
+								location: location.current,
+							} as TransmissionData,
+						]);
+					})
+			)
+			.then(([recieved, self]) =>
+				// -> REST
+				RestClient.postContact(
+					environment.API_BASE_DOMAIN + environment.API_CONTACT_PATH,
+					{
+						uuidChild: self.uuid,
+						uuidParent: recieved.uuid,
+						position:
+							self.location.accuracy < recieved.location.accuracy
+								? self.location
+								: recieved.location,
+					}
+				)
+			)
+			.then(() => {
+				// fs -> realm
+				writeUserData({fireStatus: true});
+			})
+			.catch(e => console.log('error reading next nfc:', e))
+			.finally(async () => {
+				await writeUserData({fireStatus: true});
+				getUserData().then(ud => {
+					if (ud.fireStatus === false) {
+						console.log('start READING');
+						reReadNfc();
+					} else {
+						console.log('start WRITING');
+						reWriteNfc();
+					}
 				});
 			});
-			await getPermission(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-				.then(() => {
-					geoLocationSub = subscribePosition((pos: GeoLocation) => {
-						position = pos;
-						if (firestate === true)
-							updateNfcData({uid: uuid, location: position});
-					});
-				})
-				.catch(e => {
-					console.warn('Error');
-					console.warn(e);
-				});
-		}
-		initializeUser();
-		return function cleanup() {
-			console.log('cleanup');
-			if (firestate && geoLocationSub !== undefined)
-				geoLocationSub.unsubscribe();
-			else nfcCleanupRead();
+	}, [nfcReaderLoop]);
+
+	let nfcWriteSession: CloseableHCESession | undefined;
+	const nfcWriterLoop = useRef(false); // used to refresh NFC data
+	const reWriteNfc = () => (nfcWriterLoop.current = !nfcWriterLoop.current);
+	// NFC write
+	useOnDepsUpdate(() => {
+		console.log('nfc write');
+		new HandledPromise()
+			.then(() => {
+				// validation
+				if (!uuid) throw new Error('Torch not yet ready');
+				if (!location) throw new Error('Position not accurate enough');
+				return {
+					uuid: uuid.current,
+					location: location.current,
+				} as TransmissionData;
+			})
+			.then(tmd => nfcStartWrite(tmd, nfcWriteSession))
+			.then(x => (nfcWriteSession = x))
+			.catch(e => console.warn('Err writing nfc:', e));
+
+		return () => {
+			nfcWriteSession?.close();
 		};
-	}, [nfcReader]);
+	}, [nfcWriterLoop]);
 
-	/**
-	 * @param tmd TransmissionData to be written to NFC tag
-	 * @returns Promise of Session, which has to be closed afterwards
-	 */
-	const updateNfcData = async (tmd: TransmissionData) => {
-		if (nfcWriteSession !== undefined) nfcWriteSession.close();
-		nfcWriteSession = await nfcStartWrite(tmd);
-	};
+	let uuid = useRef<string | undefined>(undefined);
+	let [firestate, setFirestate] = useState(false);
+	// kinda constructor
+	useOnInit(() => {
+		getUserData().then(r => {
+			uuid.current = r.uuid; // uuid would not trigger a rerender here
+			setFirestate(r.fireStatus);
+			console.log(`fetched user ${uuid.current} with fire ${r.fireStatus}`);
+			if (r.fireStatus === false) {
+				console.log('start READING');
+				reReadNfc();
+				reWriteNfc();
+			} else {
+				console.log('start WRITING');
+				reWriteNfc();
+			}
+		});
+	});
 
-	const startNFCRead = async () => {
-		console.log('read mode');
-		//try to incorporate this: https://github.com/revtel/react-native-nfc-manager/issues/153#issuecomment-943704701
-		try {
-			var tagData = await nfcReadNext();
-			if (tagData.uid === undefined || tagData.location === undefined)
-				throw new Error('TagData incomplete');
-
-			RestClient.postContact(
-				environment.API_BASE_DOMAIN + environment.API_CONTACT_PATH,
-				{
-					uuidChild: uuid,
-					uuidParent: tagData.uid,
-					position:
-						position.accuracy < tagData.location.accuracy
-							? position
-							: tagData.location,
-				}
-			)
-				.then(r => {
-					if (r > 300) setFirestate(true);
-				})
-				.catch(e => {
-					console.warn(e);
+	// collects updates on location data
+	let location = useRef<GeoLocation | undefined>(undefined);
+	// Effect to update location data
+	let geoLocationSub: GeoServiceSubscription;
+	useOnInit(() =>
+		getPermission(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+			.then(() => {
+				geoLocationSub?.unsubscribe();
+				geoLocationSub = subscribePosition(async (pos: GeoLocation) => {
+					location.current = pos;
 				});
-			updateNfc(!nfcReader);
-		} catch (e) {
-			console.warn(e);
-			updateNfc(!nfcReader);
-			return;
-		}
-	};
+			})
+			.catch(e => {
+				console.warn('Error');
+				console.warn(e);
+			})
+	);
 
 	/**
-	 * USED FOR DDEV PURPOSES ONLY: Assusmes, that the realm is open! and reloades the userdata
+	 * USED FOR DEV PURPOSES ONLY: reloades the userdata
 	 * subsequently forcing a re-render through setState()
 	 */
-	const reloadData = () =>
-		sService.getUserData().then(r => {
-			setUuid(r.uuid);
-			setFirestate(r.fireStatus);
+	const reloadData = () => {
+		getUserData().then(ud => {
+			uuid.current = ud.uuid;
+			setFirestate(ud.fireStatus);
 		});
+	};
 
 	return (
 		<LinearGradient

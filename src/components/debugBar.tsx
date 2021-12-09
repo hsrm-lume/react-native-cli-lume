@@ -1,20 +1,15 @@
 import React from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
-import {StorageService} from '../services/StorageService';
+import {getUserData, writeUserData} from '../services';
 const DebugBar = (props: {reload: Function}) => {
-	const sService = new StorageService();
-	sService.openRealm();
 	/**
 	 *  creates an new user with a set admin userdata and toggles the fireState
 	 */
 	const adminHandler = async () => {
 		console.log('Toggling Fire');
-		await sService.getUserData().then(async r => {
-			await sService
-				.createAdmin({uuid: r.uuid, fireStatus: !r.fireStatus})
-				.then(() => {
-					props.reload();
-				});
+		getUserData().then(async ud => {
+			await writeUserData({fireStatus: !ud.fireStatus});
+			props.reload();
 		});
 	};
 

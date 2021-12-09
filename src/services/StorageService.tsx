@@ -6,92 +6,59 @@ import {UserData} from '../types/UserData';
 import {environment} from '../env/environment';
 import {HandledPromise} from '../types/HandledPromise';
 
-export class StorageService {
-	realm?: Realm;
+const openRealm = async () =>
+	await Realm.open({
+		path: 'userOptions',
+		schema: [userDataSchema],
+		schemaVersion: 1,
+	});
 
-	async openRealm() {
-		this.realm = await Realm.open({
-			path: 'userOptions',
-			schema: [userDataSchema],
-			schemaVersion: 1,
+/**
+ * Fetches the UserData from Realm if it exists
+ * else creates a new one
+ * @returns Promise with UserData
+ */
+export const getUserData = (): HandledPromise<UserData> =>
+	new HandledPromise(async (resolve, reject) => {
+		// open the realm
+		const r = await openRealm();
+
+		// Return the User if it exists
+		const u = r.objects<UserData>('userData')[0];
+		if (u) return resolve(u);
+
+		// Create a new User if it doesn't exist
+		const newu = r.write(() =>
+			r.create<UserData>('userData', {
+				uuid: uuid(),
+				fireStatus: false,
+			})
+		);
+		if (!newu) return reject('Could not create user');
+		resolve(newu);
+	});
+
+/**
+ * Sets user data
+ * @param data
+ */
+export const writeUserData = (
+	data: Partial<UserData>
+): HandledPromise<UserData> =>
+	new HandledPromise(async (resolve, reject) => {
+		// open the realm
+		const r = await openRealm();
+
+		// fetch user to change
+		let u = r.objects<UserData>('userData')[0];
+
+		// modify user
+		r.write(() => {
+			if (data.fireStatus !== undefined) u.fireStatus = data.fireStatus;
+			// allow uuid change only in dev mode
+			if (data.uuid !== undefined && environment.STAGE === 'dev')
+				u.uuid = data.uuid;
 		});
-	}
-	closeRealm() {
-		// use when main component gets unmounted
-		if (this.realm && !this.realm.isClosed) this.realm.close();
-	}
-
-	/**
-	 * Fetches the UserData from Realm if it exists
-	 * else creates a new one
-	 * @returns Promise with UserData
-	 */
-	getUserData(): Promise<UserData> {
-		return new HandledPromise((resolve, reject) => {
-			// Reject if realm is not open
-			if (!this.realm) return reject('Realm not open');
-
-			// Return the User if it exists
-			const u = this.realm.objects<UserData>('userData')[0];
-			if (u) return resolve(u);
-
-			// Create a new User if it doesn't exist
-			this.realm.write(() => {
-				const n = this.realm?.create<UserData>('userData', {
-					uuid: uuid(),
-					fireStatus: false,
-				});
-				if (!n) return reject('could not create user data');
-				resolve(n);
-			});
-		});
-	}
-
-	/**
-	 * Sets user data
-	 * @param data
-	 */
-	writeUserData(data: UserData): HandledPromise<UserData> {
-		return new HandledPromise((resolve, reject) => {
-			// Reject if realm is not open
-			if (!this.realm) return reject('Realm not open');
-
-			// fetch user to change
-			let u = this.realm.objects<UserData>('userData')[0];
-
-			// modify user
-			this.realm!.write(() => {
-				u.fireStatus = data.fireStatus;
-				// allow uuid change only in dev mode
-				if (environment.STAGE === 'dev') u.uuid = data.uuid;
-			});
-			if (u) return resolve(u);
-		});
-	}
-
-	// DEV PURPOSES ONLY
-	wipeData() {
-		this.realm?.write(() => {
-			this.realm!.deleteAll();
-		});
-	}
-	createAdmin(data: UserData) {
-		return new HandledPromise((resolve, reject) => {
-			// Reject if realm is not open
-			if (!this.realm) return reject('Realm not open');
-			this.wipeData();
-			this.realm?.write(() => {
-				const n = this.realm?.create<UserData>('userData', {
-					fireStatus: data.fireStatus,
-					uuid: data.uuid,
-				});
-				if (!n) return reject('could not create user data');
-				resolve(n);
-			});
-		});
-	}
-	toConsole() {
-		console.log('Full Realm');
-		console.log(this.realm?.objects('userData'));
-	}
-}
+		if (u) return resolve(u);
+		reject('could not write user data');
+	});

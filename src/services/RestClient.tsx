@@ -10,6 +10,7 @@ export class RestClient {
         "lat": <float>,    // Latitude  between - 90 & + 90
         "lng": <float>     // Longitude between -180 & +180*/
 	static postContact(route: string, data: ApiData): HandledPromise<number> {
+		// TODO reject on > 300
 		console.log(route);
 		console.log(data);
 		return new HandledPromise(this.post(route, data).then(r => r.status));

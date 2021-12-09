@@ -5,6 +5,7 @@
 export class HandledPromise<T> extends Promise<T> {
 	promise: Promise<T>;
 
+	constructor();
 	constructor(
 		executor: (
 			resolve: (value: T | PromiseLike<T>) => void,
@@ -13,7 +14,7 @@ export class HandledPromise<T> extends Promise<T> {
 	);
 	constructor(promise: Promise<T>);
 	constructor(
-		promise:
+		promise?:
 			| Promise<T>
 			| ((
 					resolve: (value: T | PromiseLike<T>) => void,
@@ -21,15 +22,20 @@ export class HandledPromise<T> extends Promise<T> {
 			  ) => void)
 	) {
 		super(() => {}); // no handler, all resolve & reject will be handled by the this.promise
-		if (promise instanceof Promise) {
-			this.promise = promise;
-			return;
-		}
-		this.promise = new Promise<T>(promise);
-		this.promise = this.promise.catch(err => {
-			console.warn('DEFAULT WARNING CATCHER', err);
-			return err;
-		});
+
+		// construct some promise thet just resolves
+		if (!promise) this.promise = new Promise<T>(r => r(undefined as any));
+		// construct a HandledPromise from a Promise
+		else if (promise instanceof Promise) this.promise = promise;
+		// construct a HandledPromise from a PromiseLike
+		else this.promise = new Promise<T>(promise);
+		// add default handler
+		this.promise.then(
+			v => v,
+			err => {
+				console.warn('DEFAULT WARNING CATCHER', err);
+			}
+		);
 	}
 
 	override then<TResult1 = T, TResult2 = never>(
@@ -52,5 +58,9 @@ export class HandledPromise<T> extends Promise<T> {
 			| null
 	): Promise<T | TResult> {
 		return this.promise.catch(onrejected);
+	}
+
+	override finally(onfinally?: (() => void) | undefined | null): Promise<T> {
+		return this.promise.finally(onfinally);
 	}
 }

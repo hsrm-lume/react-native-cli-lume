@@ -9,7 +9,12 @@ import {TransmissionData} from '../types/TranmissionData';
 export class CloseableHCESession {
 	constructor(private session: HCESession) {}
 	close(): HandledPromise<void> {
-		return new HandledPromise(this.session.terminate());
+		if (this.session.active)
+			return new HandledPromise(this.session.terminate());
+		else return new HandledPromise(Promise.resolve());
+	}
+	isOpen(): boolean {
+		return this.session.active;
 	}
 }
 
@@ -18,12 +23,16 @@ export class CloseableHCESession {
  * @returns Promise of Session, which has to be closed afterwards
  */
 export const nfcStartWrite = (
-	tmd: TransmissionData
+	tmd: TransmissionData,
+	oldSession?: CloseableHCESession
 ): HandledPromise<CloseableHCESession> =>
 	new HandledPromise((resolve, reject) => {
 		const tag = new NFCTagType4(NFCContentType.Text, JSON.stringify(tmd));
-		new HCESession(tag)
-			.start()
+		new HandledPromise<void>((resolve, reject) => {
+			if (!oldSession || !oldSession.isOpen()) resolve();
+			else oldSession.close().then(resolve, reject);
+		})
+			.then(() => new HCESession(tag).start())
 			.then(s => new CloseableHCESession(s))
 			.then(resolve)
 			.catch(reject);
@@ -32,19 +41,25 @@ export const nfcStartWrite = (
 /**
  * @returns Promise of TransmissionData recieved from NFC tag
  */
-export const nfcReadNext = (): HandledPromise<TransmissionData> => {
-	return new HandledPromise((resolve, reject) =>
+export const nfcReadNext = (): HandledPromise<TransmissionData> =>
+	new HandledPromise<TransmissionData>((resolve, reject) => {
 		NfcManager.requestTechnology([NfcTech.Ndef])
 			.then(() => NfcManager.getTag())
-			.then(tag => {
-				NfcManager.cancelTechnologyRequest();
-				if (!tag) throw new Error('NFC-Tag empty');
-				return processNfcTag(tag);
+			.then(async data => {
+				await NfcManager.cancelTechnologyRequest();
+				if (!data) throw new Error('NFC-Tag empty');
+
+				const tag = processNfcTag(data);
+
+				if (tag.uuid === undefined || tag.location === undefined)
+					throw new Error('NFC-Tag invalidddd');
+
+				return tag;
 			})
 			.then(resolve)
-			.catch(reject)
-	);
-};
+			.catch(reject);
+	});
+
 /**
  * reading Cleanup function, to be run whe the "parent" component is unmounted
  */
@@ -58,8 +73,8 @@ export const nfcCleanupRead = (): void => {
  */
 const processNfcTag = (tag: TagEvent): TransmissionData => {
 	const msg = tag.ndefMessage;
-	// TODO: Error service
-	if (msg === undefined) console.warn('NFC tag is empty');
+
+	if (msg === undefined) throw new Error('NFC tag is empty');
 
 	const res = msg
 		.flatMap(element => element.payload as number[])
