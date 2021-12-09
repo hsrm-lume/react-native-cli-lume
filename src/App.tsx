@@ -10,6 +10,7 @@ import CustomWebView from './components/webView';
 import Menubar from './components/menubar';
 import DebugBar from './components/debugBar';
 import FireView from './components/fire';
+import ErrorBar from './components/errorBar';
 import nfcService from './services/nfcService';
 import storageService from './services/storageService';
 import {userData} from './types/userData';
@@ -19,15 +20,24 @@ import restClient from './services/RestClient';
 import {environment} from './env/environment';
 import LinearGradient from 'react-native-linear-gradient';
 
+import ErrorHandler from './services/ErrorHandler';
+import ErrorMessage from './services/ErrorMessage';
+
 export default function App() {
 	var [fireState, setFire] = useState(false);
+	var [bigSize, setBigSize] = useState(false);
 	var [uid, setUid] = useState('');
 	var [startWebView, setWeb] = useState(false);
+	var [render, setRender] = useState(1);
+	var countMsg = 0;
+
 
 	//init data
 
 	const nService = new nfcService();
 	const sService = new storageService();
+	const errorHandler = new ErrorHandler();
+
 
 	const initUser = async () => {
 		await sService.initRealm().then(async function (result) {
@@ -52,6 +62,12 @@ export default function App() {
 		console.log('HCE');
 		nService.startHCE(uid);
 	};
+
+	const switchBigSize = () => {
+		bigSize = !bigSize;
+		setBigSize(bigSize);
+	};
+
 	const startNFCRead = async () => {
 		try {
 			console.log('Reading');
@@ -114,27 +130,85 @@ export default function App() {
 		console.log(l);
 	}, []);
 
-	initUser();
-	const onPress = () => setCount(count + 1);
-	const [count, setCount] = useState(0);
+	const addError = useCallback(() => {
+		render = render + 1;
+		setRender(render);
+		switch (countMsg % 5) {
+			case 0: {
+				ErrorHandler.handleError({
+					icon: 'internetWarning',
+					message:
+						'Das ist die ganz besonders lange Test-Massage ' +
+						countMsg +
+						' um zu zeigen wie sich die App bei Zeilenumbrüchen verhält',
+					dissmisable: true,
+				});
+				break;
+			}
+
+			case 1: {
+				ErrorHandler.handleError({
+					icon: 'locationWarning',
+					message: 'Das ist Massage ' + countMsg,
+					dissmisable: true,
+				});
+				//Test: shouldnt insert two same errors
+				ErrorHandler.handleError({
+					icon: 'locationWarning',
+					message: 'Das ist Massage ' + countMsg,
+					dissmisable: true,
+				});
+				break;
+			}
+
+			case 2: {
+				ErrorHandler.handleError({
+					icon: 'locationError',
+					message: 'Das ist Massage ' + countMsg,
+					dissmisable: true,
+				});
+				break;
+			}
+
+			case 3: {
+				ErrorHandler.handleError({
+					icon: 'warning',
+					message: 'Das ist Massage ' + countMsg,
+					dissmisable: true,
+				});
+				break;
+			}
+			case 4: {
+				ErrorHandler.handleError({
+					icon: 'apiConnection',
+					message: 'Das ist Api-Massage ' + countMsg,
+					dissmisable: true,
+				});
+				break;
+			}
+		}
+		countMsg += 1;
+	}, []);
+
+	const remError = useCallback((msg: ErrorMessage) => {
+		render = render - 1;
+		setRender(render);
+		ErrorHandler.remError(msg);
+		countMsg -= 1;
+	}, []);
+
 	if (!startWebView) {
 		return (
 			<LinearGradient
 				colors={fireState ? ['#ffffff', '#FF3A3A'] : ['#ffffff', '#6F3FAF']}
-				style={styles.container}
-			>
-				<DebugBar adminHandler={adminHandler} />
+				style={styles.container}>
+				<DebugBar adminHandler={addError} />
 				<FireView fire={fireState} />
-				<TouchableHighlight
-					style={styles.button}
-					//activeOpacity={0.85}
-					underlayColor="#dddddd"
-					onPress={() => (fireState ? startHCE() : startNFCRead())}
-				>
-					<Text style={styles.text1}>
-						{fireState ? 'Feuer teilen' : 'Feuer empfangen'}
-					</Text>
-				</TouchableHighlight>
+				<ErrorBar
+					bigSize={bigSize}
+					switchBigSize={switchBigSize}
+					remMsg={remError}
+				/>
 				<Menubar webHandler={startWeb} fireHandler={startFire} web={false} />
 			</LinearGradient>
 		);
@@ -162,16 +236,20 @@ const styles = StyleSheet.create({
 	},
 
 	button: {
-		height: '10%',
-		width: '70%',
+		//smaller button
+		height: 'auto',
+		width: '20%',
 		backgroundColor: '#abb0ba',
 		borderRadius: 10,
 		alignItems: 'center',
 		justifyContent: 'center',
+		left: '5%',
+		bottom: '10%',
+		position: 'absolute',
 	},
 
 	text1: {
-		fontSize: 30,
+		fontSize: 20,
 		color: '#000000',
 	},
 });

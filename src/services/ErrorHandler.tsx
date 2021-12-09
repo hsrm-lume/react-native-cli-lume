@@ -1,30 +1,25 @@
-import {Alert} from 'react-native';
+import ErrorMessage from './ErrorMessage';
 
 class ErrorHandler {
-	static handleError(
-		title: string,
-		msg: string,
-		twoButtons: boolean,
-		callbackOk: () => void = () => {},
-		callbackCancel: () => void = () => {}
-	) {
-		var buttonCancel = {
-			text: 'Cancel',
-			onPress: callbackCancel,
-		};
+	static errorList: Array<ErrorMessage> = [
+		{icon: 'warning', message: 'Initiale Testmessage', dissmisable: true},
+	];
 
-		var buttonOk = {
-			text: 'Ok',
-			onPress: callbackOk,
-		};
-
-		if (twoButtons) {
-			var buttons = [buttonCancel, buttonOk];
-		} else {
-			var buttons = [buttonOk];
+	static handleError(message: ErrorMessage) {
+		if (
+			!this.errorList.some(
+				x => x.message == message.message && x.icon == message.icon
+			)
+		) {
+			this.errorList.push(message);
 		}
+	}
 
-		Alert.alert(title, msg, buttons);
+	static remError(message: ErrorMessage) {
+		var i = this.errorList.indexOf(message);
+		if (i != -1) {
+			this.errorList.splice(i, 1);
+		}
 	}
 }
 
