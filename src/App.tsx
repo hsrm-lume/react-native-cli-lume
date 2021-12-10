@@ -6,8 +6,6 @@ import WebScreen from './screens/webScreen';
 import Fire from './assets/fire.svg';
 import Map from './assets/map.svg';
 import Warning from './assets/warning.svg';
-import ErrorHandler from './services/ErrorHandler';
-import ErrorMessage from './services/ErrorMessage';
 import DebugScreen from './screens/debugScreen';
 
 export default function App() {

@@ -9,7 +9,7 @@ const DebugTile = (props: {action?: Function; desc?: string}) => {
 				if (props.action) props.action();
 				else console.log('No action');
 			}}>
-			<Text>{props.desc || 'undefined'}</Text>
+			<Text style={styles.text}>{props.desc || 'undefined'}</Text>
 		</Pressable>
 	);
 };
@@ -20,6 +20,9 @@ const styles = StyleSheet.create({
 		backgroundColor: '#000000',
 		marginBottom: 10,
 		padding: 10,
+	},
+	text: {
+		color: '#ffffff',
 	},
 });
 export default DebugTile;

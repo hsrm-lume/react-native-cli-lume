@@ -12,7 +12,7 @@ function defer(fn: Function, thisVal: any, ...args: any[]) {
 /**
  * A promise where rejections are treated with an error handler
  * If the HandledPromise is rejected, the error handler is called
- * @param executor The Executor to be ran in a HandledPromise or a Promies to convert
+ * @param executor The Executor to be ran in a HandledPromise or a Promise to convert
  * @returns a Handled Promise
  */
 export class HandledPromise<T> {
