@@ -32,7 +32,7 @@ export const nfcStartWrite = (
 			if (!oldSession || !oldSession.isOpen()) resolve();
 			else oldSession.close().then(resolve, reject);
 		})
-			.then(() => new HCESession(tag).start())
+			.then(() => new HCESession(tag).start()) // TODO: extend tmd by package name
 			.then(s => new CloseableHCESession(s))
 			.then(resolve)
 			.catch(reject);
@@ -76,10 +76,12 @@ const processNfcTag = (tag: TagEvent): TransmissionData => {
 
 	if (msg === undefined) throw new Error('NFC tag is empty');
 
-	const res = msg
-		.flatMap(element => element.payload as number[])
-		.reduce((acc, curr) => (acc += String.fromCharCode(curr)), '')
-		.substring(3);
+	const ress = msg.map(m =>
+		m.payload.reduce((acc, curr) => (acc += String.fromCharCode(curr)), '')
+	);
+	// ress[0] is package name
+	// ress[1] is json payload
+	console.log(ress[1]);
 
-	return JSON.parse(res) as TransmissionData;
+	return JSON.parse(ress[1]) as TransmissionData;
 };

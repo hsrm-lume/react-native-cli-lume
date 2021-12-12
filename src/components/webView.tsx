@@ -8,6 +8,7 @@ const CustomWebView = (props: {url: string}) => {
 			source={{uri: props.url}}
 			style={styles.WebView}
 			renderLoading={() =>
+				/* TODO: Loading view */
 				WebErrorView({
 					title: 'Loading...',
 					msg: 'Please wait...',

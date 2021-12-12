@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import DebugTile from '../components/debugTile';
+import {FireOffLogic} from '../components/fireOffLogic';
+import {FireOnLogic} from '../components/fireOnLogic';
 import {
 	GeoServiceSubscription,
 	getPermission,
@@ -12,13 +14,18 @@ import {UserData} from '../types/UserData';
 
 // Changes on useState wil always rerun entire component function
 // useEffect(() => {...], []); makes the effect run only once (on initial render)
+// dependency array gets foreach diffed with `Object.is(a,b)` (=> `a.equals(b)`)
 
 export default function DebugScreen() {
-	const [userData, userDataChange] = useState<UserData | undefined>(undefined);
+	const [userData, userDataChange] = useState<Partial<UserData>>({});
+	const fireStatusChange = (fs: boolean) => {
+		console.log('setting fire to: ' + fs);
+		userDataChange({uuid: userData.uuid, fireStatus: fs});
+	};
 	useEffect(() => {
 		getUserData().then(ud => {
-			if (ud.fireStatus == userData?.fireStatus && ud.uuid == userData?.uuid)
-				return;
+			if (ud.fireStatus == userData.fireStatus && ud.uuid == userData.uuid)
+				return; // no change if values already match
 			userDataChange(ud);
 			console.log('fetched', ud);
 		});
@@ -43,8 +50,8 @@ export default function DebugScreen() {
 
 	return (
 		<View style={styles.debugWrapper}>
-			<DebugTile desc={'FireState: ' + userData?.fireStatus} />
-			<DebugTile desc={'uuid: ' + userData?.uuid} />
+			<DebugTile desc={'FireState: ' + userData.fireStatus} />
+			<DebugTile desc={'uuid: ' + userData.uuid} />
 			<DebugTile desc={'location acess: ' + permission} />
 			<DebugTile
 				desc={
@@ -56,6 +63,17 @@ export default function DebugScreen() {
 						: 'unknown')
 				}
 			/>
+			{pos && userData.fireStatus !== undefined && userData.uuid ? ( // only render logic if data ready
+				userData.fireStatus ? ( // render fire logic dependent on fire state
+					<FireOnLogic uuid={userData.uuid} location={pos} />
+				) : (
+					<FireOffLogic
+						userData={{uuid: userData.uuid, fireStatus: userData.fireStatus}}
+						fireUpdater={fireStatusChange}
+						location={pos}
+					/>
+				)
+			) : null}
 		</View>
 	);
 }
