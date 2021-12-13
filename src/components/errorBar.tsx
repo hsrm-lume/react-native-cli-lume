@@ -43,14 +43,17 @@ const ErrorBar = (props: {
 										<View style={styles.textBox}>
 											<Text style={styles.text}>{item.message}</Text>
 										</View>
-										<TouchableHighlight
-											style={styles.closeMsg}
-											underlayColor="#ffffff"
-											onPress={() => {
-												props.remMsg(item);
-											}}>
-											<CloseMsg width={15} height={15} />
-										</TouchableHighlight>
+                                        {item.dissmisable ? 
+                                            <TouchableHighlight
+                                                style={styles.closeMsg}
+                                                underlayColor="#ffffff"
+                                                onPress={() => {
+                                                    props.remMsg(item);
+                                                }}>
+                                                <CloseMsg width={15} height={15} />
+                                            </TouchableHighlight > 
+                                            : null
+                                        }
 									</View>
 								);
 							case 'locationError':
@@ -62,14 +65,17 @@ const ErrorBar = (props: {
 										<View style={styles.textBox}>
 											<Text style={styles.text}>{item.message}</Text>
 										</View>
-										<TouchableHighlight
-											style={styles.closeMsg}
-											underlayColor="#ffffff"
-											onPress={() => {
-												props.remMsg(item);
-											}}>
-											<CloseMsg width={15} height={15} />
-										</TouchableHighlight>
+                                        {item.dissmisable ? 
+                                            <TouchableHighlight
+                                                style={styles.closeMsg}
+                                                underlayColor="#ffffff"
+                                                onPress={() => {
+                                                    props.remMsg(item);
+                                                }}>
+                                                <CloseMsg width={15} height={15} />
+                                            </TouchableHighlight > 
+                                            : null
+                                        }
 									</View>
 								);
 							case 'locationWarning':
@@ -81,14 +87,17 @@ const ErrorBar = (props: {
 										<View style={styles.textBox}>
 											<Text style={styles.text}>{item.message}</Text>
 										</View>
-										<TouchableHighlight
-											style={styles.closeMsg}
-											underlayColor="#ffffff"
-											onPress={() => {
-												props.remMsg(item);
-											}}>
-											<CloseMsg width={15} height={15} />
-										</TouchableHighlight>
+                                        {item.dissmisable ? 
+                                            <TouchableHighlight
+                                                style={styles.closeMsg}
+                                                underlayColor="#ffffff"
+                                                onPress={() => {
+                                                    props.remMsg(item);
+                                                }}>
+                                                <CloseMsg width={15} height={15} />
+                                            </TouchableHighlight > 
+                                            : null
+                                        }
 									</View>
 								);
 							default:
@@ -100,14 +109,17 @@ const ErrorBar = (props: {
 										<View style={styles.textBox}>
 											<Text style={styles.text}>{item.message}</Text>
 										</View>
-										<TouchableHighlight
-											style={styles.closeMsg}
-											underlayColor="#ffffff"
-											onPress={() => {
-												props.remMsg(item);
-											}}>
-											<CloseMsg width={15} height={15} />
-										</TouchableHighlight>
+                                        {item.dissmisable ? 
+                                            <TouchableHighlight
+                                                style={styles.closeMsg}
+                                                underlayColor="#ffffff"
+                                                onPress={() => {
+                                                    props.remMsg(item);
+                                                }}>
+                                                <CloseMsg width={15} height={15} />
+                                            </TouchableHighlight > 
+                                            : null
+                                        }
 									</View>
 								);
 						}
