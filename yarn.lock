@@ -830,6 +830,10 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
+"@hsrm-lume/react-native-hce@https://github.com/hsrm-lume/react-native-hce.git":
+  version "0.2.0"
+  resolved "https://github.com/hsrm-lume/react-native-hce.git#23c8af5fed7e089cb85abc067846c9aafc7cc0a4"
+
 "@humanwhocodes/config-array@^0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.5.0.tgz#1407967d4c6eecd7388f83acf1eaf4d0c6e58ef9"
@@ -6681,11 +6685,6 @@ react-native-get-random-values@^1.7.1:
   integrity sha512-VXWdk73N7pQMEAcM9pvZv+yuWmu2qQrS0QldhdgYmo7dmPHb3x/7tvQKDxkR9gy9/+SoS2uQq9eq06sZ200piA==
   dependencies:
     fast-base64-decode "^1.0.0"
-
-react-native-hce@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/react-native-hce/-/react-native-hce-0.1.2.tgz#01d152ed08d12ce3aed60a368b187540397c75d3"
-  integrity sha512-+6PtRig9uqy/p1lBy1flAUI0sxzgWa8kSnnC2WJSW+cOa8cFCIRV0suFsFprz73ufUZv7fnOWXJipwk2wYiJ7g==
 
 react-native-linear-gradient@^2.5.6:
   version "2.5.6"
