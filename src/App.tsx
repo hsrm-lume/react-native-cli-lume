@@ -7,13 +7,24 @@ import Fire from './assets/fire.svg';
 import Map from './assets/map.svg';
 
 //////////////
-// import {DevSettings} from 'react-native';
+import {DevSettings} from 'react-native';
+import {userDataSchema} from './types/UserDataSchema';
 
-// if (__DEV__) {
-// 	DevSettings.addMenuItem('Toggle Element Inspector', () => {
-// 		console.log('CLICKED!');
-// 	});
-// }
+if (__DEV__) {
+	DevSettings.addMenuItem('Clear Storage', () => {
+		Realm.open({
+			path: 'userOptions',
+			schema: [userDataSchema],
+			schemaVersion: 1,
+		})
+			.then(r =>
+				r.write(() => {
+					r.deleteAll();
+				})
+			)
+			.then(() => console.log('cleaned storage. Reload app to see changes.'));
+	});
+}
 ////////////
 
 export default function App() {

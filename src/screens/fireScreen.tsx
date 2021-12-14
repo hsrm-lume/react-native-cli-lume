@@ -32,8 +32,8 @@ export default function FireScreen() {
 
 	// position
 	const [pos, posChange] = useState<GeoLocation | undefined>(undefined);
-	let sub: GeoServiceSubscription;
 	useOnInit(() => {
+		let sub: GeoServiceSubscription;
 		console.log('getting permission');
 		getPermission('android.permission.ACCESS_FINE_LOCATION').then(() => {
 			sub = subscribePosition(pos => {
@@ -41,7 +41,6 @@ export default function FireScreen() {
 			});
 		});
 		return () => {
-			console.log('unsubscribing');
 			sub?.unsubscribe();
 		};
 	});
