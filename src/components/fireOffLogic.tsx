@@ -15,6 +15,7 @@ export function FireOffLogic(props: {
 	fireUpdater: (b: boolean) => void;
 }) {
 	const [nfcReaderLoop, updateRead] = useState(false); // used to refresh NFC reader loop
+	let didUnmount = false;
 	const reReadNfc = () => {
 		updateRead(!nfcReaderLoop);
 	};
@@ -48,10 +49,12 @@ export function FireOffLogic(props: {
 				writeUserData({fireStatus: true})
 			)
 			.finally(() => {
+				if (didUnmount) return; // dont do anything if component is unmounted
 				getUserData().then(ud => props.fireUpdater(ud.fireStatus));
 				reReadNfc();
 			});
 		return () => {
+			didUnmount = true;
 			nfcCleanupRead();
 		};
 	}, [nfcReaderLoop]);
