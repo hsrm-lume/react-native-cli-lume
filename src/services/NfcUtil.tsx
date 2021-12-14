@@ -1,8 +1,18 @@
-import HCESession, {NFCContentType, NFCTagType4} from 'react-native-hce';
-import NfcManager, {NfcTech, TagEvent} from 'react-native-nfc-manager';
+import HCESession, {
+	NFCContentType,
+	NFCTagType4,
+} from '@hsrm-lume/react-native-hce';
+import NfcManager, {
+	NdefRecord,
+	NfcTech,
+	TagEvent,
+} from 'react-native-nfc-manager';
 import {HandledPromise} from '../types/HandledPromise';
 import {TransmissionData} from '../types/TranmissionData';
-
+type SlimNdefRecord = {
+	payload: string;
+	type: string;
+};
 /**
  * Wrapper class to close a HCE session
  */
@@ -27,12 +37,16 @@ export const nfcStartWrite = (
 	oldSession?: CloseableHCESession
 ): HandledPromise<CloseableHCESession> =>
 	new HandledPromise((resolve, reject) => {
-		const tag = new NFCTagType4(NFCContentType.Text, JSON.stringify(tmd));
 		new Promise<void>((resolve, reject) => {
 			if (!oldSession || !oldSession.isOpen()) resolve();
 			else oldSession.close().then(resolve, reject);
 		})
-			.then(() => new HCESession(tag).start()) // TODO: extend tmd by package name
+			.then(() => new HCESession())
+			.then(s =>
+				s.addTag(new NFCTagType4(NFCContentType.JSON, JSON.stringify(tmd)))
+			)
+			.then(s => s.addTag(new NFCTagType4(NFCContentType.APP, 'com.lume')))
+			.then(s => s.start())
 			.then(s => new CloseableHCESession(s))
 			.then(resolve)
 			.catch(reject);
@@ -76,12 +90,28 @@ const processNfcTag = (tag: TagEvent): TransmissionData => {
 
 	if (msg === undefined) throw new Error('NFC tag is empty');
 
-	const ress = msg.map(m =>
-		m.payload.reduce((acc, curr) => (acc += String.fromCharCode(curr)), '')
-	);
-	// ress[0] is package name
-	// ress[1] is json payload
-	console.log(ress[1]);
+	//Only returns 'application/json' payloads if found.
+	const res = msg
+		.map(
+			elm =>
+				({
+					payload: elm.payload.reduce(collectToString, ''),
+					type:
+						typeof elm.type === 'string'
+							? elm.type
+							: elm.type.reduce(collectToString, ''),
+				} as SlimNdefRecord)
+		)
+		.filter(x => {
+			console.log(x.type);
+			return x.type == 'application/json';
+		});
+	// process the first application/json payload
+	if (res.length == 0 || res[0].payload === undefined)
+		throw new Error('NFC Tag does not contain valuable content');
 
-	return JSON.parse(ress[1]) as TransmissionData;
+	return JSON.parse(res[0].payload) as TransmissionData;
 };
+
+const collectToString = (acc: string, curr: number) =>
+	(acc += String.fromCharCode(curr));
