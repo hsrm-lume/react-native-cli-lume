@@ -14,20 +14,19 @@ import InternetWarning from '../assets/internetWarning.svg';
 import Close from '../assets/close.svg';
 import CloseMsg from '../assets/smallClose.svg';
 
-const ErrorBar = () => {
-	var [bigSize, setBigSize] = useState(false);
-	const switchBigSize = () => {
-		setBigSize(!bigSize);
-	};
-
-	if (bigSize) {
+const ErrorBar = (props: {
+	bigSize: boolean;
+	switchBigSize: Function;
+	remMsg: Function;
+}) => {
+	if (props.bigSize) {
 		return (
 			<View style={styles.barBig}>
 				<TouchableHighlight
 					style={styles.closeWindow}
 					underlayColor="#ffffff"
 					onPress={() => {
-						switchBigSize();
+						props.switchBigSize();
 					}}>
 					<Close width={50} height={50} />
 				</TouchableHighlight>
@@ -48,7 +47,7 @@ const ErrorBar = () => {
 											style={styles.closeMsg}
 											underlayColor="#ffffff"
 											onPress={() => {
-												ErrorHandler.remError(i);
+												props.remMsg(item);
 											}}>
 											<CloseMsg width={15} height={15} />
 										</TouchableHighlight>
@@ -67,7 +66,7 @@ const ErrorBar = () => {
 											style={styles.closeMsg}
 											underlayColor="#ffffff"
 											onPress={() => {
-												ErrorHandler.remError(i);
+												props.remMsg(item);
 											}}>
 											<CloseMsg width={15} height={15} />
 										</TouchableHighlight>
@@ -86,7 +85,7 @@ const ErrorBar = () => {
 											style={styles.closeMsg}
 											underlayColor="#ffffff"
 											onPress={() => {
-												ErrorHandler.remError(i);
+												props.remMsg(item);
 											}}>
 											<CloseMsg width={15} height={15} />
 										</TouchableHighlight>
@@ -105,7 +104,7 @@ const ErrorBar = () => {
 											style={styles.closeMsg}
 											underlayColor="#ffffff"
 											onPress={() => {
-												ErrorHandler.remError(i);
+												props.remMsg(item);
 											}}>
 											<CloseMsg width={15} height={15} />
 										</TouchableHighlight>
@@ -118,7 +117,10 @@ const ErrorBar = () => {
 		);
 	} else {
 		return (
-			<View style={styles.barSmall}>
+			<View
+				style={
+					ErrorHandler.errorList.length > 3 ? styles.barSmall2 : styles.barSmall
+				}>
 				<ScrollView horizontal>
 					{ErrorHandler.errorList.map(function (item, i) {
 						switch (item.icon) {
@@ -129,7 +131,7 @@ const ErrorBar = () => {
 										style={styles.icon}
 										underlayColor="#ffffff"
 										onPress={() => {
-											switchBigSize();
+											props.switchBigSize();
 										}}
 										key={i}>
 										<InternetWarning width={'100%'} height={'100%'} />
@@ -141,7 +143,7 @@ const ErrorBar = () => {
 										style={styles.icon}
 										underlayColor="#ffffff"
 										onPress={() => {
-											switchBigSize();
+											props.switchBigSize();
 										}}
 										key={i}>
 										<LocationError width={'100%'} height={'100%'} />
@@ -153,7 +155,7 @@ const ErrorBar = () => {
 										style={styles.icon}
 										underlayColor="#ffffff"
 										onPress={() => {
-											switchBigSize();
+											props.switchBigSize();
 										}}
 										key={i}>
 										<LocationWarning width={'100%'} height={'100%'} />
@@ -165,7 +167,7 @@ const ErrorBar = () => {
 										style={styles.icon}
 										underlayColor="#ffffff"
 										onPress={() => {
-											switchBigSize();
+											props.switchBigSize();
 										}}
 										key={i}>
 										<Warning width={'100%'} height={'100%'} />
@@ -189,8 +191,22 @@ const styles = StyleSheet.create({
 		bottom: 10,
 		right: 10,
 		marginLeft: 20,
-		paddingLeft: 0,
-		paddingRight: 0,
+		paddingLeft: 10,
+		paddingRight: 10,
+	},
+
+	barSmall2: {
+		//Higher margin for scrolling
+		backgroundColor: '#ffffff',
+		borderRadius: 25,
+		alignItems: 'center',
+		justifyContent: 'center',
+		position: 'absolute',
+		bottom: 10,
+		right: 10,
+		marginLeft: 20,
+		paddingLeft: 20,
+		paddingRight: 20,
 	},
 
 	barBig: {
