@@ -88,12 +88,9 @@ const QRScanner = ({navigation}) => {
 const styles = StyleSheet.create({
 	Text: {
 		textAlign: 'center',
-<<<<<<< HEAD
 		fontSize: 20,
 		color: 'black',
 		marginTop: -20,
-=======
->>>>>>> configure QR Code Scanner
 	},
 });
 
