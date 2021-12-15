@@ -9,11 +9,18 @@ export class RestClient {
     "position": {
         "lat": <float>,    // Latitude  between - 90 & + 90
         "lng": <float>     // Longitude between -180 & +180*/
-	static postContact(route: string, data: ApiData): HandledPromise<number> {
-		// TODO reject on > 300
+	static postContact(route: string, data: ApiData): HandledPromise<void> {
 		console.log(route);
 		console.log(data);
-		return new HandledPromise(this.post(route, data).then(r => r.status));
+		return new HandledPromise<void>((resolve, reject) => {
+			this.post(route, data)
+				.then(r => {
+					if (r.status == 200) resolve();
+					else throw new Error('Api-Error: ' + r.statusText);
+				})
+				.then(resolve)
+				.catch(reject);
+		});
 	}
 
 	private static post(route: string, body?: object) {

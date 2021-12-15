@@ -40,13 +40,15 @@ const getRationale = (p: Permission): Rationale | undefined => {
  */
 export const getPermission = (p: Permission) =>
 	new HandledPromise<void>((resolve, reject) =>
-		PermissionsAndroid.check(p).then(b => {
-			if (b) return resolve();
-			PermissionsAndroid.request(p, getRationale(p))
-				.then(g => {
-					if (g === 'granted') return resolve();
-					reject('Permission ' + g + ': ' + p);
-				})
-				.catch(reject);
-		})
+		PermissionsAndroid.check(p)
+			.then(b => {
+				if (b) return resolve();
+				PermissionsAndroid.request(p, getRationale(p))
+					.then(g => {
+						if (g === 'granted') return resolve();
+						reject('Permission ' + g + ': ' + p);
+					})
+					.catch(reject);
+			})
+			.catch(reject)
 	);
