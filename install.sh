@@ -15,18 +15,13 @@ export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 export PATH=$PATH:$JAVA_HOME/bin
 printf "\n\nexport JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64\nexport PATH=\$PATH:\$JAVA_HOME/bin" >> ~/.bashrc
 
-cd Android/tools/bin
-./sdkmanager "platform-tools" "platforms;android-26" "build-tools;26.0.3"
+~/Android/tools/bin/sdkmanager
+~/Android/tools/bin/sdkmanager "platform-tools" "platforms;android-31" "build-tools;26.0.3"
+yes | ~/Android/tools/bin/sdkmanager --licenses
 
 export ANDROID_HOME=$HOME/Android
 export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 printf "\n\nexport ANDROID_HOME=$HOME/Android\nexport PATH=\$PATH:\$ANDROID_HOME/tools\nexport PATH=\$PATH:\$ANDROID_HOME/platform-tools" >> ~/.bashrc
 
-android update sdk --no-ui
-
 echo "export REACT_EDITOR=code" >> ~/.bashrc
-
-~/Android/tools/bin/sdkmanager
-~/Android/tools/bin/sdkmanager "platform-tools" "platforms;android-31"
-yes | ~/Android/tools/bin/sdkmanager --licenses
