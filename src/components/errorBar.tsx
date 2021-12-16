@@ -32,9 +32,9 @@ const ErrorBar = (props: {
 				</TouchableHighlight>
 				<ScrollView>
 					{ErrorHandler.errorList.map(function (item, i) {
-						switch (item.icon) {
-							case 'apiConnection':
-							case 'internetWarning':
+						switch (item.errorType) {
+							case 'warning.internet':
+							case 'warning.internet.api':
 								return (
 									<View style={styles.message} key={i}>
 										<View style={styles.icon}>
@@ -56,7 +56,7 @@ const ErrorBar = (props: {
                                         }
 									</View>
 								);
-							case 'locationError':
+							case 'error.location':
 								return (
 									<View style={styles.message} key={i}>
 										<View style={styles.icon}>
@@ -78,7 +78,7 @@ const ErrorBar = (props: {
                                         }
 									</View>
 								);
-							case 'locationWarning':
+							case 'warning.location':
 								return (
 									<View style={styles.message} key={i}>
 										<View style={styles.icon}>
@@ -135,9 +135,9 @@ const ErrorBar = (props: {
 				}>
 				<ScrollView horizontal>
 					{ErrorHandler.errorList.map(function (item, i) {
-						switch (item.icon) {
-							case 'apiConnection':
-							case 'internetWarning':
+						switch (item.errorType) {
+							case 'warning.internet.api':
+							case 'warning.internet':
 								return (
 									<TouchableHighlight
 										style={styles.icon}
@@ -149,7 +149,7 @@ const ErrorBar = (props: {
 										<InternetWarning width={'100%'} height={'100%'} />
 									</TouchableHighlight>
 								);
-							case 'locationError':
+							case 'error.location':
 								return (
 									<TouchableHighlight
 										style={styles.icon}
@@ -161,7 +161,7 @@ const ErrorBar = (props: {
 										<LocationError width={'100%'} height={'100%'} />
 									</TouchableHighlight>
 								);
-							case 'locationWarning':
+							case 'warning.location':
 								return (
 									<TouchableHighlight
 										style={styles.icon}

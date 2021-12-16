@@ -1,5 +1,5 @@
 interface ErrorMessage{
-    icon: "warning"|"locationWarning"|"locationError"|"internetWarning"|"apiConnection";
+    errorType: string;  //errorType by pattern error.internet.api...
     message: string;
     dissmisable: boolean;
 }
