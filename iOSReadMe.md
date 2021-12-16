@@ -4,7 +4,7 @@ How to setup for iOS development:
 ### Prerequisites
 - (ARM) M1 Mac 
 - Apple XCode installed
-- `brew` command is available and updated(`brew update`)
+- `brew` is available and updated(`brew update`)
 
 
 
