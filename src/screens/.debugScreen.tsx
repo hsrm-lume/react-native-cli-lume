@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import DebugTile from '../components/debugTile';
-import {FireOffLogic} from '../components/fireOffLogic';
-import {FireOnLogic} from '../components/fireOnLogic';
+import DebugTile from '../components/.debugTile';
+import {FireOffLogic} from '../components/fire/fireOffLogic';
+import {FireOnLogic} from '../components/fire/fireOnLogic';
 import {
 	GeoServiceSubscription,
 	getPermission,

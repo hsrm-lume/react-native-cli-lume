@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {StyleSheet} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import ErrorBar from '../components/errorBar';
-import FireView from '../components/fire';
-import {FireOffLogic} from '../components/fireOffLogic';
-import {FireOnLogic} from '../components/fireOnLogic';
+import ErrorBar from '../components/error/errorBar';
+import FireView from '../components/fire/fire';
+import {FireOffLogic} from '../components/fire/fireOffLogic';
+import {FireOnLogic} from '../components/fire/fireOnLogic';
 import {
 	GeoServiceSubscription,
 	getPermission,

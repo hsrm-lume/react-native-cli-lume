@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
-import InternetWarning from '../assets/internetWarning.svg';
+import InternetWarning from '../../assets/internetWarning.svg';
 
 const WebErrorView = (props: {msg?: string; title?: string}) => {
 	const message = props.msg || '';

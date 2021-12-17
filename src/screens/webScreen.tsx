@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import CustomWebView from '../components/webView';
+import CustomWebView from '../components/web/webView';
 import {environment} from '../env/environment';
 
 import {getUserData} from '../services';
 
-import WebErrorView from '../components/webErrorView';
+import WebErrorView from '../components/web/webErrorView';
 import {ErrorHandler} from '../services/ErrorHandler';
 
 export default function WebScreen() {
@@ -17,21 +17,15 @@ export default function WebScreen() {
 		x => x.errorType == 'error.internet'
 	);
 
-	if (offline) {
-		// start WebErrorView
-		return (
-			<View style={styles.containerMap}>
+	return (
+		<View style={styles.containerMap}>
+			{offline ? (
 				<WebErrorView msg={offline.message} />
-			</View>
-		);
-	} else {
-		// start Webview
-		return (
-			<View style={styles.containerMap}>
+			) : (
 				<CustomWebView url={environment.WEBVIEW_BASE_DOMAIN + uid} />
-			</View>
-		);
-	}
+			)}
+		</View>
+	);
 }
 
 const styles = StyleSheet.create({

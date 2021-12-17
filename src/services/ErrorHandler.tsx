@@ -43,20 +43,20 @@ export class ErrorHandler {
 	): void {
 		if (typeof msg === 'string') {
 			if (!message) return;
-			return this.handleError({
+			return ErrorHandler.handleError({
 				message: message,
 				errorType: msg,
 				dissmisable: dismissable,
 			});
 		}
 		if (
-			this.errorList.some(
+			ErrorHandler.errorList.some(
 				x => x.message == msg.message && x.errorType == msg.errorType
 			)
 		)
 			return;
-		this.errorList.push(msg);
-		this.errorList.sort(ErrorHandler.compare);
+		ErrorHandler.errorList.push(msg);
+		ErrorHandler.errorList.sort(ErrorHandler.compare);
 	}
 
 	/**
@@ -74,24 +74,24 @@ export class ErrorHandler {
 		msg: string | ErrorMessage,
 		includeSubtypes: boolean = false
 	): void {
-		const oldLen = this.errorList.length;
+		const oldLen = ErrorHandler.errorList.length;
 		if (typeof msg === 'string') {
-			this.errorList = this.errorList.filter(
+			ErrorHandler.errorList = ErrorHandler.errorList.filter(
 				includeSubtypes
 					? e => e.errorType.startsWith(msg)
 					: e => e.errorType == msg
 			);
 		} else {
-			const i = this.errorList.indexOf(msg);
-			if (i != -1) this.errorList.splice(i, 1);
+			const i = ErrorHandler.errorList.indexOf(msg);
+			if (i != -1) ErrorHandler.errorList.splice(i, 1);
 		}
-		console.log('removed', oldLen - this.errorList.length, 'errors');
+		console.log('removed', oldLen - ErrorHandler.errorList.length, 'errors');
 	}
 }
 
 // INITIALIZE
 [
-	{errorType: 'warning', message: '1. Testmessage', dissmisable: false},
+	{errorType: 'warning', message: '1. Testmessage', dissmisable: true},
 	{
 		errorType: 'warning.internet',
 		message: '2. Testmessage',
@@ -100,6 +100,6 @@ export class ErrorHandler {
 	{
 		errorType: 'warning.location',
 		message: '3. Testmessage',
-		dissmisable: false,
+		dissmisable: true,
 	},
 ].forEach(ErrorHandler.handleError);

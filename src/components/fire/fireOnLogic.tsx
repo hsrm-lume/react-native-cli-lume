@@ -1,6 +1,6 @@
 import {useEffect} from 'react';
-import {CloseableHCESession, nfcStartWrite} from '../services';
-import {GeoLocation, HandledPromise, TransmissionData} from '../types';
+import {CloseableHCESession, nfcStartWrite} from '../../services';
+import {GeoLocation, HandledPromise, TransmissionData} from '../../types';
 
 export function FireOnLogic(props: {location: GeoLocation; uuid: string}) {
 	let nfcWriteSession: CloseableHCESession | undefined;

@@ -1,13 +1,13 @@
 import {useEffect, useState} from 'react';
-import {environment} from '../env/environment';
+import {environment} from '../../env/environment';
 import {
 	getUserData,
 	nfcCleanupRead,
 	nfcReadNext,
 	RestClient,
 	writeUserData,
-} from '../services';
-import {GeoLocation, TransmissionData, UserData} from '../types';
+} from '../../services';
+import {GeoLocation, TransmissionData, UserData} from '../../types';
 
 export function FireOffLogic(props: {
 	location: GeoLocation;
