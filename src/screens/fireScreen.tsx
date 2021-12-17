@@ -17,8 +17,7 @@ import {
 	subscribePosition,
 	writeUserData,
 } from '../services';
-import ErrorHandler from '../services/ErrorHandler';
-import ErrorMessage from '../services/ErrorMessage';
+import {ErrorHandler, ErrorMessage} from '../services/ErrorHandler';
 import {GeoLocation} from '../types/GeoLocation';
 import {HandledPromise} from '../types/HandledPromise';
 import {TransmissionData} from '../types/TranmissionData';

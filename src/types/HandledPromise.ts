@@ -1,4 +1,4 @@
-import ErrorHandler from '../services/ErrorHandler';
+import {ErrorHandler} from '../services/ErrorHandler';
 
 /**
  * A promise where rejections are treated with an error handler
@@ -36,7 +36,7 @@ export class HandledPromise<T> extends Promise<T> {
 			v => v,
 			err => {
 				ErrorHandler.handleError({
-					icon: 'warning',
+					errorType: 'error',
 					message: err.message || err,
 					dissmisable: true,
 				});

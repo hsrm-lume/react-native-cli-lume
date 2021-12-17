@@ -6,7 +6,7 @@ import {
 	TouchableHighlight,
 	ScrollView,
 } from 'react-native';
-import ErrorHandler from '../services/ErrorHandler';
+import {ErrorHandler} from '../services/ErrorHandler';
 import Warning from '../assets/warning.svg';
 import LocationWarning from '../assets/locationWarning.svg';
 import LocationError from '../assets/locationError.svg';
@@ -43,17 +43,16 @@ const ErrorBar = (props: {
 										<View style={styles.textBox}>
 											<Text style={styles.text}>{item.message}</Text>
 										</View>
-                                        {item.dissmisable ? 
-                                            <TouchableHighlight
-                                                style={styles.closeMsg}
-                                                underlayColor="#ffffff"
-                                                onPress={() => {
-                                                    props.remMsg(item);
-                                                }}>
-                                                <CloseMsg width={15} height={15} />
-                                            </TouchableHighlight > 
-                                            : null
-                                        }
+										{item.dissmisable ? (
+											<TouchableHighlight
+												style={styles.closeMsg}
+												underlayColor="#ffffff"
+												onPress={() => {
+													props.remMsg(item);
+												}}>
+												<CloseMsg width={15} height={15} />
+											</TouchableHighlight>
+										) : null}
 									</View>
 								);
 							case 'error.location':
@@ -65,17 +64,16 @@ const ErrorBar = (props: {
 										<View style={styles.textBox}>
 											<Text style={styles.text}>{item.message}</Text>
 										</View>
-                                        {item.dissmisable ? 
-                                            <TouchableHighlight
-                                                style={styles.closeMsg}
-                                                underlayColor="#ffffff"
-                                                onPress={() => {
-                                                    props.remMsg(item);
-                                                }}>
-                                                <CloseMsg width={15} height={15} />
-                                            </TouchableHighlight > 
-                                            : null
-                                        }
+										{item.dissmisable ? (
+											<TouchableHighlight
+												style={styles.closeMsg}
+												underlayColor="#ffffff"
+												onPress={() => {
+													props.remMsg(item);
+												}}>
+												<CloseMsg width={15} height={15} />
+											</TouchableHighlight>
+										) : null}
 									</View>
 								);
 							case 'warning.location':
@@ -87,17 +85,16 @@ const ErrorBar = (props: {
 										<View style={styles.textBox}>
 											<Text style={styles.text}>{item.message}</Text>
 										</View>
-                                        {item.dissmisable ? 
-                                            <TouchableHighlight
-                                                style={styles.closeMsg}
-                                                underlayColor="#ffffff"
-                                                onPress={() => {
-                                                    props.remMsg(item);
-                                                }}>
-                                                <CloseMsg width={15} height={15} />
-                                            </TouchableHighlight > 
-                                            : null
-                                        }
+										{item.dissmisable ? (
+											<TouchableHighlight
+												style={styles.closeMsg}
+												underlayColor="#ffffff"
+												onPress={() => {
+													props.remMsg(item);
+												}}>
+												<CloseMsg width={15} height={15} />
+											</TouchableHighlight>
+										) : null}
 									</View>
 								);
 							default:
@@ -109,17 +106,16 @@ const ErrorBar = (props: {
 										<View style={styles.textBox}>
 											<Text style={styles.text}>{item.message}</Text>
 										</View>
-                                        {item.dissmisable ? 
-                                            <TouchableHighlight
-                                                style={styles.closeMsg}
-                                                underlayColor="#ffffff"
-                                                onPress={() => {
-                                                    props.remMsg(item);
-                                                }}>
-                                                <CloseMsg width={15} height={15} />
-                                            </TouchableHighlight > 
-                                            : null
-                                        }
+										{item.dissmisable ? (
+											<TouchableHighlight
+												style={styles.closeMsg}
+												underlayColor="#ffffff"
+												onPress={() => {
+													props.remMsg(item);
+												}}>
+												<CloseMsg width={15} height={15} />
+											</TouchableHighlight>
+										) : null}
 									</View>
 								);
 						}

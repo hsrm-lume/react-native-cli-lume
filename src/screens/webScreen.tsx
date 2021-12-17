@@ -6,28 +6,22 @@ import {environment} from '../env/environment';
 import {getUserData} from '../services';
 
 import WebErrorView from '../components/webErrorView';
-import ErrorHandler from '../services/ErrorHandler';
+import {ErrorHandler} from '../services/ErrorHandler';
 
 export default function WebScreen() {
 	var [uid, setUid] = useState('');
 
 	getUserData().then(ud => setUid(ud.uuid));
 
-	const offline = ErrorHandler.errorList.some(x => x.icon == 'internetWarning');
+	const offline = ErrorHandler.errorList.find(
+		x => x.errorType == 'error.internet'
+	);
 
 	if (offline) {
 		// start WebErrorView
-		const errorMessage = ErrorHandler.errorList.find(
-			x => x.icon == 'internetWarning'
-		);
-		if (typeof errorMessage === 'undefined') {
-			var message = 'Keine Internetverbindung';
-		} else {
-			var message = errorMessage.message;
-		}
 		return (
 			<View style={styles.containerMap}>
-				<WebErrorView msg={message} />
+				<WebErrorView msg={offline.message} />
 			</View>
 		);
 	} else {
