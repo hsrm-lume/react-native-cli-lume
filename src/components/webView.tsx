@@ -1,8 +1,22 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {WebView} from 'react-native-webview';
+import WebErrorView from './webErrorView';
 const CustomWebView = (props: {url: string}) => {
-	return <WebView source={{uri: props.url}} style={styles.WebView} />;
+	return (
+		<WebView
+			source={{uri: props.url}}
+			style={styles.WebView}
+			renderLoading={() =>
+				/* TODO: Loading view */
+				WebErrorView({
+					title: 'Loading...',
+					msg: 'Please wait...',
+				})
+			}
+			startInLoadingState={true}
+		/>
+	);
 };
 
 const styles = StyleSheet.create({
