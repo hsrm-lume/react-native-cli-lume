@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Pressable, Text, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ErrorBar from '../components/errorBar';
 import FireView from '../components/fire';
@@ -13,6 +13,7 @@ import {
 } from '../services';
 import {useOnInit, UserData} from '../types';
 import {GeoLocation} from '../types/GeoLocation';
+import QRScanner from '../components/qrScanner';
 
 export default function FireScreen() {
 	// userData
@@ -45,6 +46,12 @@ export default function FireScreen() {
 		};
 	});
 
+	// qrStatus
+	var [qrStatus, setQrStatus] = useState(false);
+	const switchQrStatus = () => {
+		setQrStatus(!qrStatus);
+	};
+
 	// rendering
 	return (
 		<LinearGradient
@@ -54,7 +61,29 @@ export default function FireScreen() {
 			style={styles.container}>
 			<FireView fire={userData.fireStatus || false} />
 			<ErrorBar />
-
+			{ /* TODO: Error when rendering FireView and QR components together */
+				userData.fireStatus !== undefined && qrStatus !== undefined 
+					&& pos && userData.uuid ? ( // only render logic if data ready
+					qrStatus ? ( // render QR component or Pressable dependent on qrStatus
+						userData.fireStatus ? (
+							null /* TODO: QR Code Generator */
+						) : (
+							<QRScanner uid={userData.uuid} position={pos} />
+						)
+					) : (
+						userData.fireStatus ? (
+								<Pressable onPress={switchQrStatus}>
+									<Text style={styles.text1}>Generate QR Code</Text>
+								</Pressable>
+							
+						) : (
+								<Pressable onPress={switchQrStatus}>
+									<Text style={styles.text1}>Scan QR Code</Text>
+								</Pressable>
+						)
+					)
+				) : null /* TODO: Loading view */
+			}
 			{
 				pos && userData.fireStatus !== undefined && userData.uuid ? ( // only render logic if data ready
 					userData.fireStatus ? ( // render fire logic dependent on fire state
