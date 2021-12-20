@@ -10,6 +10,25 @@ export interface ErrorMessage {
 	dissmisable: boolean;
 }
 
+/**
+ * @param msg the error message to test for the given type
+ * @param type the type to test msg for
+ * @param includeSubtypes wether to include subtypes
+ * @returns true if msg matches type
+ */
+const messageTypeEquals = (
+	msg: ErrorMessage,
+	type: string,
+	includeSubtypes: boolean
+): boolean => {
+	if (includeSubtypes)
+		return (
+			msg.errorType == type ||
+			(msg.errorType.startsWith(type) && msg.errorType[type.length] == '.')
+		);
+	else return msg.errorType == type;
+};
+
 export class ErrorHandler {
 	/**
 	 * List of ErrorMessages
@@ -77,9 +96,7 @@ export class ErrorHandler {
 		const oldLen = ErrorHandler.errorList.length;
 		if (typeof msg === 'string') {
 			ErrorHandler.errorList = ErrorHandler.errorList.filter(
-				includeSubtypes
-					? e => e.errorType.startsWith(msg)
-					: e => e.errorType == msg
+				e => !messageTypeEquals(e, msg, includeSubtypes)
 			);
 		} else {
 			const i = ErrorHandler.errorList.indexOf(msg);
