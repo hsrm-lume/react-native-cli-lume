@@ -4,10 +4,7 @@ import {environment} from '../env/environment';
 import {RestClient, writeUserData} from '../services';
 import {TransmissionData, GeoLocation, HandledPromise} from '../types';
 
-const QRScanner = (props: {
-	uid: string;
-	position: GeoLocation;
-}) => {
+const QRScanner = (props: {uid: string; position: GeoLocation}) => {
 	return (
 		<QRCodeScanner
 			onRead={event => {
@@ -27,27 +24,24 @@ const QRScanner = (props: {
 					} catch (error) {
 						throw new Error('QR Code is invalid');
 					}
-					resolve([self, received])
-				})
-					.then(([self, received]) => {
-						// POST ApiData to REST API
-						RestClient.postContact(
-							environment.API_BASE_DOMAIN + environment.API_CONTACT_PATH,
-							{
-								uuidChild: self.uuid,
-								uuidParent: received.uuid,
-								position:
-									self.location.accuracy < received.location.accuracy
-										? self.location
-										: received.location,
-							}
-						)
-
-					})
-					.then(() => { /* TODO: wait until postContact succeeded */
+					resolve([self, received]);
+				}).then(([self, received]) => {
+					// POST ApiData to REST API
+					RestClient.postContact(
+						environment.API_BASE_DOMAIN + environment.API_CONTACT_PATH,
+						{
+							uuidChild: self.uuid,
+							uuidParent: received.uuid,
+							position:
+								self.location.accuracy < received.location.accuracy
+									? self.location
+									: received.location,
+						}
+					).then(() => {
 						// fs -> realm
-						writeUserData({ fireStatus: true });
-					})
+						writeUserData({fireStatus: true});
+					});
+				});
 			}}
 		/>
 	);
