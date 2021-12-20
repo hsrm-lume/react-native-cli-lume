@@ -59,44 +59,55 @@ export default function FireScreen() {
 				userData.fireStatus ? ['#ffffff', '#FF3A3A'] : ['#ffffff', '#6F3FAF']
 			}
 			style={styles.container}>
-			<FireView fire={userData.fireStatus || false} />
-			<ErrorBar />
-			{ /* TODO: Error when rendering FireView and QR components together */
-				userData.fireStatus !== undefined && qrStatus !== undefined 
-					&& pos && userData.uuid ? ( // only render logic if data ready
-					qrStatus ? ( // render QR component or Pressable dependent on qrStatus
-						userData.fireStatus ? (
-							null /* TODO: QR Code Generator */
-						) : (
-							<QRScanner uid={userData.uuid} position={pos} />
-						)
+			{pos &&
+			userData.uuid &&
+			qrStatus !== undefined &&
+			userData.fireStatus !== undefined ? ( // only render components if data ready
+				userData.fireStatus ? (
+					// fire on
+					qrStatus ? (
+						// render QR Code Generator
+						<Text>QR Code Generator</Text> /* TODO */
 					) : (
-						userData.fireStatus ? (
-								<Pressable onPress={switchQrStatus}>
-									<Text style={styles.text1}>Generate QR Code</Text>
-								</Pressable>
-							
-						) : (
-								<Pressable onPress={switchQrStatus}>
-									<Text style={styles.text1}>Scan QR Code</Text>
-								</Pressable>
-						)
+						// render fire components and QR button
+						<>
+							<FireView fire={userData.fireStatus} />
+							<FireOnLogic uuid={userData.uuid} location={pos} />
+							<Pressable onPress={switchQrStatus} style={styles.button}>
+								<Text style={styles.text1}>Generate QR Code</Text>
+							</Pressable>
+						</>
 					)
-				) : null /* TODO: Loading view */
-			}
-			{
-				pos && userData.fireStatus !== undefined && userData.uuid ? ( // only render logic if data ready
-					userData.fireStatus ? ( // render fire logic dependent on fire state
-						<FireOnLogic uuid={userData.uuid} location={pos} />
-					) : (
+				) : // fire off
+				qrStatus ? (
+					// render QR Code Scanner
+					<QRScanner
+						uid={userData.uuid}
+						position={pos}
+						updateQrStatus={switchQrStatus}
+					/>
+				) : (
+					// render fire components and QR button
+					<>
+						<FireView fire={userData.fireStatus} />
 						<FireOffLogic
-							userData={{uuid: userData.uuid, fireStatus: userData.fireStatus}}
+							userData={{
+								uuid: userData.uuid,
+								fireStatus: userData.fireStatus,
+							}}
 							fireUpdater={fireStatusChange}
 							location={pos}
 						/>
-					)
-				) : null /* TODO: Loading view */
-			}
+						<Pressable onPress={switchQrStatus} style={styles.button}>
+							<Text style={styles.text1}>Scan QR Code</Text>
+						</Pressable>
+					</>
+				)
+			) : (
+				/* TODO: Loading view */
+				<Text style={styles.text1}>Loading...</Text>
+			)}
+			<ErrorBar />
 		</LinearGradient>
 	);
 }

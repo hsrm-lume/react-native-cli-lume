@@ -4,7 +4,11 @@ import {environment} from '../env/environment';
 import {RestClient, writeUserData} from '../services';
 import {TransmissionData, GeoLocation, HandledPromise} from '../types';
 
-const QRScanner = (props: {uid: string; position: GeoLocation}) => {
+const QRScanner = (props: {
+	uid: string;
+	position: GeoLocation;
+	updateQrStatus: () => void;
+}) => {
 	return (
 		<QRCodeScanner
 			onRead={event => {
@@ -42,6 +46,7 @@ const QRScanner = (props: {uid: string; position: GeoLocation}) => {
 						writeUserData({fireStatus: true});
 					});
 				});
+				props.updateQrStatus();
 			}}
 		/>
 	);
