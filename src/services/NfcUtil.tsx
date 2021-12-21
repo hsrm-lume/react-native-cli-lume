@@ -71,7 +71,7 @@ export const nfcReadNext = (): HandledPromise<TransmissionData> =>
 				return tag;
 			})
 			.then(resolve)
-			.catch(reject);
+			.catch(() => reject(new Error('nfcReadNext')));
 	});
 
 /**

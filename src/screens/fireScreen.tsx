@@ -9,10 +9,12 @@ import {
 	GeoServiceSubscription,
 	getPermission,
 	getUserData,
+	nfcCleanupRead,
 	subscribePosition,
 } from '../services';
 import {useOnInit, UserData} from '../types';
 import {GeoLocation} from '../types/GeoLocation';
+import QRGenerator from '../components/qrGenerator';
 import QRScanner from '../components/qrScanner';
 
 export default function FireScreen() {
@@ -67,15 +69,17 @@ export default function FireScreen() {
 					// fire on
 					qrStatus ? (
 						// render QR Code Generator
-						<Text>QR Code Generator</Text> /* TODO */
+						<View style={styles.qrCode}>
+							<QRGenerator uid={userData.uuid} position={pos} />
+						</View>
 					) : (
 						// render fire components and QR button
 						<>
 							<FireView fire={userData.fireStatus} />
-							<FireOnLogic uuid={userData.uuid} location={pos} />
 							<Pressable onPress={switchQrStatus} style={styles.button}>
 								<Text style={styles.text1}>Generate QR Code</Text>
 							</Pressable>
+							<FireOnLogic uuid={userData.uuid} location={pos} />
 						</>
 					)
 				) : // fire off
@@ -90,6 +94,9 @@ export default function FireScreen() {
 					// render fire components and QR button
 					<>
 						<FireView fire={userData.fireStatus} />
+						<Pressable onPress={switchQrStatus} style={styles.button}>
+							<Text style={styles.text1}>Scan QR Code</Text>
+						</Pressable>
 						<FireOffLogic
 							userData={{
 								uuid: userData.uuid,
@@ -98,9 +105,6 @@ export default function FireScreen() {
 							fireUpdater={fireStatusChange}
 							location={pos}
 						/>
-						<Pressable onPress={switchQrStatus} style={styles.button}>
-							<Text style={styles.text1}>Scan QR Code</Text>
-						</Pressable>
 					</>
 				)
 			) : (
@@ -128,5 +132,11 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		alignItems: 'center',
 		justifyContent: 'center',
+	},
+	qrCode: {
+		flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
 	},
 });
