@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import InternetWarning from '../assets/internetWarning.svg';
 
 const WebErrorView = (props: {msg: string}) => {
-	const title = 'KEINE VERBINDUNG!';
+	const title = 'YOU ARE OFFLINE!';
 	const message = props.msg;
 
 	return (
 		<View style={styles.ErrorView}>
 			<View style={styles.Image}>
-				<InternetWarning width={'100%'} height={'100%'} />
+				<InternetWarning width={'100%'} height={'100%'}/>
 			</View>
 			<View>
 				<Text style={styles.Title}>{title}</Text>

@@ -7,6 +7,7 @@ import {getUserData} from '../services';
 
 import WebErrorView from '../components/webErrorView';
 import ErrorHandler from '../services/ErrorHandler';
+import { checkConnected } from '../services/InternetCheck';
 
 export default function WebScreen() {
 	var [uid, setUid] = useState('');
@@ -14,14 +15,18 @@ export default function WebScreen() {
 	getUserData().then(ud => setUid(ud.uuid));
 
 	const offline = ErrorHandler.errorList.some(x => x.icon == 'internetWarning');
+	const [connectStatus, setConnectStatus] = useState<boolean | null>(); 
+	checkConnected().then(res =>{
+		setConnectStatus(res);
+	   });
 
-	if (offline) {
+	if (connectStatus == false) {
 		// start WebErrorView
 		const errorMessage = ErrorHandler.errorList.find(
 			x => x.icon == 'internetWarning'
 		);
 		if (typeof errorMessage === 'undefined') {
-			var message = 'Keine Internetverbindung';
+			var message = 'Please close the app and check your network connection';
 		} else {
 			var message = errorMessage.message;
 		}

@@ -1,10 +1,11 @@
 import {resolveObjectURL} from 'buffer';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {PermissionsAndroid, StyleSheet} from 'react-native';
+import {PermissionsAndroid, StyleSheet, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import DebugBar from '../components/debugBar';
 import ErrorBar from '../components/errorBar';
 import FireView from '../components/fire';
+import WebErrorView from '../components/webErrorView';
 import {environment} from '../env/environment';
 import {
 	CloseableHCESession,
@@ -19,6 +20,7 @@ import {
 } from '../services';
 import ErrorHandler from '../services/ErrorHandler';
 import ErrorMessage from '../services/ErrorMessage';
+import { checkConnected } from '../services/InternetCheck';
 import {GeoLocation} from '../types/GeoLocation';
 import {HandledPromise} from '../types/HandledPromise';
 import {TransmissionData} from '../types/TranmissionData';
@@ -171,8 +173,29 @@ export default function FireScreen() {
 		});
 	};
 
-	return (
-		<LinearGradient
+	const [connectStatus, setConnectStatus] = useState<boolean | null>(); 
+	checkConnected().then(res =>{
+		setConnectStatus(res);
+	   });
+	if (connectStatus == false) {
+		// start WebErrorView
+		const errorMessage = ErrorHandler.errorList.find(
+			x => x.icon == 'internetWarning'
+		);
+		if (typeof errorMessage === 'undefined') {
+			var message = 'Please close the app and check your network connection';
+		} else {
+			var message = errorMessage.message;
+		}
+		return (
+			<View style={styles.containerMap}>
+				<WebErrorView msg={message} />
+			</View>
+		);
+	} else {
+		// start fireview
+		return (
+			<LinearGradient
 			colors={
 				firestate.current ? ['#ffffff', '#FF3A3A'] : ['#ffffff', '#6F3FAF']
 			}
@@ -187,6 +210,8 @@ export default function FireScreen() {
 		</LinearGradient>
 	);
 }
+
+}  
 
 const styles = StyleSheet.create({
 	container: {
@@ -204,5 +229,9 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		alignItems: 'center',
 		justifyContent: 'center',
+	},
+	containerMap: {
+		width: '100%',
+		height: '100%',
 	},
 });
