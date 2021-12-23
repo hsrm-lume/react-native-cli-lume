@@ -34,7 +34,7 @@ export const getUserData = (): HandledPromise<UserData> =>
 				fireStatus: false,
 			})
 		);
-		if (!newu) return reject('Could not create user');
+		if (!newu) return reject('error.storage.create.user');
 		resolve(newu);
 	});
 
@@ -62,5 +62,5 @@ export const writeUserData = (
 				u.uuid = data.uuid;
 		});
 		if (u) return resolve(u);
-		reject('could not write user data');
+		reject('error.storage.write.user');
 	});

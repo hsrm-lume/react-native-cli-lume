@@ -16,7 +16,7 @@ export class RestClient {
 			this.post(route, data)
 				.then(r => {
 					if (r.status == 200) resolve();
-					else throw new Error('Api-Error: ' + r.statusText);
+					else throw new Error('error.internet.api');
 				})
 				.then(resolve)
 				.catch(reject);

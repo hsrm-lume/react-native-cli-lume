@@ -49,11 +49,7 @@ export class HandledPromise<T> {
 
 	protected handleErr(err: any) {
 		console.warn('HandledPromise: ', err);
-		ErrorHandler.handleError({
-			errorType: 'error',
-			message: err.message || err,
-			dissmisable: true,
-		});
+		ErrorHandler.handleError(err.message || err);
 	}
 
 	then<TResult1 = T, TResult2 = never>(

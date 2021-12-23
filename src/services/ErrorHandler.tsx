@@ -1,3 +1,5 @@
+import {Errors} from './Errors';
+
 /**
  * Interface that describes an errorMessage
  * @member errorType with pattern like `error.internet.api`
@@ -34,6 +36,7 @@ export class ErrorHandler {
 	 * List of ErrorMessages
 	 */
 	static errorList: ErrorMessage[] = [];
+    
 
 	/**
 	 * internal compare function to sort Errors by their dismissability
@@ -45,78 +48,39 @@ export class ErrorHandler {
 	}
 
 	/**
-	 * Adds the given message to the errorList
-	 * unless some Message with same type and text already exists
-	 * @param message the ErrorMessage to add
-	 */
-	static handleError(message: ErrorMessage): void;
-	/**
 	 * Adds a ErrorMessage with given parameters
 	 * unless some Message with same type and text already exists
 	 */
-	static handleError(type: string, message: string, dismissable: boolean): void;
-	static handleError(
-		msg: ErrorMessage | string,
-		message?: string,
-		dismissable: boolean = false
-	): void {
-		if (typeof msg === 'string') {
-			if (!message) return;
-			return ErrorHandler.handleError({
-				message: message,
-				errorType: msg,
-				dissmisable: dismissable,
-			});
-		}
-		if (
-			ErrorHandler.errorList.some(
-				x => x.message == msg.message && x.errorType == msg.errorType
-			)
-		)
-			return;
+	static handleError(errorType: string, dismissable: boolean = false) {
+		const msg: ErrorMessage = {
+            errorType: errorType, 
+            message: Errors.getMessage(errorType), 
+            dissmisable: dismissable};
+
+		if (ErrorHandler.errorList.some(x => x.errorType == msg.errorType)) return;
+        
 		ErrorHandler.errorList.push(msg);
 		ErrorHandler.errorList.sort(ErrorHandler.compare);
 	}
 
-	/**
-	 * Remove the ErrorMessage by reference
-	 * @param message to remove
-	 */
-	static remError(message: ErrorMessage): void;
+
 	/**
 	 * Remove the ErrorMessage by its type
 	 * @param errorType the type to remove
 	 * @param includeSubtypes to include everything that starts with `errorType`
 	 */
-	static remError(errorType: string, includeSubtypes: boolean): void;
-	static remError(
-		msg: string | ErrorMessage,
-		includeSubtypes: boolean = false
-	): void {
+	static remError(errType: string, includeSubtypes: boolean = false){
 		const oldLen = ErrorHandler.errorList.length;
-		if (typeof msg === 'string') {
-			ErrorHandler.errorList = ErrorHandler.errorList.filter(
-				e => !messageTypeEquals(e, msg, includeSubtypes)
-			);
-		} else {
-			const i = ErrorHandler.errorList.indexOf(msg);
-			if (i != -1) ErrorHandler.errorList.splice(i, 1);
-		}
+		ErrorHandler.errorList = ErrorHandler.errorList.filter(
+            e => !messageTypeEquals(e, errType, includeSubtypes)
+        );
+		
 		console.log('removed', oldLen - ErrorHandler.errorList.length, 'errors');
 	}
 }
-
 // INITIALIZE
-[
-	{errorType: 'warning', message: '1. Testmessage', dissmisable: true},
-	{
-		errorType: 'warning.internet',
-		message: '2. Testmessage',
-		dissmisable: true,
-	},
-	{
-		errorType: 'warning.location',
-		message: '3. Testmessage',
-		dissmisable: true,
-	},
-].forEach(ErrorHandler.handleError);
+
+ErrorHandler.handleError("warning.internet.device", true);
+ErrorHandler.handleError("warning.location.sonstwas");
+ErrorHandler.handleError("error.location.egal");
+ErrorHandler.handleError("error");

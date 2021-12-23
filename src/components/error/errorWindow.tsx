@@ -18,7 +18,7 @@ import {Icon} from './icon';
  */
 export const ErrorWindow = (props: {
 	close: (event: GestureResponderEvent) => void;
-	removeMsg: (m: ErrorMessage) => void;
+	removeMsg: (errType: string) => void;
 }) => (
 	<View style={styles.errorWindow}>
 		<Icon icon={ArrowDown} action={props.close} style={styles.closeWindow} />

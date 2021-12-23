@@ -15,8 +15,8 @@ const ErrorBar = () => {
 	const [r, setRepaint] = useState(false);
 	// removeMessage callback gets called as wrapper
 	// to trigger a repaint after a message got removed
-	const removeMessage = (m: ErrorMessage) => {
-		ErrorHandler.remError(m);
+	const removeMessage = (errType: string) => {
+		ErrorHandler.remError(errType);
 		// close ErrorWindow if no errors are left
 		if (ErrorHandler.errorList.length == 0) setBigSize(false);
 		setRepaint(!r);
@@ -27,7 +27,7 @@ const ErrorBar = () => {
 	) : (
 		<ScrollView horizontal style={styles.errorBar}>
 			{ErrorHandler.errorList.map((item, i) => (
-				<ErrorIcon msg={item} action={switchBigSize} key={i} />
+				<ErrorIcon errType={item.errorType} action={switchBigSize} key={i} />
 			))}
 		</ScrollView>
 	);

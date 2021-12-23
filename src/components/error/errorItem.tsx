@@ -11,10 +11,10 @@ import {ErrorIcon} from './errorIcon';
  */
 export const ErrorItem = (props: {
 	item: ErrorMessage;
-	removeMsg: (m: ErrorMessage) => void;
+	removeMsg: (errType: string) => void;
 }) => (
 	<View style={styles.message}>
-		<ErrorIcon msg={props.item} />
+		<ErrorIcon errType={props.item.errorType} />
 		<View style={styles.textBox}>
 			<Text style={styles.text}>{props.item.message}</Text>
 		</View>
@@ -24,7 +24,7 @@ export const ErrorItem = (props: {
 				<Icon
 					icon={CloseIcon}
 					style={styles.closeIcon}
-					action={() => props.removeMsg(props.item)}
+					action={() => props.removeMsg(props.item.errorType)}
 				/>
 			) : null
 		}

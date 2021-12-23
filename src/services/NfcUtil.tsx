@@ -61,12 +61,12 @@ export const nfcReadNext = (): HandledPromise<TransmissionData> =>
 			.then(() => NfcManager.getTag())
 			.then(async data => {
 				await NfcManager.cancelTechnologyRequest();
-				if (!data) throw new Error('NFC-Tag empty');
+				if (!data) throw new Error('error.nfc.read.empty');
 
 				const tag = processNfcTag(data);
 
 				if (tag.uuid === undefined || tag.location === undefined)
-					throw new Error('NFC-Tag invalid');
+					throw new Error('error.nfc.read.invalid');
 
 				return tag;
 			})
@@ -88,7 +88,7 @@ export const nfcCleanupRead = (): void => {
 const processNfcTag = (tag: TagEvent): TransmissionData => {
 	const msg = tag.ndefMessage;
 
-	if (msg === undefined) throw new Error('NFC tag is empty');
+	if (msg === undefined) throw new Error('error.nfc.process.empty');
 
 	//Only returns 'application/json' payloads if found.
 	const res = msg
@@ -108,7 +108,7 @@ const processNfcTag = (tag: TagEvent): TransmissionData => {
 		});
 	// process the first application/json payload
 	if (res.length == 0 || res[0].payload === undefined)
-		throw new Error('NFC Tag does not contain valuable content');
+		throw new Error('error.nfc.process.valuableContent');
 
 	return JSON.parse(res[0].payload) as TransmissionData;
 };
