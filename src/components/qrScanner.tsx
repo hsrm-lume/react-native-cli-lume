@@ -29,23 +29,25 @@ const QRScanner = (props: {
 						throw new Error('QR Code is invalid');
 					}
 					resolve([self, received]);
-				}).then(([self, received]) => {
-					// POST ApiData to REST API
-					RestClient.postContact(
-						environment.API_BASE_DOMAIN + environment.API_CONTACT_PATH,
-						{
-							uuidChild: self.uuid,
-							uuidParent: received.uuid,
-							position:
-								self.location.accuracy < received.location.accuracy
-									? self.location
-									: received.location,
-						}
-					).then(() => {
+				})
+					.then(([self, received]) =>
+						// POST ApiData to REST API
+						RestClient.postContact(
+							environment.API_BASE_DOMAIN + environment.API_CONTACT_PATH,
+							{
+								uuidChild: self.uuid,
+								uuidParent: received.uuid,
+								position:
+									self.location.accuracy < received.location.accuracy
+										? self.location
+										: received.location,
+							}
+						)
+					)
+					.then(() =>
 						// fs -> realm
-						writeUserData({fireStatus: true});
-					});
-				});
+						writeUserData({fireStatus: true})
+					);
 				props.updateQrStatus();
 			}}
 		/>

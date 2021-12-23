@@ -69,9 +69,11 @@ export default function FireScreen() {
 					// fire on
 					qrStatus ? (
 						// render QR Code Generator
-						<View style={styles.qrCode}>
-							<QRGenerator uid={userData.uuid} position={pos} />
-						</View>
+						<QRGenerator
+							uid={userData.uuid}
+							position={pos}
+							updateQrStatus={switchQrStatus}
+						/>
 					) : (
 						// render fire components and QR button
 						<>
