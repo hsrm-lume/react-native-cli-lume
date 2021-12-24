@@ -2,7 +2,8 @@ import React from 'react';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {environment} from '../env/environment';
 import {RestClient, writeUserData} from '../services';
-import {TransmissionData, GeoLocation, HandledPromise} from '../types';
+import {GeoLocation, HandledPromise} from '../types';
+import {QrCodeData} from '../types/QrCodeData';
 
 const QRScanner = (props: {
 	uid: string;
@@ -13,14 +14,15 @@ const QRScanner = (props: {
 		<QRCodeScanner
 			onRead={event => {
 				// validation
-				new HandledPromise<[TransmissionData, TransmissionData]>(resolve => {
+				new HandledPromise<[QrCodeData, QrCodeData]>(resolve => {
 					if (!props.uid) throw new Error('Torch not yet ready');
 					if (!props.position) throw new Error('Position not accurate enough');
-					if (!event.data) throw new Error('QR Code is invalid');
-					var self: TransmissionData;
-					var received: TransmissionData;
+					if (!event.data) throw new Error('QR Code is empty');
+					var self: QrCodeData;
+					var received: QrCodeData;
 					try {
 						self = {
+							ts: Math.floor(Date.now() / 1000),
 							uuid: props.uid,
 							location: props.position,
 						};
@@ -28,6 +30,9 @@ const QRScanner = (props: {
 					} catch (error) {
 						throw new Error('QR Code is invalid');
 					}
+					// check timestamp
+					if (self.ts - received.ts > 10)
+						throw new Error('QR Code is outdated');
 					resolve([self, received]);
 				})
 					.then(([self, received]) =>

@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, TouchableHighlight} from 'react-native';
-import {TransmissionData, GeoLocation} from '../types';
+import {GeoLocation} from '../types';
+import {QrCodeData} from '../types/QrCodeData';
 import QRCode from 'react-native-qrcode-svg';
 import Close from '../assets/close.svg';
 
@@ -9,13 +10,12 @@ const QRGenerator = (props: {
 	position: GeoLocation;
 	updateQrStatus: () => void;
 }) => {
-	const tmd: TransmissionData = {
+	const qrData: QrCodeData = {
+		ts: Math.floor(Date.now() / 1000),
 		uuid: props.uid,
 		location: props.position,
 	};
-	const data = JSON.stringify(tmd);
-	console.log('QR Code Data: ' + data);
-
+	const data = JSON.stringify(qrData);
 	return (
 		<View style={styles.container}>
 			<TouchableHighlight
@@ -28,7 +28,10 @@ const QRGenerator = (props: {
 				<QRCode
 					size={250}
 					value={data}
-					onError={() => console.warn('Error in QR Generator')}
+					onError={
+						() => console.warn('Error in QR Generator')
+						/* TODO: ErrorHandler */
+					}
 				/>
 			</View>
 		</View>
