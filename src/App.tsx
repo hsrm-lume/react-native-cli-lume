@@ -42,7 +42,8 @@ export default function App() {
 					},
 					headerShown: false,
 					tabBarShowLabel: false,
-				})}>
+				})}
+			>
 				<bottomNav.Screen name="Fire" component={FireScreen} />
 
 				<bottomNav.Screen name="Web" component={WebScreen} />

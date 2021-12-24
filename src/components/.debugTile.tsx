@@ -8,7 +8,8 @@ const DebugTile = (props: {action?: Function; desc?: string}) => {
 			onPress={() => {
 				if (props.action) props.action();
 				else console.log('No action');
-			}}>
+			}}
+		>
 			<Text style={styles.text}>{props.desc || 'undefined'}</Text>
 		</Pressable>
 	);

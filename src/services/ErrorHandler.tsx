@@ -36,7 +36,6 @@ export class ErrorHandler {
 	 * List of ErrorMessages
 	 */
 	static errorList: ErrorMessage[] = [];
-    
 
 	/**
 	 * internal compare function to sort Errors by their dismissability
@@ -53,34 +52,34 @@ export class ErrorHandler {
 	 */
 	static handleError(errorType: string, dismissable: boolean = false) {
 		const msg: ErrorMessage = {
-            errorType: errorType, 
-            message: Errors.getMessage(errorType), 
-            dissmisable: dismissable};
+			errorType: errorType,
+			message: Errors.getMessage(errorType),
+			dissmisable: dismissable,
+		};
 
 		if (ErrorHandler.errorList.some(x => x.errorType == msg.errorType)) return;
-        
+
 		ErrorHandler.errorList.push(msg);
 		ErrorHandler.errorList.sort(ErrorHandler.compare);
 	}
-
 
 	/**
 	 * Remove the ErrorMessage by its type
 	 * @param errorType the type to remove
 	 * @param includeSubtypes to include everything that starts with `errorType`
 	 */
-	static remError(errType: string, includeSubtypes: boolean = false){
+	static remError(errType: string, includeSubtypes: boolean = false) {
 		const oldLen = ErrorHandler.errorList.length;
 		ErrorHandler.errorList = ErrorHandler.errorList.filter(
-            e => !messageTypeEquals(e, errType, includeSubtypes)
-        );
-		
+			e => !messageTypeEquals(e, errType, includeSubtypes)
+		);
+
 		console.log('removed', oldLen - ErrorHandler.errorList.length, 'errors');
 	}
 }
 // INITIALIZE
 
-ErrorHandler.handleError("warning.internet.device", true);
-ErrorHandler.handleError("warning.location.sonstwas");
-ErrorHandler.handleError("error.location.egal");
-ErrorHandler.handleError("error");
+ErrorHandler.handleError('warning.internet.device', true);
+ErrorHandler.handleError('warning.location.sonstwas');
+ErrorHandler.handleError('error.location.egal');
+ErrorHandler.handleError('error');

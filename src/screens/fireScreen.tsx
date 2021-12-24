@@ -51,7 +51,8 @@ export default function FireScreen() {
 			colors={
 				userData.fireStatus ? ['#ffffff', '#FF3A3A'] : ['#ffffff', '#6F3FAF']
 			}
-			style={styles.container}>
+			style={styles.container}
+		>
 			<FireView fire={userData.fireStatus || false} />
 			<ErrorBar />
 
