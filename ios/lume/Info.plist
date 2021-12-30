@@ -29,18 +29,6 @@
 	<key>NSCameraUsageDescription</key>
 	<string>lume needs access to your camera for the QR Code Scanner</string>
 
-	<!-- Required with iOS 11 and higher: include this only if you are planning to use the camera roll -->
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>lume needs access to your photo library for the QR Code Scanner</string>
-
-	<!-- Include this only if you are planning to use the camera roll -->
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>lume needs access to your photo library for the QR Code Scanner</string>
-
-	<!-- Include this only if you are planning to use the microphone for video recording -->
-	<key>NSMicrophoneUsageDescription</key>
-	<string>lume needs access to your microphone for the QR Code Scanner</string>
-
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>

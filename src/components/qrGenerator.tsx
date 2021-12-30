@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, TouchableHighlight} from 'react-native';
+import {View, StyleSheet, TouchableHighlight, Text} from 'react-native';
 import {GeoLocation} from '../types';
 import {QrCodeData} from '../types/QrCodeData';
 import QRCode from 'react-native-qrcode-svg';
@@ -17,44 +17,69 @@ const QRGenerator = (props: {
 	};
 	const data = JSON.stringify(qrData);
 	return (
-		<View style={styles.container}>
-			<TouchableHighlight
-				style={styles.closeWindow}
-				underlayColor="#EEEEEE"
-				onPress={props.updateQrStatus}>
-				<Close width={50} height={50} />
-			</TouchableHighlight>
-			<View style={styles.qrCode}>
-				<QRCode
-					size={250}
-					value={data}
-					onError={
-						() => console.warn('Error in QR Generator')
-						/* TODO: ErrorHandler */
-					}
-				/>
+		<>
+			<View style={styles.headlineBox}>
+				<Text style={styles.headlineText}>SHARE YOUR FIRE!</Text>
 			</View>
-		</View>
+			<View style={styles.window}>
+				<TouchableHighlight
+					style={styles.closeWindow}
+					underlayColor="#FFFFFF"
+					onPress={props.updateQrStatus}>
+					<Close width={50} height={50} />
+				</TouchableHighlight>
+				<View style={styles.qrCode}>
+					<QRCode
+						size={250}
+						value={data}
+						onError={
+							() => console.warn('Error in QR Generator')
+							/* TODO: ErrorHandler */
+						}
+					/>
+				</View>
+				<View style={styles.textBox}>
+					<Text style={styles.text}>Share your lume QR-Code!</Text>
+				</View>
+			</View>
+		</>
 	);
 };
 
 const styles = StyleSheet.create({
-	container: {
+	headlineBox: {
 		alignItems: 'center',
-		backgroundColor: '#EEEEEE',
-		top: '2%',
-		bottom: '2%',
-		left: '4%',
-		right: '4%',
+		paddingTop: 64,
+	},
+
+	headlineText: {
+		fontSize: 30,
+		color: '#000000',
+	},
+
+	window: {
+		alignItems: 'center',
+		backgroundColor: '#FFFFFF',
 		borderRadius: 30,
-		position: 'absolute',
-		opacity: 1,
+		height: 445,
+		width: 331,
+		marginTop: 35,
+	},
+
+	qrCode: {
+		paddingVertical: 45,
+	},
+
+	textBox: {
+		alignItems: 'center',
 		paddingBottom: 25,
 	},
-	qrCode: {
-		flex: 1,
-		justifyContent: 'center',
+
+	text: {
+		fontSize: 22,
+		color: '#000000',
 	},
+
 	closeWindow: {
 		alignSelf: 'flex-end',
 	},

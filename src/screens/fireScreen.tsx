@@ -76,10 +76,10 @@ export default function FireScreen() {
 					) : (
 						// render fire components and QR button
 						<>
-							<FireView fire={userData.fireStatus} />
-							<Pressable onPress={switchQrStatus} style={styles.button}>
-								<Text style={styles.text1}>Generate QR Code</Text>
-							</Pressable>
+							<FireView
+								fire={userData.fireStatus}
+								updateQrStatus={switchQrStatus}
+							/>
 							<FireOnLogic uuid={userData.uuid} location={pos} />
 						</>
 					)
@@ -94,10 +94,10 @@ export default function FireScreen() {
 				) : (
 					// render fire components and QR button
 					<>
-						<FireView fire={userData.fireStatus} />
-						<Pressable onPress={switchQrStatus} style={styles.button}>
-							<Text style={styles.text1}>Scan QR Code</Text>
-						</Pressable>
+						<FireView
+							fire={userData.fireStatus}
+							updateQrStatus={switchQrStatus}
+						/>
 						<FireOffLogic
 							userData={{
 								uuid: userData.uuid,
