@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {Permission, StyleSheet} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import {PERMISSIONS} from 'react-native-permissions';
 import ErrorBar from '../components/errorBar';
 import FireView from '../components/fire';
 import {FireOffLogic} from '../components/fireOffLogic';
@@ -35,11 +36,14 @@ export default function FireScreen() {
 	useOnInit(() => {
 		let sub: GeoServiceSubscription;
 		console.log('getting permission');
-		getPermission('android.permission.ACCESS_FINE_LOCATION').then(() => {
-			sub = subscribePosition(pos => {
-				posChange(pos);
-			});
-		});
+		getPermission(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE as Permission).then(
+			() => {
+				sub = subscribePosition(pos => {
+					console.log(pos);
+					posChange(pos);
+				});
+			}
+		);
 		return () => {
 			sub?.unsubscribe();
 		};
@@ -54,20 +58,23 @@ export default function FireScreen() {
 			style={styles.container}>
 			<FireView fire={userData.fireStatus || false} />
 			<ErrorBar />
-
-			{
+			{/* 			{
 				pos && userData.fireStatus !== undefined && userData.uuid ? ( // only render logic if data ready
-					userData.fireStatus ? ( // render fire logic dependent on fire state
-						<FireOnLogic uuid={userData.uuid} location={pos} />
-					) : (
-						<FireOffLogic
-							userData={{uuid: userData.uuid, fireStatus: userData.fireStatus}}
-							fireUpdater={fireStatusChange}
-							location={pos}
-						/>
-					)
-				) : null /* TODO: Loading view */
-			}
+					Platform.OS == 'ios' ? ( // only start NFC if we are on Android
+						userData.fireStatus ? ( // render fire logic dependent on fire state
+							<FireOnLogic uuid={userData.uuid} location={pos} />
+						) : (
+							<FireOffLogic
+								userData={{
+									uuid: userData.uuid,
+									fireStatus: userData.fireStatus,
+								}}
+								fireUpdater={fireStatusChange}
+								location={pos}
+							/>
+						)
+					) : null
+				) : null /* TODO: Loading view */}
 		</LinearGradient>
 	);
 }

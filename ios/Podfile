@@ -6,7 +6,14 @@ platform :ios, '11.0'
 flipperkit_version = '0.111.0'
 
 
+
+
 target 'lume' do
+
+  permissions_path = '../node_modules/react-native-permissions/ios'
+
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
+  pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
   config = use_native_modules!
 
   use_react_native!(

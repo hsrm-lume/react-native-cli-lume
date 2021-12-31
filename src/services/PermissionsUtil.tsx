@@ -1,4 +1,5 @@
 import {PermissionsAndroid, Permission, Rationale} from 'react-native';
+import {request, check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import {HandledPromise} from '../types/HandledPromise';
 
 /**
@@ -39,16 +40,33 @@ const getRationale = (p: Permission): Rationale | undefined => {
  * @returns Promise that resolves if permission is granted
  */
 export const getPermission = (p: Permission) =>
-	new HandledPromise<void>((resolve, reject) =>
-		PermissionsAndroid.check(p)
+	new HandledPromise<void>((resolve, reject) => {
+		check(p)
 			.then(b => {
-				if (b) return resolve();
-				PermissionsAndroid.request(p, getRationale(p))
+				if (b == RESULTS.GRANTED) return resolve();
+				request(p)
 					.then(g => {
-						if (g === 'granted') return resolve();
-						reject('Permission ' + g + ': ' + p);
+						switch (g) {
+							case RESULTS.UNAVAILABLE:
+								reject(g + ' is Unavailable');
+								break;
+							case RESULTS.GRANTED:
+							case RESULTS.LIMITED:
+								resolve();
+								break;
+							case RESULTS.DENIED:
+								reject('Permission ' + g + ' denied');
+								break;
+
+							case RESULTS.BLOCKED:
+								reject('Permission ' + g + ' blocked');
+								break;
+							default:
+								reject('Permission' + g + ': ' + p);
+								break;
+						}
 					})
 					.catch(reject);
 			})
-			.catch(reject)
-	);
+			.catch(reject);
+	});
