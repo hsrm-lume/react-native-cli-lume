@@ -24,6 +24,8 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NFCReaderUsageDescription</key>
+	<string>NFC permission is required to use this app.</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
@@ -42,6 +44,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera is needed</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Lume needs access to your Location Data to function correctly. Please grant this </string>
 	<key>UILaunchStoryboardName</key>
@@ -57,8 +61,6 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>  
-	<key>NSCameraUsageDescription</key>
-  	<string>Camera is needed</string>
+	<false/>
 </dict>
 </plist>

@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
-import {Permission, StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {PERMISSIONS} from 'react-native-permissions';
 import ErrorBar from '../components/errorBar';
 import FireView from '../components/fire';
 import {FireOffLogic} from '../components/fireOffLogic';
@@ -36,14 +35,12 @@ export default function FireScreen() {
 	useOnInit(() => {
 		let sub: GeoServiceSubscription;
 		console.log('getting permission');
-		getPermission(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE as Permission).then(
-			() => {
-				sub = subscribePosition(pos => {
-					console.log(pos);
-					posChange(pos);
-				});
-			}
-		);
+		getPermission('lume.permissons.location').then(() => {
+			sub = subscribePosition(pos => {
+				console.log(pos);
+				posChange(pos);
+			});
+		});
 		return () => {
 			sub?.unsubscribe();
 		};
@@ -58,23 +55,27 @@ export default function FireScreen() {
 			style={styles.container}>
 			<FireView fire={userData.fireStatus || false} />
 			<ErrorBar />
-			{/* 			{
+			{
 				pos && userData.fireStatus !== undefined && userData.uuid ? ( // only render logic if data ready
-					Platform.OS == 'ios' ? ( // only start NFC if we are on Android
-						userData.fireStatus ? ( // render fire logic dependent on fire state
+					userData.fireStatus ? ( // render fire logic dependent on fire state
+						// iOS currently has this bug https://developer.apple.com/forums/thread/657166 - i
+						// propose simply not using nfc for iOS and relying on the QR-Code Paring
+						Platform.OS === 'android' ? (
 							<FireOnLogic uuid={userData.uuid} location={pos} />
-						) : (
-							<FireOffLogic
-								userData={{
-									uuid: userData.uuid,
-									fireStatus: userData.fireStatus,
-								}}
-								fireUpdater={fireStatusChange}
-								location={pos}
-							/>
-						)
+						) : null
+					) : Platform.OS === 'android' ? (
+						<FireOffLogic
+							userData={{
+								uuid: userData.uuid,
+								fireStatus: userData.fireStatus,
+							}}
+							fireUpdater={fireStatusChange}
+							location={pos}
+						/>
 					) : null
-				) : null /* TODO: Loading view */}
+				) : null
+				/* TODO: Loading view */
+			}
 		</LinearGradient>
 	);
 }
