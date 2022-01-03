@@ -52,36 +52,60 @@ export class Errors {
 		'error.internet.map': {msg: 'Sorry, map is offline!'},
 		// location
 		'error.location': {msg: 'Error @ Location determination'},
-		'error.location.device': {msg: 'Please check your GPS is enabled'},
-		// nfc
-		'error.nfc.read.empty': {msg: 'NFC-Tag empty'},
-		'error.nfc.read.invalid': {msg: 'NFC-Tag invalid'},
-		'error.nfc.process.valuableContent': {
-			msg: 'NFC Tag does not contain valuable content',
+		'error.location.device': {
+			msg: 'GPS seems to be disabled',
+			desc: 'Please turn on your devices GPS for lume to work properly.',
 		},
-		'error.nfc.process.empty': {msg: 'NFC-Tag empty'},
+		// nfc
+		'error.nfc.read.empty': {
+			msg: 'Fire could not be retrieved',
+			desc: 'The touched device seems not to be a compatible lume device. Please check your peers device to have the app opened.',
+		},
+		'error.nfc.read.invalid': {
+			msg: 'Fire could not be retrieved',
+			desc: 'The touched device could not properly transfer the fire. Please retry and hold the devices steady.',
+		},
+		'error.nfc.process.valuableContent': {
+			msg: 'Fire could not be retrieved',
+			desc: 'The touched device could not properly transfer the fire. Please retry and hold the devices steady.',
+		},
+		'error.nfc.process.empty': {
+			msg: 'Fire could not be retrieved',
+			desc: 'The touched device seems not to be a compatible lume device. Please check your peers device to have the app opened.',
+		},
 		// qr
 		'error.qr.device.camera.functionality': {
-			msg: 'Please check your camera is working!',
+			msg: 'QR-Capturing failed',
+			desc: 'Lume has trouble talking to your devices camera.',
 		},
 		'error.qr.device.camera.permission': {
-			msg: 'Please check your camera permission for this app!',
+			msg: 'No permission for camera',
+			desc: 'Please check your camera permission for lume!',
 		},
 		// storage
 		'error.storage.write': {msg: 'Could not write user'},
-		'error.storage.create': {msg: 'Could not create user data'},
+		'error.storage.create': {
+			msg: 'Error while creating your lume profile',
+			desc: 'Please try to restart the app',
+		},
 		// *** Warnings ***
 		// internet
-		'warning.internet.device': {msg: 'Please check your internet connection.'},
+		'warning.internet.device': {
+			msg: "Can't connect to the internet",
+			desc: 'Please check your internet connection.',
+		},
 		'warning.internet.map.loading': {
 			msg: 'Loading...',
 			desc: 'Please be patient while the map is being prepared.',
 		},
 		// location
-		'warning.location.accuracy': {msg: 'Bad location accuracy.'},
+		'warning.location.accuracy': {
+			msg: 'Poor GPS-location accuracy.',
+			desc: 'Your location cannot be determined exactly enough for lume to work properly.',
+		},
 		// qr
 		'warning.qr.device.camera.functionality': {
-			msg: 'Please hold your phone still.',
+			msg: 'Error acessing the devices camera.',
 		},
 	};
 
