@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, Pressable, Text} from 'react-native';
+import {StyleSheet, Text} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ErrorBar from '../components/errorBar';
 import FireView from '../components/fire';

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, TouchableHighlight, Text} from 'react-native';
 import {GeoLocation} from '../types';
-import {QrCodeData} from '../types/QrCodeData';
+import {QrCodeData} from '../types/TranmissionData';
 import QRCode from 'react-native-qrcode-svg';
 import Close from '../assets/close.svg';
 
