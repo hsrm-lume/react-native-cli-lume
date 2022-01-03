@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {ErrorMessage} from '../../services';
+import {ErrorMessage, Errors, MessageKey} from '../../services';
 import {Icon} from './icon';
 import CloseIcon from '../../assets/thinCross.svg';
 import {ErrorIcon} from './errorIcon';
@@ -11,25 +11,28 @@ import {ErrorIcon} from './errorIcon';
  */
 export const ErrorItem = (props: {
 	item: ErrorMessage;
-	removeMsg: (errType: string) => void;
-}) => (
-	<View style={styles.message}>
-		<ErrorIcon errType={props.item.errorType} />
-		<View style={styles.textBox}>
-			<Text style={styles.text}>{props.item.message}</Text>
+	removeMsg: (errType: MessageKey) => void;
+}) => {
+	const m = Errors.getMessage(props.item.errorType);
+	return (
+		<View style={styles.message}>
+			<ErrorIcon errType={props.item.errorType} />
+			<View style={styles.textBox}>
+				<Text style={styles.text}>{m.msg}</Text>
+			</View>
+			{
+				/* only add remove callback if message is dismissable */
+				props.item.dissmisable ? (
+					<Icon
+						icon={CloseIcon}
+						style={styles.closeIcon}
+						action={() => props.removeMsg(props.item.errorType)}
+					/>
+				) : null
+			}
 		</View>
-		{
-			/* only add remove callback if message is dismissable */
-			props.item.dissmisable ? (
-				<Icon
-					icon={CloseIcon}
-					style={styles.closeIcon}
-					action={() => props.removeMsg(props.item.errorType)}
-				/>
-			) : null
-		}
-	</View>
-);
+	);
+};
 
 const styles = StyleSheet.create({
 	message: {

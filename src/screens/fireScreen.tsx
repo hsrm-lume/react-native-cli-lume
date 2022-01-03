@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {StyleSheet} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ErrorBar from '../components/error/errorBar';
+import FullErrorView from '../components/error/fullErrorView';
 import FireView from '../components/fire/fire';
 import {FireOffLogic} from '../components/fire/fireOffLogic';
 import {FireOnLogic} from '../components/fire/fireOnLogic';
@@ -51,24 +52,28 @@ export default function FireScreen() {
 			colors={
 				userData.fireStatus ? ['#ffffff', '#FF3A3A'] : ['#ffffff', '#6F3FAF']
 			}
-			style={styles.container}
-		>
+			style={styles.container}>
 			<FireView fire={userData.fireStatus || false} />
 			<ErrorBar />
 
-			{
-				pos && userData.fireStatus !== undefined && userData.uuid ? ( // only render logic if data ready
-					userData.fireStatus ? ( // render fire logic dependent on fire state
-						<FireOnLogic uuid={userData.uuid} location={pos} />
-					) : (
-						<FireOffLogic
-							userData={{uuid: userData.uuid, fireStatus: userData.fireStatus}}
-							fireUpdater={fireStatusChange}
-							location={pos}
-						/>
-					)
-				) : null /* TODO: Loading view */
-			}
+			{pos && userData.fireStatus !== undefined && userData.uuid ? ( // only render logic if data ready
+				userData.fireStatus ? ( // render fire logic dependent on fire state
+					<FireOnLogic uuid={userData.uuid} location={pos} />
+				) : (
+					<FireOffLogic
+						userData={{uuid: userData.uuid, fireStatus: userData.fireStatus}}
+						fireUpdater={fireStatusChange}
+						location={pos}
+					/>
+				)
+			) : (
+				<FullErrorView
+					item={{
+						errorType: 'warning.internet.map.loading',
+						dissmisable: false,
+					}}
+				/>
+			)}
 		</LinearGradient>
 	);
 }

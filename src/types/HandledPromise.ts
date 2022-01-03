@@ -1,3 +1,4 @@
+import {MessageKey} from '../services';
 import {ErrorHandler} from '../services/ErrorHandler';
 
 type Executor<T> = (
@@ -44,12 +45,18 @@ export class HandledPromise<T> {
 	}
 
 	protected addDefaultHandler() {
-		if (this.isLastInChain) this.promise.catch(err => this.handleErr(err));
+		if (this.isLastInChain)
+			this.promise.catch(err => {
+				// TODO check for mapping Error -> type
+				// although ts does typechecking to ensure the error type is known,
+				// Promises do always reject with any type. Therefore an unknown case could still occour
+				this.handleErr(err);
+			});
 	}
 
-	protected handleErr(err: any) {
+	protected handleErr(err: MessageKey) {
 		console.warn('HandledPromise: ', err);
-		ErrorHandler.handleError(err.message || err);
+		ErrorHandler.handleError(err);
 	}
 
 	then<TResult1 = T, TResult2 = never>(

@@ -1,16 +1,4 @@
-import {Errors} from './Errors';
-
-/**
- * Interface that describes an errorMessage
- * @member errorType with pattern like `error.internet.api`
- * @member message the text to display
- * @member dismissable wether the message can be dismissed by the user
- */
-export interface ErrorMessage {
-	errorType: string;
-	message: string;
-	dissmisable: boolean;
-}
+import {ErrorMessage, MessageKey} from './Errors';
 
 /**
  * @param msg the error message to test for the given type
@@ -50,10 +38,9 @@ export class ErrorHandler {
 	 * Adds a ErrorMessage with given parameters
 	 * unless some Message with same type and text already exists
 	 */
-	static handleError(errorType: string, dismissable: boolean = false) {
+	static handleError(errorType: MessageKey, dismissable: boolean = true) {
 		const msg: ErrorMessage = {
 			errorType: errorType,
-			message: Errors.getMessage(errorType),
 			dissmisable: dismissable,
 		};
 
@@ -68,7 +55,7 @@ export class ErrorHandler {
 	 * @param errorType the type to remove
 	 * @param includeSubtypes to include everything that starts with `errorType`
 	 */
-	static remError(errType: string, includeSubtypes: boolean = false) {
+	static remError(errType: MessageKey, includeSubtypes: boolean = true) {
 		const oldLen = ErrorHandler.errorList.length;
 		ErrorHandler.errorList = ErrorHandler.errorList.filter(
 			e => !messageTypeEquals(e, errType, includeSubtypes)
@@ -77,9 +64,3 @@ export class ErrorHandler {
 		console.log('removed', oldLen - ErrorHandler.errorList.length, 'errors');
 	}
 }
-// INITIALIZE
-
-ErrorHandler.handleError('warning.internet.device', true);
-ErrorHandler.handleError('warning.location.sonstwas');
-ErrorHandler.handleError('error.location.egal');
-ErrorHandler.handleError('error');

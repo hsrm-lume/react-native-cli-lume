@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import {StyleSheet, ScrollView} from 'react-native';
-import {ErrorHandler, ErrorMessage} from '../../services/ErrorHandler';
+import {MessageKey} from '../../services';
+import {ErrorHandler} from '../../services/ErrorHandler';
 import {ErrorIcon} from './errorIcon';
 import {ErrorWindow} from './errorWindow';
 
 /**
  * @returns a jsx component that displays a scrollable list of error items.
- * The List can bs clocked to open a ErrorWindow
+ * The List can be clicked to open a ErrorWindow
  */
 const ErrorBar = () => {
 	var [bigSize, setBigSize] = useState(false);
@@ -15,7 +16,7 @@ const ErrorBar = () => {
 	const [r, setRepaint] = useState(false);
 	// removeMessage callback gets called as wrapper
 	// to trigger a repaint after a message got removed
-	const removeMessage = (errType: string) => {
+	const removeMessage = (errType: MessageKey) => {
 		ErrorHandler.remError(errType);
 		// close ErrorWindow if no errors are left
 		if (ErrorHandler.errorList.length == 0) setBigSize(false);

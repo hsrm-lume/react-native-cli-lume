@@ -3,10 +3,9 @@ import {
 	GestureResponderEvent,
 	ScrollView,
 	StyleSheet,
-	TouchableHighlight,
 	View,
 } from 'react-native';
-import {ErrorHandler, ErrorMessage} from '../../services';
+import {ErrorHandler, MessageKey} from '../../services';
 import ArrowDown from '../../assets/arrowSmallDown.svg';
 import {ErrorItem} from './errorItem';
 import {Icon} from './icon';
@@ -18,7 +17,7 @@ import {Icon} from './icon';
  */
 export const ErrorWindow = (props: {
 	close: (event: GestureResponderEvent) => void;
-	removeMsg: (errType: string) => void;
+	removeMsg: (errType: MessageKey) => void;
 }) => (
 	<View style={styles.errorWindow}>
 		<Icon icon={ArrowDown} action={props.close} style={styles.closeWindow} />

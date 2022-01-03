@@ -57,8 +57,7 @@ export const subscribePosition = (
 	const n = Geolocation.watchPosition(
 		pos => internalCallback(pos, callback),
 		e => {
-			// TODO error handler
-			ErrorHandler.handleError('error.location', true);
+			ErrorHandler.handleError('error.location');
 			console.warn('Geolocation.watchPosition error', e);
 		},
 		watchOptions
