@@ -1,5 +1,4 @@
 import {useEffect, useState} from 'react';
-import {environment} from '../env/environment';
 import {
 	getUserData,
 	nfcCleanupRead,
@@ -30,18 +29,14 @@ export function FireOffLogic(props: {
 					location: props.location,
 				} as TransmissionData,
 			])
-			.then(([recieved, self]) =>
+			.then(([received, self]) =>
 				// -> REST
 				RestClient.postContact(
-					environment.API_BASE_DOMAIN + environment.API_CONTACT_PATH,
-					{
-						uuidChild: self.uuid,
-						uuidParent: recieved.uuid,
-						position:
-							self.location.accuracy < recieved.location.accuracy
-								? self.location
-								: recieved.location,
-					}
+					received.uuid,
+					self.uuid,
+					self.location.accuracy < received.location.accuracy
+						? self.location
+						: received.location
 				)
 			)
 			.then(() =>

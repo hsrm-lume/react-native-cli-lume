@@ -1,10 +1,9 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import {environment} from '../env/environment';
 import {RestClient, writeUserData} from '../services';
 import {GeoLocation, HandledPromise} from '../types';
-import {QrCodeData} from '../types/QrCodeData';
+import {QrCodeData} from '../types/TranmissionData';
 
 const QRScanner = (props: {
 	uid: string;
@@ -45,15 +44,11 @@ const QRScanner = (props: {
 							.then(([self, received]) =>
 								// POST ApiData to REST API
 								RestClient.postContact(
-									environment.API_BASE_DOMAIN + environment.API_CONTACT_PATH,
-									{
-										uuidChild: self.uuid,
-										uuidParent: received.uuid,
-										position:
-											self.location.accuracy < received.location.accuracy
-												? self.location
-												: received.location,
-									}
+									received.uuid,
+									self.uuid,
+									self.location.accuracy < received.location.accuracy
+										? self.location
+										: received.location
 								)
 							)
 							.then(() =>
