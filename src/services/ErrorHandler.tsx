@@ -26,6 +26,11 @@ export class ErrorHandler {
 	static errorList: ErrorMessage[] = [];
 
 	/**
+	 * List that holds subscriptions to ErrorHandler changes
+	 */
+	static changeSubscriptions: (() => void)[] = [];
+
+	/**
 	 * internal compare function to sort Errors by their dismissability
 	 */
 	private static compare(a: ErrorMessage, b: ErrorMessage) {
@@ -48,6 +53,7 @@ export class ErrorHandler {
 
 		ErrorHandler.errorList.push(msg);
 		ErrorHandler.errorList.sort(ErrorHandler.compare);
+		ErrorHandler.changeSubscriptions.forEach(s => s());
 	}
 
 	/**
@@ -62,5 +68,6 @@ export class ErrorHandler {
 		);
 
 		console.log('removed', oldLen - ErrorHandler.errorList.length, 'errors');
+		ErrorHandler.changeSubscriptions.forEach(s => s());
 	}
 }

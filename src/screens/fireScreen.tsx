@@ -7,6 +7,7 @@ import FireView from '../components/fire/fire';
 import {FireOffLogic} from '../components/fire/fireOffLogic';
 import {FireOnLogic} from '../components/fire/fireOnLogic';
 import {
+	ErrorHandler,
 	GeoServiceSubscription,
 	getPermission,
 	getUserData,
@@ -22,6 +23,13 @@ export default function FireScreen() {
 		console.log('setting fire to: ' + fs);
 		userDataChange({uuid: userData.uuid, fireStatus: fs});
 	};
+
+	const [repaint, setRepaint] = useState(true);
+	const repaintMainComponent = () => {
+		setRepaint(!repaint);
+	};
+	ErrorHandler.changeSubscriptions.push(repaintMainComponent);
+
 	useOnInit(() => {
 		getUserData().then(ud => {
 			if (ud.fireStatus == userData.fireStatus && ud.uuid == userData.uuid)
