@@ -61,25 +61,30 @@ export default function FireScreen() {
 				userData.fireStatus ? ['#ffffff', '#FF3A3A'] : ['#ffffff', '#6F3FAF']
 			}
 			style={styles.container}>
-			<FireView fire={userData.fireStatus || false} />
-			<ErrorBar />
-
 			{pos && userData.fireStatus !== undefined && userData.uuid ? ( // only render logic if data ready
-				userData.fireStatus ? ( // render fire logic dependent on fire state
-					<FireOnLogic uuid={userData.uuid} location={pos} />
-				) : (
-					<FireOffLogic
-						userData={{uuid: userData.uuid, fireStatus: userData.fireStatus}}
-						fireUpdater={fireStatusChange}
-						location={pos}
-					/>
-				)
+				<>
+					<FireView fire={userData.fireStatus || false} />
+					<ErrorBar />
+					{userData.fireStatus ? (
+						<FireOnLogic uuid={userData.uuid} location={pos} /> // render fire logic dependent on fire state
+					) : (
+						<FireOffLogic
+							userData={{uuid: userData.uuid, fireStatus: userData.fireStatus}}
+							fireUpdater={fireStatusChange}
+							location={pos}
+						/>
+					)}
+				</>
 			) : (
 				<FullErrorView
 					item={{
 						errorType: 'warning.internet.map.loading',
 						dissmisable: false,
 					}}
+					action={() => {
+						console.log('fixed');
+					}}
+					fixBtnText="Go to Settings"
 				/>
 			)}
 		</LinearGradient>
