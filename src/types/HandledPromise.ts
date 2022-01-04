@@ -48,6 +48,7 @@ export class HandledPromise<T> {
 	}
 
 	protected handleErr(err: any) {
+		if (err == 'ignored') return;
 		console.warn('HandledPromise: ', err);
 		ErrorHandler.handleError({
 			icon: 'warning',

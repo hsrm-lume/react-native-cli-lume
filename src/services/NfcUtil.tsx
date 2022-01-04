@@ -58,6 +58,7 @@ export const nfcStartWrite = (
 export const nfcReadNext = (): HandledPromise<TransmissionData> =>
 	new HandledPromise<TransmissionData>((resolve, reject) => {
 		NfcManager.requestTechnology([NfcTech.Ndef])
+			.catch(() => reject('ignored'))
 			.then(() => NfcManager.getTag())
 			.then(async data => {
 				await NfcManager.cancelTechnologyRequest();
