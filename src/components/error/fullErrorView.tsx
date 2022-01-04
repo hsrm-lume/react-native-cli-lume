@@ -10,7 +10,7 @@ import {ErrorIcon} from './errorIcon';
  */
 const FullErrorView = (props: {item: MessageKey; action?: () => void}) => {
 	const m = Errors.getMessage(props.item);
-	const action = () => props.action || remError(props.item); // TODO register a button action that works as "fix the error" action
+	const action = props.action || (() => remError(props.item)); // TODO register a button action that works as "fix the error" action
 	return (
 		<View style={styles.ErrorView}>
 			<View style={styles.Image}>
@@ -76,8 +76,21 @@ const styles = StyleSheet.create({
 		color: '#000000',
 		fontSize: 18,
 		marginTop: 60,
-		paddingLeft: '10%',
 		paddingRight: '10%',
+		paddingLeft: '10%',
+	},
+	FixButton: {
+		marginTop: '10%',
+		backgroundColor: '#FFFFFF',
+		borderRadius: 25,
+	},
+	btnText: {
+		color: '#000000',
+		fontSize: 18,
+		paddingRight: '10%',
+		paddingLeft: '10%',
+		paddingTop: '10%',
+		paddingBottom: '10%',
 	},
 });
 
