@@ -7,7 +7,7 @@ import {ErrorWindow} from './errorWindow';
 
 /**
  * @returns a jsx component that displays a scrollable list of error items.
- * The List can be clicked to open a ErrorWindow
+ * The List can be clicked to open an ErrorWindow
  */
 const ErrorBar = () => {
 	var [bigSize, setBigSize] = useState(false);

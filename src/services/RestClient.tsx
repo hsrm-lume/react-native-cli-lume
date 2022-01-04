@@ -16,10 +16,13 @@ export class RestClient {
 			this.post(route, data)
 				.then(r => {
 					if (r.status == 200) resolve();
-					else throw new Error('error.internet.api');
+					else reject('error.internet.api');
 				})
 				.then(resolve)
-				.catch(reject);
+				.catch(() => {
+					reject('error.internet.api');
+					return;
+				});
 		});
 	}
 

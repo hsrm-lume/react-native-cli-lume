@@ -55,7 +55,7 @@ export class HandledPromise<T> {
 	}
 
 	protected handleErr(err: MessageKey) {
-		console.warn('HandledPromise: ', err);
+		//console.warn('HandledPromise: ', err);
 		ErrorHandler.handleError(err);
 	}
 
