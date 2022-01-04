@@ -47,10 +47,11 @@ export class HandledPromise<T> {
 	protected addDefaultHandler() {
 		if (this.isLastInChain)
 			this.promise.catch(err => {
+				if (err instanceof Error) this.handleErr(err.message as MessageKey);
 				// TODO check for mapping Error -> type
 				// although ts does typechecking to ensure the error type is known,
 				// Promises do always reject with any type. Therefore an unknown case could still occour
-				this.handleErr(err);
+				else this.handleErr(err);
 			});
 	}
 
