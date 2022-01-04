@@ -20,8 +20,8 @@ export class CloseableHCESession {
 	constructor(private session: HCESession) {}
 	close(): HandledPromise<void> {
 		if (this.session.active)
-			return HandledPromise.from(this.session.terminate());
-		else return HandledPromise.from(Promise.resolve());
+			return HandledPromise.from('nfc.write', this.session.terminate());
+		else return HandledPromise.from(undefined, Promise.resolve());
 	}
 	isOpen(): boolean {
 		return this.session.active;
@@ -36,10 +36,10 @@ export const nfcStartWrite = (
 	tmd: TransmissionData,
 	oldSession?: CloseableHCESession
 ): HandledPromise<CloseableHCESession> =>
-	new HandledPromise((resolve, reject) => {
+	new HandledPromise('nfc.write', (resolve, reject) => {
 		new Promise<void>((resolve, reject) => {
 			if (!oldSession || !oldSession.isOpen()) resolve();
-			else oldSession.close().then(resolve, reject);
+			else oldSession.close().then(resolve).catch(reject);
 		})
 			.then(() => new HCESession())
 			.then(s =>
@@ -56,29 +56,32 @@ export const nfcStartWrite = (
  * @returns Promise of TransmissionData recieved from NFC tag
  */
 export const nfcReadNext = (): HandledPromise<TransmissionData> =>
-	new HandledPromise<TransmissionData>((resolve, reject) => {
-		NfcManager.requestTechnology([NfcTech.Ndef])
-			.then(() => NfcManager.getTag())
-			.then(async data => {
+	HandledPromise.from<NfcTech | null>(
+		undefined,
+		new Promise<NfcTech | null>(async resolve => {
+			try {
 				await NfcManager.cancelTechnologyRequest();
-				if (!data) throw new Error('error.nfc.read.empty');
-
-				const tag = processNfcTag(data);
-
-				if (tag.uuid === undefined || tag.location === undefined)
-					throw new Error('error.nfc.read.invalid');
-
-				return tag;
-			})
-			.then(resolve)
-			.catch(reject);
-	});
+			} catch {}
+			resolve(NfcManager.requestTechnology([NfcTech.Ndef]));
+		})
+	)
+		.then(() => NfcManager.getTag())
+		.then(
+			data =>
+				new HandledPromise('nfc.empty', resolve => {
+					if (!data) throw new Error('No nfc data read');
+					const tag = processNfcTag(data);
+					if (tag.uuid === undefined || tag.location === undefined)
+						throw new Error('Read invalid nfc data:' + tag);
+					resolve(tag);
+				})
+		);
 
 /**
  * reading Cleanup function, to be run whe the "parent" component is unmounted
  */
-export const nfcCleanupRead = (): void => {
-	NfcManager.cancelTechnologyRequest();
+export const nfcCleanupRead = () => {
+	return NfcManager.cancelTechnologyRequest();
 };
 
 /**
@@ -88,7 +91,7 @@ export const nfcCleanupRead = (): void => {
 const processNfcTag = (tag: TagEvent): TransmissionData => {
 	const msg = tag.ndefMessage;
 
-	if (msg === undefined) throw new Error('error.nfc.process.empty');
+	if (msg === undefined) throw new Error('recieved NFC Message was undefined');
 
 	//Only returns 'application/json' payloads if found.
 	const res = msg
@@ -103,7 +106,6 @@ const processNfcTag = (tag: TagEvent): TransmissionData => {
 				} as SlimNdefRecord)
 		)
 		.filter(x => {
-			console.log(x.type);
 			return x.type == 'application/json';
 		});
 	// process the first application/json payload

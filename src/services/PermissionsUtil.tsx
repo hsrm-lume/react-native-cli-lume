@@ -39,7 +39,7 @@ const getRationale = (p: Permission): Rationale | undefined => {
  * @returns Promise that resolves if permission is granted
  */
 export const getPermission = (p: Permission) =>
-	new HandledPromise<void>((resolve, reject) =>
+	new HandledPromise<void>('location.permission', (resolve, reject) =>
 		PermissionsAndroid.check(p)
 			.then(b => {
 				if (b) return resolve();

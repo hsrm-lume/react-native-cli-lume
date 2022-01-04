@@ -1,19 +1,20 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
-import {ErrorMessage, Errors} from '../../services/Errors';
+import {StyleSheet, View, Text, TouchableHighlight} from 'react-native';
+import {remError} from '../../services';
+import {Errors, MessageKey} from '../../services/Errors';
 import {ErrorIcon} from './errorIcon';
 
 /**
  * @param item the ErrorMessage to display
  * @returns a jsx component that displays an error in full-screen
  */
-const FullErrorView = (props: {item: ErrorMessage}) => {
-	const m = Errors.getMessage(props.item.errorType);
-	const action = undefined; // TODO register a button action that works as "fix the error" action
+const FullErrorView = (props: {item: MessageKey; action?: () => void}) => {
+	const m = Errors.getMessage(props.item);
+	const action = () => props.action || remError(props.item); // TODO register a button action that works as "fix the error" action
 	return (
 		<View style={styles.ErrorView}>
 			<View style={styles.Image}>
-				<ErrorIcon errType={props.item.errorType} style={styles.Svg} />
+				<ErrorIcon errType={props.item} style={styles.Svg} />
 			</View>
 			<View>
 				<Text style={styles.Title}>{m.msg}</Text>
@@ -25,7 +26,12 @@ const FullErrorView = (props: {item: ErrorMessage}) => {
 			) : null}
 			{action ? (
 				/* TODO: Add button with callback */ <View>
-					<Text style={styles.Message}>FIX IT</Text>
+					<TouchableHighlight
+						style={[styles.FixButton]}
+						underlayColor="#ffffff"
+						onPress={action}>
+						<Text style={styles.btnText}>FIX IT</Text>
+					</TouchableHighlight>
 				</View>
 			) : null}
 		</View>
@@ -33,6 +39,19 @@ const FullErrorView = (props: {item: ErrorMessage}) => {
 };
 
 const styles = StyleSheet.create({
+	FixButton: {
+		marginTop: '10%',
+		backgroundColor: '#FFFFFF',
+		borderRadius: 25,
+	},
+	btnText: {
+		color: '#000000',
+		fontSize: 18,
+		paddingRight: '10%',
+		paddingLeft: '10%',
+		paddingTop: '10%',
+		paddingBottom: '10%',
+	},
 	ErrorView: {
 		height: '100%',
 		width: '100%',

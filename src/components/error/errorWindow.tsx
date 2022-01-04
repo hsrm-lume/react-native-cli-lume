@@ -5,7 +5,7 @@ import {
 	StyleSheet,
 	View,
 } from 'react-native';
-import {ErrorHandler, MessageKey} from '../../services';
+import {getDismissableErrors, MessageKey} from '../../services';
 import ArrowDown from '../../assets/arrowSmallDown.svg';
 import {ErrorItem} from './errorItem';
 import {Icon} from './icon';
@@ -22,7 +22,7 @@ export const ErrorWindow = (props: {
 	<View style={styles.errorWindow}>
 		<Icon icon={ArrowDown} action={props.close} style={styles.closeWindow} />
 		<ScrollView style={styles.scrollView}>
-			{ErrorHandler.errorList.map((item, i) => (
+			{getDismissableErrors().map((item, i) => (
 				<ErrorItem item={item} removeMsg={props.removeMsg} key={i} />
 			))}
 		</ScrollView>

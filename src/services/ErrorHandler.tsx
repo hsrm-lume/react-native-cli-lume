@@ -1,4 +1,5 @@
-import {ErrorMessage, MessageKey} from './Errors';
+import {isDismissableError} from '.';
+import {isFullscreenError, MessageKey} from './Errors';
 
 /**
  * @param msg the error message to test for the given type
@@ -7,67 +8,48 @@ import {ErrorMessage, MessageKey} from './Errors';
  * @returns true if msg matches type
  */
 const messageTypeEquals = (
-	msg: ErrorMessage,
+	msg: MessageKey,
 	type: string,
 	includeSubtypes: boolean
 ): boolean => {
 	if (includeSubtypes)
-		return (
-			msg.errorType == type ||
-			(msg.errorType.startsWith(type) && msg.errorType[type.length] == '.')
-		);
-	else return msg.errorType == type;
+		return msg == type || (msg.startsWith(type) && msg[type.length] == '.');
+	else return msg == type;
 };
 
-export class ErrorHandler {
-	/**
-	 * List of ErrorMessages
-	 */
-	static errorList: ErrorMessage[] = [];
+let errorList: MessageKey[] = [];
 
-	/**
-	 * List that holds subscriptions to ErrorHandler changes
-	 */
-	static changeSubscriptions: (() => void)[] = [];
+export const getFullscreenErrors = (): MessageKey[] =>
+	errorList.filter(isFullscreenError);
+export const getDismissableErrors = (): MessageKey[] =>
+	errorList.filter(isDismissableError);
 
-	/**
-	 * internal compare function to sort Errors by their dismissability
-	 */
-	private static compare(a: ErrorMessage, b: ErrorMessage) {
-		if (a.dissmisable && !b.dissmisable) return -1;
-		if (!a.dissmisable && b.dissmisable) return 1;
-		return 0;
-	}
+let changeSubscription: () => void = () => {};
+/**
+ * Register a new change subscription
+ */
+export const registerErrorsChangeSubscription = (s: () => void) =>
+	(changeSubscription = s);
 
-	/**
-	 * Adds a ErrorMessage with given parameters
-	 * unless some Message with same type and text already exists
-	 */
-	static handleError(errorType: MessageKey, dismissable: boolean = true) {
-		const msg: ErrorMessage = {
-			errorType: errorType,
-			dissmisable: dismissable,
-		};
+/**
+ * Adds a MessageKey with given parameters
+ * unless some Message with same key already exists
+ */
+export const handleError = (errorType: MessageKey) => {
+	if (errorList.some(x => x == errorType)) return;
 
-		if (ErrorHandler.errorList.some(x => x.errorType == msg.errorType)) return;
+	errorList.push(errorType);
+	changeSubscription();
+};
 
-		ErrorHandler.errorList.push(msg);
-		ErrorHandler.errorList.sort(ErrorHandler.compare);
-		ErrorHandler.changeSubscriptions.forEach(s => s());
-	}
-
-	/**
-	 * Remove the ErrorMessage by its type
-	 * @param errorType the type to remove
-	 * @param includeSubtypes to include everything that starts with `errorType`
-	 */
-	static remError(errType: MessageKey, includeSubtypes: boolean = true) {
-		const oldLen = ErrorHandler.errorList.length;
-		ErrorHandler.errorList = ErrorHandler.errorList.filter(
-			e => !messageTypeEquals(e, errType, includeSubtypes)
-		);
-
-		console.log('removed', oldLen - ErrorHandler.errorList.length, 'errors');
-		ErrorHandler.changeSubscriptions.forEach(s => s());
-	}
-}
+/**
+ * Remove the Error by its Message key
+ * @param errorType the key to remove
+ * @param includeSubtypes to include everything that starts with `errorType`
+ */
+export const remError = (errType: string, includeSubtypes: boolean = true) => {
+	errorList = errorList.filter(
+		e => !messageTypeEquals(e, errType, includeSubtypes)
+	);
+	changeSubscription();
+};

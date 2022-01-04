@@ -19,7 +19,7 @@ const openRealm = async () =>
  * @returns Promise with UserData
  */
 export const getUserData = (): HandledPromise<UserData> =>
-	new HandledPromise(async (resolve, reject) => {
+	new HandledPromise('storage', async resolve => {
 		// open the realm
 		const r = await openRealm();
 
@@ -34,7 +34,7 @@ export const getUserData = (): HandledPromise<UserData> =>
 				fireStatus: false,
 			})
 		);
-		if (!newu) return reject('error.storage.create.user');
+		if (!newu) throw new Error('New user could not be created');
 		resolve(newu);
 	});
 
@@ -45,7 +45,7 @@ export const getUserData = (): HandledPromise<UserData> =>
 export const writeUserData = (
 	data: Partial<UserData>
 ): HandledPromise<UserData> =>
-	new HandledPromise(async (resolve, reject) => {
+	new HandledPromise('storage', async resolve => {
 		// open the realm
 		const r = await openRealm();
 
@@ -61,6 +61,6 @@ export const writeUserData = (
 			if (data.uuid !== undefined && environment.STAGE === 'dev')
 				u.uuid = data.uuid;
 		});
-		if (u) return resolve(u);
-		reject('error.storage.write.user');
+		if (!u) throw new Error('userdata could not be fetched');
+		resolve(u);
 	});

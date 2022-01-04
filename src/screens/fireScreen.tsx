@@ -7,11 +7,12 @@ import FireView from '../components/fire/fire';
 import {FireOffLogic} from '../components/fire/fireOffLogic';
 import {FireOnLogic} from '../components/fire/fireOnLogic';
 import {
-	ErrorHandler,
 	GeoServiceSubscription,
+	getFullscreenErrors,
 	getPermission,
 	getUserData,
 	subscribePosition,
+	registerErrorsChangeSubscription,
 } from '../services';
 import {useOnInit, UserData} from '../types';
 import {GeoLocation} from '../types/GeoLocation';
@@ -28,7 +29,7 @@ export default function FireScreen() {
 	const repaintMainComponent = () => {
 		setRepaint(!repaint);
 	};
-	ErrorHandler.changeSubscriptions.push(repaintMainComponent);
+	registerErrorsChangeSubscription(repaintMainComponent);
 
 	useOnInit(() => {
 		getUserData().then(ud => {
@@ -54,8 +55,13 @@ export default function FireScreen() {
 		};
 	});
 
-	// rendering
-	return (
+	// TODO initial tech checks
+	// display errors if there is at least one
+	const e = getFullscreenErrors()[0];
+	if (e) return <FullErrorView item={e} />;
+
+	// display fire view if no errors present
+	return userData.uuid && userData.fireStatus !== undefined && pos ? (
 		<LinearGradient
 			colors={
 				userData.fireStatus ? ['#ffffff', '#FF3A3A'] : ['#ffffff', '#6F3FAF']
@@ -63,27 +69,17 @@ export default function FireScreen() {
 			style={styles.container}>
 			<FireView fire={userData.fireStatus || false} />
 			<ErrorBar />
-
-			{pos && userData.fireStatus !== undefined && userData.uuid ? ( // only render logic if data ready
-				userData.fireStatus ? ( // render fire logic dependent on fire state
-					<FireOnLogic uuid={userData.uuid} location={pos} />
-				) : (
-					<FireOffLogic
-						userData={{uuid: userData.uuid, fireStatus: userData.fireStatus}}
-						fireUpdater={fireStatusChange}
-						location={pos}
-					/>
-				)
+			{userData.fireStatus ? ( // render fire logic dependent on fire state
+				<FireOnLogic uuid={userData.uuid} location={pos} />
 			) : (
-				<FullErrorView
-					item={{
-						errorType: 'warning.internet.map.loading',
-						dissmisable: false,
-					}}
+				<FireOffLogic
+					userData={{uuid: userData.uuid, fireStatus: userData.fireStatus}}
+					fireUpdater={fireStatusChange}
+					location={pos}
 				/>
 			)}
 		</LinearGradient>
-	);
+	) : null;
 }
 
 const styles = StyleSheet.create({

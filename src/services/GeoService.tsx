@@ -1,7 +1,7 @@
 import Geolocation, {GeoWatchOptions} from 'react-native-geolocation-service';
+import {handleError, remError} from '.';
 import {environment} from '../env/environment';
 import {GeoLocation} from '../types/GeoLocation';
-import {ErrorHandler} from './ErrorHandler';
 
 /**
  * Wrapper class to unsubscribe from the GeoLocation watch
@@ -39,7 +39,12 @@ const internalCallback = (
 	position: Geolocation.GeoPosition,
 	cb: (pos: GeoLocation) => void
 ) => {
-	if (position.coords.accuracy > environment.GEO_THRESHOLD) return; // TODO error handler
+	if (position.coords.accuracy > environment.GEO_THRESHOLD) {
+		handleError('location.accuracy');
+		return;
+	}
+	remError('location.accuracy');
+	remError('location.device');
 	cb({
 		accuracy: position.coords.accuracy,
 		lat: position.coords.latitude,
@@ -57,7 +62,7 @@ export const subscribePosition = (
 	const n = Geolocation.watchPosition(
 		pos => internalCallback(pos, callback),
 		e => {
-			ErrorHandler.handleError('error.location');
+			handleError('location.device');
 			console.warn('Geolocation.watchPosition error', e);
 		},
 		watchOptions

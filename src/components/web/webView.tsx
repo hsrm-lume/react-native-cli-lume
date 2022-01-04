@@ -10,10 +10,7 @@ const CustomWebView = (props: {url: string}) => {
 			renderLoading={() =>
 				/* TODO: Loading view */
 				FullErrorView({
-					item: {
-						dissmisable: false,
-						errorType: 'warning.internet.map.loading',
-					},
+					item: 'internet.map.loading',
 				})
 			}
 			startInLoadingState={true}

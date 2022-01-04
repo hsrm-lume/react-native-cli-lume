@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, ScrollView} from 'react-native';
-import {MessageKey} from '../../services';
-import {ErrorHandler} from '../../services/ErrorHandler';
+import {getDismissableErrors, MessageKey, remError} from '../../services';
 import {ErrorIcon} from './errorIcon';
 import {ErrorWindow} from './errorWindow';
 
@@ -17,9 +16,9 @@ const ErrorBar = () => {
 	// removeMessage callback gets called as wrapper
 	// to trigger a repaint after a message got removed
 	const removeMessage = (errType: MessageKey) => {
-		ErrorHandler.remError(errType);
+		remError(errType);
 		// close ErrorWindow if no errors are left
-		if (ErrorHandler.errorList.length == 0) setBigSize(false);
+		if (getDismissableErrors().length == 0) setBigSize(false);
 		setRepaint(!r);
 	};
 
@@ -27,8 +26,8 @@ const ErrorBar = () => {
 		<ErrorWindow close={switchBigSize} removeMsg={removeMessage} />
 	) : (
 		<ScrollView horizontal style={styles.errorBar}>
-			{ErrorHandler.errorList.map((item, i) => (
-				<ErrorIcon errType={item.errorType} action={switchBigSize} key={i} />
+			{getDismissableErrors().map((item, i) => (
+				<ErrorIcon errType={item} action={switchBigSize} key={i} />
 			))}
 		</ScrollView>
 	);

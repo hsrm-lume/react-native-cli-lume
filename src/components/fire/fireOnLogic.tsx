@@ -6,7 +6,7 @@ export function FireOnLogic(props: {location: GeoLocation; uuid: string}) {
 	let nfcWriteSession: CloseableHCESession | undefined;
 	// NFC write
 	useEffect(() => {
-		new HandledPromise<TransmissionData>(resolve => {
+		new HandledPromise<TransmissionData>('nfc.write', resolve => {
 			resolve({
 				uuid: props.uuid,
 				location: props.location,

@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {ErrorMessage, Errors, MessageKey} from '../../services';
+import {Errors, MessageKey} from '../../services';
 import {Icon} from './icon';
 import CloseIcon from '../../assets/thinCross.svg';
 import {ErrorIcon} from './errorIcon';
@@ -10,27 +10,22 @@ import {ErrorIcon} from './errorIcon';
  * @returns a jsx component that displays the error message with icon and dismiss button
  */
 export const ErrorItem = (props: {
-	item: ErrorMessage;
+	item: MessageKey;
 	removeMsg: (errType: MessageKey) => void;
 }) => {
-	const m = Errors.getMessage(props.item.errorType);
+	const m = Errors.getMessage(props.item);
 	return (
 		<View style={styles.message}>
-			<ErrorIcon errType={props.item.errorType} />
+			<ErrorIcon errType={props.item} />
 			<View style={styles.textBox}>
 				<Text style={styles.header}>{m.msg}</Text>
 				{m.desc ? <Text style={styles.text}>{m.desc}</Text> : null}
 			</View>
-			{
-				/* only add remove callback if message is dismissable */
-				props.item.dissmisable ? (
-					<Icon
-						icon={CloseIcon}
-						style={styles.closeIcon}
-						action={() => props.removeMsg(props.item.errorType)}
-					/>
-				) : null
-			}
+			<Icon
+				icon={CloseIcon}
+				style={styles.closeIcon}
+				action={() => props.removeMsg(props.item)}
+			/>
 		</View>
 	);
 };
