@@ -18,7 +18,8 @@ export const ErrorItem = (props: {
 		<View style={styles.message}>
 			<ErrorIcon errType={props.item.errorType} />
 			<View style={styles.textBox}>
-				<Text style={styles.text}>{m.msg}</Text>
+				<Text style={styles.header}>{m.msg}</Text>
+				{m.desc ? <Text style={styles.text}>{m.desc}</Text> : null}
 			</View>
 			{
 				/* only add remove callback if message is dismissable */
@@ -51,5 +52,10 @@ const styles = StyleSheet.create({
 	text: {
 		fontSize: 20,
 		color: '#000000',
+	},
+	header: {
+		fontSize: 20,
+		color: '#000000',
+		fontWeight: 'bold',
 	},
 });
