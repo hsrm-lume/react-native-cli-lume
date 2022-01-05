@@ -7,12 +7,12 @@ import {
 	remError,
 } from '../services';
 import {checkConnected} from '../services/InternetCheck';
-import {useOnInit, UserData} from '../types';
+import {UserData} from '../types';
 import {GeoLocation} from '../types/GeoLocation';
 import QRGenerator from '../components/qrGenerator';
 import QRScanner from '../components/qrScanner';
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text} from 'react-native';
+import {Platform, StyleSheet, Text} from 'react-native';
 import ErrorBar from '../components/error/errorBar';
 import FireView from '../components/fire/fire';
 import {FireOffLogic} from '../components/fire/fireOffLogic';
@@ -112,7 +112,9 @@ export default function FireScreen() {
 									updateQrStatus={switchQrStatus}
 								/>
 								<ErrorBar />
-								<FireOnLogic uuid={userData.uuid} location={pos} />
+								{Platform.OS == 'android' ? (
+									<FireOnLogic uuid={userData.uuid} location={pos} />
+								) : null}
 							</>
 						)
 					) : // fire off
@@ -130,14 +132,16 @@ export default function FireScreen() {
 								fire={userData.fireStatus}
 								updateQrStatus={switchQrStatus}
 							/>
-							<FireOffLogic
-								userData={{
-									uuid: userData.uuid,
-									fireStatus: userData.fireStatus,
-								}}
-								fireUpdater={fireStatusChange}
-								location={pos}
-							/>
+							{Platform.OS == 'android' ? (
+								<FireOffLogic
+									userData={{
+										uuid: userData.uuid,
+										fireStatus: userData.fireStatus,
+									}}
+									fireUpdater={fireStatusChange}
+									location={pos}
+								/>
+							) : null}
 						</>
 					)
 				) : (
