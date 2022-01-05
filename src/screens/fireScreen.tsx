@@ -5,20 +5,22 @@ import {
 	subscribePosition,
 	handleError,
 	remError,
+	isNfcEnabled,
 } from '../services';
 import {checkConnected} from '../services/InternetCheck';
 import {UserData} from '../types';
 import {GeoLocation} from '../types/GeoLocation';
-import QRGenerator from '../components/qrGenerator';
-import QRScanner from '../components/qrScanner';
+import QRGenerator from '../components/qr/qrGenerator';
+import QRScanner from '../components/qr/qrScanner';
 import React, {useState, useEffect} from 'react';
-import {Platform, StyleSheet, Text} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import ErrorBar from '../components/error/errorBar';
 import FireView from '../components/fire/fire';
 import {FireOffLogic} from '../components/fire/fireOffLogic';
 import {FireOnLogic} from '../components/fire/fireOnLogic';
 import LinearGradient from 'react-native-linear-gradient';
 import FullscreenErrors from '../components/error/fullscreenErrors';
+import FullErrorView from '../components/error/fullErrorView';
 
 export default function FireScreen() {
 	// userData
@@ -51,6 +53,11 @@ export default function FireScreen() {
 		getPermission('lume.permissons.location').then(() =>
 			setPosPermission(true)
 		);
+	}, [retryAfterError]);
+
+	useEffect(() => {
+		console.log('try nfc on');
+		isNfcEnabled().then(() => remError('nfc.off'));
 	}, [retryAfterError]);
 
 	// position
@@ -145,8 +152,7 @@ export default function FireScreen() {
 						</>
 					)
 				) : (
-					/* TODO: Loading view */
-					<Text style={styles.text1}>Loading...</Text>
+					<FullErrorView item="loading" action={null}></FullErrorView>
 				)}
 			</LinearGradient>
 		</>

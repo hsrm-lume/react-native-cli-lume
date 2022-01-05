@@ -1,10 +1,10 @@
 import React from 'react';
-import {View, StyleSheet, TouchableHighlight, Text} from 'react-native';
-import {GeoLocation} from '../types';
-import {QrCodeData} from '../types/TranmissionData';
+import {View, StyleSheet, Text} from 'react-native';
+import {GeoLocation} from '../../types';
+import {QrCodeData} from '../../types/TranmissionData';
 import QRCode from 'react-native-qrcode-svg';
-import ThinCross from '../assets/thinCross.svg';
-import {Icon} from './error/icon';
+import ThinCross from '../../assets/thinCross.svg';
+import {Icon} from '../error/icon';
 
 const QRGenerator = (props: {
 	uid: string;

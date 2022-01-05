@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import {RestClient, writeUserData} from '../services';
-import {GeoLocation, HandledPromise} from '../types';
-import {QrCodeData} from '../types/TranmissionData';
+import {RestClient, writeUserData} from '../../services';
+import {GeoLocation, HandledPromise} from '../../types';
+import {QrCodeData} from '../../types/TranmissionData';
 
 const QRScanner = (props: {
 	uid: string;
@@ -92,10 +92,12 @@ const styles = StyleSheet.create({
 	},
 
 	containerView: {
-		marginTop: 20,
+		marginTop: 0,
 	},
 
 	cameraView: {
+		overflow: 'hidden',
+		borderRadius: 20,
 		height: 300,
 		width: 250,
 		alignSelf: 'center',

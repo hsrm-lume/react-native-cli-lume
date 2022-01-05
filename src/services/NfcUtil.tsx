@@ -85,6 +85,20 @@ export const nfcCleanupRead = () => {
 };
 
 /**
+ *
+ * @returns  a Promise that resolves if NFC is turned on
+ */
+export const isNfcEnabled = (): HandledPromise<void> =>
+	new HandledPromise('nfc.off', (resolve, reject) => {
+		NfcManager.isEnabled()
+			.then(enabled => {
+				if (enabled) return resolve();
+				else return reject(new Error('NFC is not enabled'));
+			})
+			.catch(reject);
+	});
+
+/**
  * @param tag NFC-Tag data to be processed
  * @returns TransmissionData Object from NFC-Tag
  */
