@@ -45,7 +45,7 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Camera is needed</string>
+	<string>lume needs access to your camera for the QR Code Scanner</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Lume needs access to your Location Data to function correctly. Please grant this </string>
 	<key>UILaunchStoryboardName</key>

@@ -1,11 +1,3 @@
-import React, {useEffect, useState} from 'react';
-import {StyleSheet} from 'react-native';
-import {LinearGradient} from 'react-native-svg';
-import ErrorBar from '../components/error/errorBar';
-import FullErrorView from '../components/error/fullErrorView';
-import FireView from '../components/fire/fire';
-import {FireOffLogic} from '../components/fire/fireOffLogic';
-import {FireOnLogic} from '../components/fire/fireOnLogic';
 import {
 	GeoServiceSubscription,
 	getFullscreenErrors,
@@ -19,6 +11,16 @@ import {
 import {checkConnected} from '../services/InternetCheck';
 import {useOnInit, UserData} from '../types';
 import {GeoLocation} from '../types/GeoLocation';
+import QRGenerator from '../components/qrGenerator';
+import QRScanner from '../components/qrScanner';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, Text} from 'react-native';
+import {LinearGradient} from 'react-native-svg';
+import ErrorBar from '../components/error/errorBar';
+import FullErrorView from '../components/error/fullErrorView';
+import FireView from '../components/fire/fire';
+import {FireOffLogic} from '../components/fire/fireOffLogic';
+import {FireOnLogic} from '../components/fire/fireOnLogic';
 
 export default function FireScreen() {
 	// userData
@@ -69,6 +71,12 @@ export default function FireScreen() {
 	const e = getFullscreenErrors()[0];
 	if (e) return <FullErrorView item={e} />;
 
+	// qrStatus
+	var [qrStatus, setQrStatus] = useState(false);
+	const switchQrStatus = () => {
+		setQrStatus(!qrStatus);
+	};
+
 	// display fire view if no errors present
 	return userData.uuid && userData.fireStatus !== undefined && pos ? (
 		<LinearGradient
@@ -76,17 +84,59 @@ export default function FireScreen() {
 				userData.fireStatus ? ['#ffffff', '#FF3A3A'] : ['#ffffff', '#6F3FAF']
 			}
 			style={styles.container}>
-			<FireView fire={userData.fireStatus || false} />
-			<ErrorBar />
-			{userData.fireStatus ? ( // render fire logic dependent on fire state
-				<FireOnLogic uuid={userData.uuid} location={pos} />
+			{pos &&
+			userData.uuid &&
+			qrStatus !== undefined &&
+			userData.fireStatus !== undefined ? ( // only render components if data ready
+				userData.fireStatus ? (
+					// fire on
+					qrStatus ? (
+						// render QR Code Generator
+						<QRGenerator
+							uid={userData.uuid}
+							position={pos}
+							updateQrStatus={switchQrStatus}
+						/>
+					) : (
+						// render fire components and QR button
+						<>
+							<FireView
+								fire={userData.fireStatus}
+								updateQrStatus={switchQrStatus}
+							/>
+							<FireOnLogic uuid={userData.uuid} location={pos} />
+						</>
+					)
+				) : // fire off
+				qrStatus ? (
+					// render QR Code Scanner
+					<QRScanner
+						uid={userData.uuid}
+						position={pos}
+						updateQrStatus={switchQrStatus}
+					/>
+				) : (
+					// render fire components and QR button
+					<>
+						<FireView
+							fire={userData.fireStatus}
+							updateQrStatus={switchQrStatus}
+						/>
+						<FireOffLogic
+							userData={{
+								uuid: userData.uuid,
+								fireStatus: userData.fireStatus,
+							}}
+							fireUpdater={fireStatusChange}
+							location={pos}
+						/>
+					</>
+				)
 			) : (
-				<FireOffLogic
-					userData={{uuid: userData.uuid, fireStatus: userData.fireStatus}}
-					fireUpdater={fireStatusChange}
-					location={pos}
-				/>
+				/* TODO: Loading view */
+				<Text style={styles.text1}>Loading...</Text>
 			)}
+			<ErrorBar />
 		</LinearGradient>
 	) : null;
 }
@@ -108,8 +158,14 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
-	containerMap: {
-		width: '100%',
-		height: '100%',
+	qrCode: {
+		flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+		containerMap: {
+			width: '100%',
+			height: '100%',
+		},
 	},
 });

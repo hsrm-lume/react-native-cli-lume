@@ -81,34 +81,39 @@ const getRationale = (p: LumePermission): Rationale | undefined => {
  */
 
 export const getPermission = (p: LumePermission) =>
-	new HandledPromise<void>((resolve, reject) => {
-		let permission = mapPermission(p);
-		check(permission)
-			.then(b => {
-				if (b == RESULTS.GRANTED) return resolve();
-				request(permission, getRationale(p))
-					.then(g => {
-						switch (g) {
-							case RESULTS.UNAVAILABLE:
-								reject(g + ' is Unavailable');
-								break;
-							case RESULTS.GRANTED:
-							case RESULTS.LIMITED:
-								resolve();
-								break;
-							case RESULTS.DENIED:
-								reject('Permission ' + g + ' denied');
-								break;
+	new HandledPromise<void>(
+		p === 'lume.permissons.camera'
+			? 'camera.permission'
+			: 'location.permission',
+		(resolve, reject) => {
+			let permission = mapPermission(p);
+			check(permission)
+				.then(b => {
+					if (b == RESULTS.GRANTED) return resolve();
+					request(permission, getRationale(p))
+						.then(g => {
+							switch (g) {
+								case RESULTS.UNAVAILABLE:
+									reject(g + ' is Unavailable');
+									break;
+								case RESULTS.GRANTED:
+								case RESULTS.LIMITED:
+									resolve();
+									break;
+								case RESULTS.DENIED:
+									reject('Permission ' + g + ' denied');
+									break;
 
-							case RESULTS.BLOCKED:
-								reject('Permission ' + g + ' blocked');
-								break;
-							default:
-								reject('Permission' + g + ': ' + p);
-								break;
-						}
-					})
-					.catch(reject);
-			})
-			.catch(reject);
-	});
+								case RESULTS.BLOCKED:
+									reject('Permission ' + g + ' blocked');
+									break;
+								default:
+									reject('Permission' + g + ': ' + p);
+									break;
+							}
+						})
+						.catch(reject);
+				})
+				.catch(reject);
+		}
+	);
