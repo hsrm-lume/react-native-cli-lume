@@ -1,16 +1,22 @@
-import React, {useState} from 'react';
-import {Platform, StyleSheet} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import ErrorBar from '../components/errorBar';
-import FireView from '../components/fire';
-import {FireOffLogic} from '../components/fireOffLogic';
-import {FireOnLogic} from '../components/fireOnLogic';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet} from 'react-native';
+import {LinearGradient} from 'react-native-svg';
+import ErrorBar from '../components/error/errorBar';
+import FullErrorView from '../components/error/fullErrorView';
+import FireView from '../components/fire/fire';
+import {FireOffLogic} from '../components/fire/fireOffLogic';
+import {FireOnLogic} from '../components/fire/fireOnLogic';
 import {
 	GeoServiceSubscription,
+	getFullscreenErrors,
 	getPermission,
 	getUserData,
 	subscribePosition,
+	registerErrorsChangeSubscription,
+	handleError,
+	remError,
 } from '../services';
+import {checkConnected} from '../services/InternetCheck';
 import {useOnInit, UserData} from '../types';
 import {GeoLocation} from '../types/GeoLocation';
 
@@ -21,6 +27,13 @@ export default function FireScreen() {
 		console.log('setting fire to: ' + fs);
 		userDataChange({uuid: userData.uuid, fireStatus: fs});
 	};
+
+	const [repaint, setRepaint] = useState(true);
+	const repaintMainComponent = () => {
+		setRepaint(!repaint);
+	};
+	registerErrorsChangeSubscription(repaintMainComponent);
+
 	useOnInit(() => {
 		getUserData().then(ud => {
 			if (ud.fireStatus == userData.fireStatus && ud.uuid == userData.uuid)
@@ -32,7 +45,8 @@ export default function FireScreen() {
 
 	// position
 	const [pos, posChange] = useState<GeoLocation | undefined>(undefined);
-	useOnInit(() => {
+	useEffect(() => {
+		console.log('resubbing');
 		let sub: GeoServiceSubscription;
 		console.log('getting permission');
 		getPermission('lume.permissons.location').then(() => {
@@ -44,10 +58,19 @@ export default function FireScreen() {
 		return () => {
 			sub?.unsubscribe();
 		};
-	});
+	}, [repaint]);
 
-	// rendering
-	return (
+	// TODO initial tech checks
+	checkConnected().then(res => {
+		if (!res) handleError('internet.device');
+		else remError('internet.device');
+	});
+	// display errors if there is at least one
+	const e = getFullscreenErrors()[0];
+	if (e) return <FullErrorView item={e} />;
+
+	// display fire view if no errors present
+	return userData.uuid && userData.fireStatus !== undefined && pos ? (
 		<LinearGradient
 			colors={
 				userData.fireStatus ? ['#ffffff', '#FF3A3A'] : ['#ffffff', '#6F3FAF']
@@ -55,29 +78,17 @@ export default function FireScreen() {
 			style={styles.container}>
 			<FireView fire={userData.fireStatus || false} />
 			<ErrorBar />
-			{
-				pos && userData.fireStatus !== undefined && userData.uuid ? ( // only render logic if data ready
-					userData.fireStatus ? ( // render fire logic dependent on fire state
-						// iOS currently has this bug https://developer.apple.com/forums/thread/657166 - i
-						// propose simply not using nfc for iOS and relying on the QR-Code Paring
-						Platform.OS === 'android' ? (
-							<FireOnLogic uuid={userData.uuid} location={pos} />
-						) : null
-					) : Platform.OS === 'android' ? (
-						<FireOffLogic
-							userData={{
-								uuid: userData.uuid,
-								fireStatus: userData.fireStatus,
-							}}
-							fireUpdater={fireStatusChange}
-							location={pos}
-						/>
-					) : null
-				) : null
-				/* TODO: Loading view */
-			}
+			{userData.fireStatus ? ( // render fire logic dependent on fire state
+				<FireOnLogic uuid={userData.uuid} location={pos} />
+			) : (
+				<FireOffLogic
+					userData={{uuid: userData.uuid, fireStatus: userData.fireStatus}}
+					fireUpdater={fireStatusChange}
+					location={pos}
+				/>
+			)}
 		</LinearGradient>
-	);
+	) : null;
 }
 
 const styles = StyleSheet.create({
@@ -96,5 +107,9 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		alignItems: 'center',
 		justifyContent: 'center',
+	},
+	containerMap: {
+		width: '100%',
+		height: '100%',
 	},
 });

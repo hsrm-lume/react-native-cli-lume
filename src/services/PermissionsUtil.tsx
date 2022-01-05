@@ -79,6 +79,7 @@ const getRationale = (p: LumePermission): Rationale | undefined => {
  * @param p Permission to request
  * @returns Promise that resolves if permission is granted
  */
+
 export const getPermission = (p: LumePermission) =>
 	new HandledPromise<void>((resolve, reject) => {
 		let permission = mapPermission(p);

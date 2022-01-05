@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Pressable} from 'react-native';
+import {Text, StyleSheet, Pressable} from 'react-native';
 
 const DebugTile = (props: {action?: Function; desc?: string}) => {
 	return (
@@ -8,7 +8,8 @@ const DebugTile = (props: {action?: Function; desc?: string}) => {
 			onPress={() => {
 				if (props.action) props.action();
 				else console.log('No action');
-			}}>
+			}}
+		>
 			<Text style={styles.text}>{props.desc || 'undefined'}</Text>
 		</Pressable>
 	);

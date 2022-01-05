@@ -1,13 +1,18 @@
 import {useEffect, useState} from 'react';
-import {environment} from '../env/environment';
+import {environment} from '../../env/environment';
 import {
 	getUserData,
 	nfcCleanupRead,
 	nfcReadNext,
 	RestClient,
 	writeUserData,
-} from '../services';
-import {GeoLocation, TransmissionData, UserData} from '../types';
+} from '../../services';
+import {
+	GeoLocation,
+	HandledPromise,
+	TransmissionData,
+	UserData,
+} from '../../types';
 
 export function FireOffLogic(props: {
 	location: GeoLocation;
@@ -30,19 +35,27 @@ export function FireOffLogic(props: {
 					location: props.location,
 				} as TransmissionData,
 			])
-			.then(([recieved, self]) =>
-				// -> REST
-				RestClient.postContact(
-					environment.API_BASE_DOMAIN + environment.API_CONTACT_PATH,
-					{
-						uuidChild: self.uuid,
-						uuidParent: recieved.uuid,
-						position:
-							self.location.accuracy < recieved.location.accuracy
-								? self.location
-								: recieved.location,
-					}
-				)
+			.then(
+				([received, self]) =>
+					new HandledPromise<void>('internet.api', res => {
+						RestClient.postContact(
+							environment.API_BASE_DOMAIN + environment.API_CONTACT_PATH,
+							{
+								uuidChild: self.uuid,
+								uuidParent: received.uuid,
+								position:
+									self.location.accuracy < received.location.accuracy
+										? self.location
+										: received.location,
+							}
+						).then(res);
+					})
+			)
+			.then(
+				() =>
+					new HandledPromise<void>('storage', res => {
+						writeUserData({fireStatus: true}).then(() => res());
+					})
 			)
 			.then(() =>
 				// fs -> realm
