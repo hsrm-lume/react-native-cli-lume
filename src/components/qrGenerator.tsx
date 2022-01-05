@@ -83,6 +83,9 @@ const styles = StyleSheet.create({
 
 	closeWindow: {
 		alignSelf: 'flex-end',
+		width: '15%',
+		height: '15%',
+		paddingRight: '5%',
 	},
 });
 

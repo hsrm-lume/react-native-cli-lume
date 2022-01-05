@@ -110,6 +110,13 @@ const styles = StyleSheet.create({
 		fontSize: 22,
 		color: '#000000',
 	},
+
+	closeWindow: {
+		alignSelf: 'flex-end',
+		width: '15%',
+		height: '15%',
+		paddingRight: '5%',
+	},
 });
 
 export default QRScanner;

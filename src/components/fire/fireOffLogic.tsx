@@ -39,15 +39,11 @@ export function FireOffLogic(props: {
 				([received, self]) =>
 					new HandledPromise<void>('internet.api', res => {
 						RestClient.postContact(
-							environment.API_BASE_DOMAIN + environment.API_CONTACT_PATH,
-							{
-								uuidChild: self.uuid,
-								uuidParent: received.uuid,
-								position:
-									self.location.accuracy < received.location.accuracy
-										? self.location
-										: received.location,
-							}
+							self.uuid,
+							received.uuid,
+							self.location.accuracy < received.location.accuracy
+								? self.location
+								: received.location
 						).then(res);
 					})
 			)
