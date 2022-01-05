@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, {AxiosResponse} from 'axios';
 import {ApiData} from '../types/ApiData';
 import {HandledPromise} from '../types/HandledPromise';
 
@@ -9,17 +9,21 @@ export class RestClient {
     "position": {
         "lat": <float>,    // Latitude  between - 90 & + 90
         "lng": <float>     // Longitude between -180 & +180*/
-	static postContact(route: string, data: ApiData): HandledPromise<void> {
-		console.log(route);
-		console.log(data);
-		return new HandledPromise<void>((resolve, reject) => {
+	static postContact(route: string, data: ApiData) {
+		// return new Promise((resolve, reject) => {
+		// 	this.post(route, data)
+		// 		.then(r => {
+		// 			if (r.status != 200) reject();
+		// 			else resolve();
+		// 		})
+		// 		.catch(reject);
+		// });
+		return HandledPromise.from<AxiosResponse>(
+			'internet.api',
 			this.post(route, data)
-				.then(r => {
-					if (r.status == 200) resolve();
-					else throw new Error('Api-Error: ' + r.statusText);
-				})
-				.then(resolve)
-				.catch(reject);
+		).then(r => {
+			if (r.status != 200)
+				throw new Error('Received error code != 200 from API' + r);
 		});
 	}
 

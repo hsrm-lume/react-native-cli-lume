@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {WebView} from 'react-native-webview';
-import WebErrorView from './webErrorView';
+import FullErrorView from '../error/fullErrorView';
 const CustomWebView = (props: {url: string}) => {
 	return (
 		<WebView
@@ -9,9 +9,8 @@ const CustomWebView = (props: {url: string}) => {
 			style={styles.WebView}
 			renderLoading={() =>
 				/* TODO: Loading view */
-				WebErrorView({
-					title: 'Loading...',
-					msg: 'Please wait...',
+				FullErrorView({
+					item: 'internet.map.loading',
 				})
 			}
 			startInLoadingState={true}

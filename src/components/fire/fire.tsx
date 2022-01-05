@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import Torch from '../assets/torch.svg';
-import TorchOff from '../assets/torchOff.svg';
+import Torch from '../../assets/torch.svg';
+import TorchOff from '../../assets/torchOff.svg';
 
 const FireView = (props: {fire: boolean}) => (
 	<View style={styles.container}>
