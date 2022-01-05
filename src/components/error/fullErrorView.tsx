@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Text, TouchableHighlight} from 'react-native';
+import nfcManager from 'react-native-nfc-manager';
 import {remError} from '../../services';
 import {Errors, MessageKey} from '../../services/Errors';
 import {ErrorIcon} from './errorIcon';
@@ -20,10 +21,18 @@ const FullErrorView = (props: {
 	details?: string;
 }) => {
 	const m = Errors.getMessage(props.item);
-	const a =
-		props.action === null
-			? null // dont spawn default action if null is passed
-			: props.action || {desc: 'retry', action: () => remError(props.item)};
+	let a: ErrorAction | null = props.action || {
+		desc: 'retry',
+		action: () => remError(props.item),
+	};
+	if (props.action == null) a = null; // dont spawn default action if null is passed
+	if (props.item == 'nfc.off')
+		// override action if error is nfc.off
+		a = {
+			desc: 'go to NFC settings',
+			action: () =>
+				nfcManager.goToNfcSetting().then(() => remError(props.item)),
+		};
 	return (
 		<View style={styles.ErrorView}>
 			<View style={styles.Image}>

@@ -50,9 +50,10 @@ export default function FireScreen() {
 	);
 	useEffect(() => {
 		console.log('try get perm');
-		getPermission('lume.permissons.location').then(() =>
-			setPosPermission(true)
-		);
+		getPermission('lume.permissons.location').then(() => {
+			setPosPermission(true);
+			remError('location.permission');
+		});
 	}, [retryAfterError]);
 
 	useEffect(() => {
