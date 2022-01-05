@@ -47,11 +47,12 @@ export default function FireScreen() {
 
 	// position
 	const [pos, posChange] = useState<GeoLocation | undefined>(undefined);
-	useEffect(() => {
+	let sub: GeoServiceSubscription;
+	useOnInit(() => {
+		if (sub) return;
 		console.log('resubbing');
-		let sub: GeoServiceSubscription;
-		console.log('getting permission');
 		getPermission('lume.permissons.location').then(() => {
+			console.log('getting permission');
 			sub = subscribePosition(pos => {
 				console.log(pos);
 				posChange(pos);
@@ -60,7 +61,7 @@ export default function FireScreen() {
 		return () => {
 			sub?.unsubscribe();
 		};
-	}, [repaint]);
+	});
 
 	// TODO initial tech checks
 	checkConnected().then(res => {
@@ -163,9 +164,5 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'center',
-		containerMap: {
-			width: '100%',
-			height: '100%',
-		},
 	},
 });

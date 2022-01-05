@@ -3,7 +3,8 @@ import {View, StyleSheet, TouchableHighlight, Text} from 'react-native';
 import {GeoLocation} from '../types';
 import {QrCodeData} from '../types/TranmissionData';
 import QRCode from 'react-native-qrcode-svg';
-import Close from '../assets/close.svg';
+import ThinCross from '../assets/thinCross.svg';
+import {Icon} from './error/icon';
 
 const QRGenerator = (props: {
 	uid: string;
@@ -22,12 +23,12 @@ const QRGenerator = (props: {
 				<Text style={styles.headlineText}>SHARE YOUR FIRE!</Text>
 			</View>
 			<View style={styles.window}>
-				<TouchableHighlight
+				<Icon
+					icon={ThinCross}
+					action={props.updateQrStatus}
 					style={styles.closeWindow}
-					underlayColor="#FFFFFF"
-					onPress={props.updateQrStatus}>
-					<Close width={50} height={50} />
-				</TouchableHighlight>
+				/>
+
 				<View style={styles.qrCode}>
 					<QRCode
 						size={250}

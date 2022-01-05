@@ -19,28 +19,31 @@ const QRScanner = (props: {
 				<QRCodeScanner
 					onRead={event => {
 						// validation
-						new HandledPromise<[QrCodeData, QrCodeData]>(resolve => {
-							if (!props.uid) throw new Error('Torch not yet ready');
-							if (!props.position)
-								throw new Error('Position not accurate enough');
-							if (!event.data) throw new Error('QR-Code is empty');
-							var self: QrCodeData;
-							var received: QrCodeData;
-							try {
-								self = {
-									ts: Math.floor(Date.now() / 1000),
-									uuid: props.uid,
-									location: props.position,
-								};
-								received = JSON.parse(event.data);
-							} catch (error) {
-								throw new Error('QR-Code is invalid');
+						new HandledPromise<[QrCodeData, QrCodeData]>(
+							'qr.invalid',
+							resolve => {
+								if (!props.uid) throw new Error('Torch not yet ready');
+								if (!props.position)
+									throw new Error('Position not accurate enough');
+								if (!event.data) throw new Error('QR-Code is empty');
+								var self: QrCodeData;
+								var received: QrCodeData;
+								try {
+									self = {
+										ts: Math.floor(Date.now() / 1000),
+										uuid: props.uid,
+										location: props.position,
+									};
+									received = JSON.parse(event.data);
+								} catch (error) {
+									throw new Error('QR-Code is invalid');
+								}
+								// check timestamp
+								if (self.ts - received.ts > 10)
+									throw new Error('QR-Code is outdated');
+								resolve([self, received]);
 							}
-							// check timestamp
-							if (self.ts - received.ts > 10)
-								throw new Error('QR-Code is outdated');
-							resolve([self, received]);
-						})
+						)
 							.then(([self, received]) =>
 								// POST ApiData to REST API
 								RestClient.postContact(
