@@ -8,7 +8,6 @@ import {
 	request,
 	check,
 	PERMISSIONS,
-	PermissionStatus,
 	Permission,
 } from 'react-native-permissions';
 import {HandledPromise} from '../types/HandledPromise';
@@ -91,21 +90,24 @@ export const getPermission = (p: LumePermission) =>
 			: 'location.permission',
 		(resolve, reject) => {
 			let permission = mapPermission(p);
-			console.log('dafuq');
 			Platform.OS === 'android'
-				? PermissionsAndroid.check(permission as AndroidPermissions).then(x => {
-						if (x) {
-							console.log('ello', x);
-							return resolve();
-						}
-						return reject();
-				  })
+				? PermissionsAndroid.check(permission as AndroidPermissions)
+						.then(x => {
+							if (x) return resolve();
+							PermissionsAndroid.request(
+								permission as AndroidPermissions,
+								getRationale(p)
+							).then(x => {
+								if (x === 'granted') resolve();
+								else reject(x);
+							});
+						})
+						.catch(reject)
 				: check(permission)
 						.then(b => {
 							console.log('b', b);
-							if (b === 'granted') {
-								return resolve();
-							}
+							if (b === 'granted') return resolve();
+
 							request(permission, getRationale(p)).then(g => {
 								console.log('g', g);
 								if (g === 'granted') return resolve();

@@ -14,7 +14,7 @@ import {ErrorWindow} from './errorWindow';
  * The List can be clicked to open an ErrorWindow
  */
 const ErrorBar = () => {
-	var [bigSize, setBigSize] = useState(false);
+	const [bigSize, setBigSize] = useState(false);
 	const switchBigSize = () => setBigSize(!bigSize);
 
 	const [repaint, setRepaint] = useState(true);
