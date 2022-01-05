@@ -1,4 +1,5 @@
-import ErrorHandler from '../services/ErrorHandler';
+import {MessageKey} from '../services';
+import {handleError} from '../services/ErrorHandler';
 
 type Executor<T> = (
 	resolve: (value: T | PromiseLike<T>) => void,
@@ -20,41 +21,37 @@ export class HandledPromise<T> {
 	 * construct a HandledPromise from a Promise
 	 * @param promise the promise to be handled
 	 */
-	static from<T>(p: Promise<T>): HandledPromise<T>;
-	/**
-	 * construct some promise thet just resolves
-	 * @param value the value to resolve the promise with
-	 */
-	static from<T>(value: T): HandledPromise<T>;
-	static from<T>(p: Promise<T>): HandledPromise<T> {
-		return new HandledPromise(resolve => resolve(p));
+	static from<T>(
+		mKey: MessageKey | undefined,
+		p: Promise<T>
+	): HandledPromise<T> {
+		return new HandledPromise(mKey, (res, rej) => p.then(res).catch(rej));
 	}
 
 	protected isLastInChain = true;
 	protected promise: Promise<T>;
+	protected mKey?: MessageKey;
 	/**
 	 * construct a HandledPromise from an executor
 	 * @param executor The Executor to be ran in a HandledPromise
 	 */
-	constructor(executor: Executor<T>) {
+	constructor(mKey: MessageKey | undefined, executor: Executor<T>) {
 		this.promise = new Promise<T>(executor);
+		this.mKey = mKey;
 
 		// add default handler
 		defer(this.addDefaultHandler, this);
 	}
 
 	protected addDefaultHandler() {
-		if (this.isLastInChain) this.promise.catch(err => this.handleErr(err));
-	}
-
-	protected handleErr(err: any) {
-		if (err == 'ignored') return;
-		console.warn('HandledPromise: ', err);
-		ErrorHandler.handleError({
-			icon: 'warning',
-			message: err.message || err,
-			dissmisable: true,
-		});
+		if (this.isLastInChain)
+			this.promise.catch(err => {
+				console.warn('HandledPromise: ', this.mKey, err);
+				// TODO check for mapping Error -> type
+				// although ts does typechecking to ensure the error type is known,
+				// Promises do always reject with any type. Therefore an unknown case could still occour
+				if (this.mKey) handleError(this.mKey);
+			});
 	}
 
 	then<TResult1 = T, TResult2 = never>(
@@ -63,22 +60,23 @@ export class HandledPromise<T> {
 	): HandledPromise<TResult1 | TResult2> {
 		this.isLastInChain = false;
 		return HandledPromise.from<TResult1 | TResult2>(
+			this.mKey,
 			this.promise.then(onfulfilled, onrejected)
 		);
 	}
 
 	catch<TResult = never>(
-		onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | null
+		onrejected?: (reason: any) => TResult | PromiseLike<TResult>
 	): HandledPromise<T | TResult> {
 		this.isLastInChain = false;
-		return new HandledPromise(resolve =>
+		return new HandledPromise(this.mKey, resolve =>
 			resolve(this.promise.catch(onrejected))
 		);
 	}
 
 	finally(onfinally?: (() => void) | undefined | null): HandledPromise<T> {
 		this.isLastInChain = false;
-		return new HandledPromise<T>(resolve =>
+		return new HandledPromise<T>(this.mKey, resolve =>
 			resolve(this.promise.finally(onfinally))
 		);
 	}

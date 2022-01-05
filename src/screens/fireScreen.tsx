@@ -1,20 +1,26 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import ErrorBar from '../components/errorBar';
-import FireView from '../components/fire';
-import {FireOffLogic} from '../components/fireOffLogic';
-import {FireOnLogic} from '../components/fireOnLogic';
 import {
 	GeoServiceSubscription,
+	getFullscreenErrors,
 	getPermission,
 	getUserData,
 	subscribePosition,
+	registerErrorsChangeSubscription,
+	handleError,
+	remError,
 } from '../services';
+import {checkConnected} from '../services/InternetCheck';
 import {useOnInit, UserData} from '../types';
 import {GeoLocation} from '../types/GeoLocation';
 import QRGenerator from '../components/qrGenerator';
 import QRScanner from '../components/qrScanner';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, Text} from 'react-native';
+import {LinearGradient} from 'react-native-svg';
+import ErrorBar from '../components/error/errorBar';
+import FullErrorView from '../components/error/fullErrorView';
+import FireView from '../components/fire/fire';
+import {FireOffLogic} from '../components/fire/fireOffLogic';
+import {FireOnLogic} from '../components/fire/fireOnLogic';
 
 export default function FireScreen() {
 	// userData
@@ -23,6 +29,13 @@ export default function FireScreen() {
 		console.log('setting fire to: ' + fs);
 		userDataChange({uuid: userData.uuid, fireStatus: fs});
 	};
+
+	const [repaint, setRepaint] = useState(true);
+	const repaintMainComponent = () => {
+		setRepaint(!repaint);
+	};
+	registerErrorsChangeSubscription(repaintMainComponent);
+
 	useOnInit(() => {
 		getUserData().then(ud => {
 			if (ud.fireStatus == userData.fireStatus && ud.uuid == userData.uuid)
@@ -34,18 +47,29 @@ export default function FireScreen() {
 
 	// position
 	const [pos, posChange] = useState<GeoLocation | undefined>(undefined);
-	useOnInit(() => {
+	useEffect(() => {
+		console.log('resubbing');
 		let sub: GeoServiceSubscription;
 		console.log('getting permission');
-		getPermission('android.permission.ACCESS_FINE_LOCATION').then(() => {
+		getPermission('lume.permissons.location').then(() => {
 			sub = subscribePosition(pos => {
+				console.log(pos);
 				posChange(pos);
 			});
 		});
 		return () => {
 			sub?.unsubscribe();
 		};
+	}, [repaint]);
+
+	// TODO initial tech checks
+	checkConnected().then(res => {
+		if (!res) handleError('internet.device');
+		else remError('internet.device');
 	});
+	// display errors if there is at least one
+	const e = getFullscreenErrors()[0];
+	if (e) return <FullErrorView item={e} />;
 
 	// qrStatus
 	var [qrStatus, setQrStatus] = useState(false);
@@ -53,8 +77,8 @@ export default function FireScreen() {
 		setQrStatus(!qrStatus);
 	};
 
-	// rendering
-	return (
+	// display fire view if no errors present
+	return userData.uuid && userData.fireStatus !== undefined && pos ? (
 		<LinearGradient
 			colors={
 				userData.fireStatus ? ['#ffffff', '#FF3A3A'] : ['#ffffff', '#6F3FAF']
@@ -114,7 +138,7 @@ export default function FireScreen() {
 			)}
 			<ErrorBar />
 		</LinearGradient>
-	);
+	) : null;
 }
 
 const styles = StyleSheet.create({
@@ -139,5 +163,9 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'center',
+		containerMap: {
+			width: '100%',
+			height: '100%',
+		},
 	},
 });

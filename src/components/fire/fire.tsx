@@ -1,9 +1,9 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableHighlight} from 'react-native';
-import Torch from '../assets/torch.svg';
-import TorchOff from '../assets/torchOff.svg';
-import QRCode from '../assets/qrCode.svg';
-import Camera from '../assets/camera.svg';
+import {StyleSheet, Text, TouchableHighlight, View} from 'react-native';
+import Torch from '../../assets/torch.svg';
+import TorchOff from '../../assets/torchOff.svg';
+import QRCode from '../../assets/qrCode.svg';
+import Camera from '../../assets/camera.svg';
 
 const FireView = (props: {fire: boolean; updateQrStatus: () => void}) => (
 	<>
