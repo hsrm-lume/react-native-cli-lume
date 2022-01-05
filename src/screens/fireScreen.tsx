@@ -49,8 +49,9 @@ export default function FireScreen() {
 		console.log('resubbing');
 		let sub: GeoServiceSubscription;
 		console.log('getting permission');
-		getPermission('android.permission.ACCESS_FINE_LOCATION').then(() => {
+		getPermission('lume.permissons.location').then(() => {
 			sub = subscribePosition(pos => {
+				console.log(pos);
 				posChange(pos);
 			});
 		});
