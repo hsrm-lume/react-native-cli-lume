@@ -1,72 +1,83 @@
-import ErrorHandler from '../services/ErrorHandler';
+import {MessageKey} from '../services';
+import {handleError} from '../services/ErrorHandler';
+
+type Executor<T> = (
+	resolve: (value: T | PromiseLike<T>) => void,
+	reject: (reason?: any) => void
+) => void;
+
+function defer(fn: Function, thisVal: any, ...args: any[]) {
+	setTimeout(() => fn.apply(thisVal, args), 0);
+}
 
 /**
  * A promise where rejections are treated with an error handler
  * If the HandledPromise is rejected, the error handler is called
+ * @param executor The Executor to be ran in a HandledPromise or a Promise to convert
+ * @returns a Handled Promise
  */
-export class HandledPromise<T> extends Promise<T> {
-	promise: Promise<T>;
+export class HandledPromise<T> {
+	/**
+	 * construct a HandledPromise from a Promise
+	 * @param promise the promise to be handled
+	 */
+	static from<T>(
+		mKey: MessageKey | undefined,
+		p: Promise<T>
+	): HandledPromise<T> {
+		return new HandledPromise(mKey, (res, rej) => p.then(res).catch(rej));
+	}
 
-	constructor();
-	constructor(
-		executor: (
-			resolve: (value: T | PromiseLike<T>) => void,
-			reject: (reason?: any) => void
-		) => void
-	);
-	constructor(promise: Promise<T>);
-	constructor(
-		promise?:
-			| Promise<T>
-			| ((
-					resolve: (value: T | PromiseLike<T>) => void,
-					reject: (reason?: any) => void
-			  ) => void)
-	) {
-		super(() => {}); // no handler, all resolve & reject will be handled by the this.promise
+	protected isLastInChain = true;
+	protected promise: Promise<T>;
+	protected mKey?: MessageKey;
+	/**
+	 * construct a HandledPromise from an executor
+	 * @param executor The Executor to be ran in a HandledPromise
+	 */
+	constructor(mKey: MessageKey | undefined, executor: Executor<T>) {
+		this.promise = new Promise<T>(executor);
+		this.mKey = mKey;
 
-		// construct some promise thet just resolves
-		if (!promise) this.promise = new Promise<T>(r => r(undefined as any));
-		// construct a HandledPromise from a Promise
-		else if (promise instanceof Promise) this.promise = promise;
-		// construct a HandledPromise from a PromiseLike
-		else this.promise = new Promise<T>(promise);
 		// add default handler
-		this.promise.then(
-			v => v,
-			err => {
-				ErrorHandler.handleError({
-					icon: 'warning',
-					message: err.message || err,
-					dissmisable: true,
-				});
-			}
+		defer(this.addDefaultHandler, this);
+	}
+
+	protected addDefaultHandler() {
+		if (this.isLastInChain)
+			this.promise.catch(err => {
+				console.warn('HandledPromise: ', this.mKey, err);
+				// TODO check for mapping Error -> type
+				// although ts does typechecking to ensure the error type is known,
+				// Promises do always reject with any type. Therefore an unknown case could still occour
+				if (this.mKey) handleError(this.mKey);
+			});
+	}
+
+	then<TResult1 = T, TResult2 = never>(
+		onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null,
+		onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null
+	): HandledPromise<TResult1 | TResult2> {
+		this.isLastInChain = false;
+		return HandledPromise.from<TResult1 | TResult2>(
+			this.mKey,
+			this.promise.then(onfulfilled, onrejected)
 		);
 	}
 
-	override then<TResult1 = T, TResult2 = never>(
-		onfulfilled?:
-			| ((value: T) => TResult1 | PromiseLike<TResult1>)
-			| undefined
-			| null,
-		onrejected?:
-			| ((reason: any) => TResult2 | PromiseLike<TResult2>)
-			| undefined
-			| null
-	): Promise<TResult1 | TResult2> {
-		return this.promise.then(onfulfilled, onrejected);
+	catch<TResult = never>(
+		onrejected?: (reason: any) => TResult | PromiseLike<TResult>
+	): HandledPromise<T | TResult> {
+		this.isLastInChain = false;
+		return new HandledPromise(this.mKey, resolve =>
+			resolve(this.promise.catch(onrejected))
+		);
 	}
 
-	override catch<TResult = never>(
-		onrejected?:
-			| ((reason: any) => TResult | PromiseLike<TResult>)
-			| undefined
-			| null
-	): Promise<T | TResult> {
-		return this.promise.catch(onrejected);
-	}
-
-	override finally(onfinally?: (() => void) | undefined | null): Promise<T> {
-		return this.promise.finally(onfinally);
+	finally(onfinally?: (() => void) | undefined | null): HandledPromise<T> {
+		this.isLastInChain = false;
+		return new HandledPromise<T>(this.mKey, resolve =>
+			resolve(this.promise.finally(onfinally))
+		);
 	}
 }

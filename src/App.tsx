@@ -5,8 +5,33 @@ import FireScreen from './screens/fireScreen';
 import WebScreen from './screens/webScreen';
 import Fire from './assets/fire.svg';
 import Map from './assets/map.svg';
-import ErrorHandler from './services/ErrorHandler';
-import ErrorMessage from './services/ErrorMessage';
+
+//////////////
+import {DevSettings} from 'react-native';
+import {userDataSchema} from './types/UserDataSchema';
+import {getDismissableErrors, getFullscreenErrors} from './services';
+
+if (__DEV__) {
+	DevSettings.addMenuItem('Clear Storage', () => {
+		Realm.open({
+			path: 'userOptions',
+			schema: [userDataSchema],
+			schemaVersion: 1,
+		})
+			.then(r =>
+				r.write(() => {
+					r.deleteAll();
+				})
+			)
+			.then(() => console.log('cleaned storage. Reload app to see changes.'));
+	});
+	DevSettings.addMenuItem('readout errorlist', () => {
+		console.log('ErrorList:');
+		getFullscreenErrors().forEach(console.log);
+		getDismissableErrors().forEach(console.log);
+	});
+}
+////////////
 
 export default function App() {
 	const bottomNav = createBottomTabNavigator();

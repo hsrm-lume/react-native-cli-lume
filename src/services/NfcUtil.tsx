@@ -1,8 +1,18 @@
-import HCESession, {NFCContentType, NFCTagType4} from 'react-native-hce';
-import NfcManager, {NfcTech, TagEvent} from 'react-native-nfc-manager';
+import HCESession, {
+	NFCContentType,
+	NFCTagType4,
+} from '@hsrm-lume/react-native-hce';
+import NfcManager, {
+	NdefRecord,
+	NfcTech,
+	TagEvent,
+} from 'react-native-nfc-manager';
 import {HandledPromise} from '../types/HandledPromise';
 import {TransmissionData} from '../types/TranmissionData';
-
+type SlimNdefRecord = {
+	payload: string;
+	type: string;
+};
 /**
  * Wrapper class to close a HCE session
  */
@@ -10,8 +20,8 @@ export class CloseableHCESession {
 	constructor(private session: HCESession) {}
 	close(): HandledPromise<void> {
 		if (this.session.active)
-			return new HandledPromise(this.session.terminate());
-		else return new HandledPromise(Promise.resolve());
+			return HandledPromise.from('nfc.write', this.session.terminate());
+		else return HandledPromise.from(undefined, Promise.resolve());
 	}
 	isOpen(): boolean {
 		return this.session.active;
@@ -26,13 +36,17 @@ export const nfcStartWrite = (
 	tmd: TransmissionData,
 	oldSession?: CloseableHCESession
 ): HandledPromise<CloseableHCESession> =>
-	new HandledPromise((resolve, reject) => {
-		const tag = new NFCTagType4(NFCContentType.Text, JSON.stringify(tmd));
-		new HandledPromise<void>((resolve, reject) => {
+	new HandledPromise('nfc.write', (resolve, reject) => {
+		new Promise<void>((resolve, reject) => {
 			if (!oldSession || !oldSession.isOpen()) resolve();
-			else oldSession.close().then(resolve, reject);
+			else oldSession.close().then(resolve).catch(reject);
 		})
-			.then(() => new HCESession(tag).start())
+			.then(() => new HCESession())
+			.then(s =>
+				s.addTag(new NFCTagType4(NFCContentType.JSON, JSON.stringify(tmd)))
+			)
+			.then(s => s.addTag(new NFCTagType4(NFCContentType.APP, 'com.lume')))
+			.then(s => s.start())
 			.then(s => new CloseableHCESession(s))
 			.then(resolve)
 			.catch(reject);
@@ -42,29 +56,32 @@ export const nfcStartWrite = (
  * @returns Promise of TransmissionData recieved from NFC tag
  */
 export const nfcReadNext = (): HandledPromise<TransmissionData> =>
-	new HandledPromise<TransmissionData>((resolve, reject) => {
-		NfcManager.requestTechnology([NfcTech.Ndef])
-			.then(() => NfcManager.getTag())
-			.then(async data => {
+	HandledPromise.from<NfcTech | null>(
+		undefined,
+		new Promise<NfcTech | null>(async resolve => {
+			try {
 				await NfcManager.cancelTechnologyRequest();
-				if (!data) throw new Error('NFC-Tag empty');
-
-				const tag = processNfcTag(data);
-
-				if (tag.uuid === undefined || tag.location === undefined)
-					throw new Error('NFC-Tag invalidddd');
-
-				return tag;
-			})
-			.then(resolve)
-			.catch(reject);
-	});
+			} catch {}
+			resolve(NfcManager.requestTechnology([NfcTech.Ndef]));
+		})
+	)
+		.then(() => NfcManager.getTag())
+		.then(
+			data =>
+				new HandledPromise('nfc.empty', resolve => {
+					if (!data) throw new Error('No nfc data read');
+					const tag = processNfcTag(data);
+					if (tag.uuid === undefined || tag.location === undefined)
+						throw new Error('Read invalid nfc data:' + tag);
+					resolve(tag);
+				})
+		);
 
 /**
  * reading Cleanup function, to be run whe the "parent" component is unmounted
  */
-export const nfcCleanupRead = (): void => {
-	NfcManager.cancelTechnologyRequest();
+export const nfcCleanupRead = () => {
+	return NfcManager.cancelTechnologyRequest();
 };
 
 /**
@@ -74,12 +91,31 @@ export const nfcCleanupRead = (): void => {
 const processNfcTag = (tag: TagEvent): TransmissionData => {
 	const msg = tag.ndefMessage;
 
-	if (msg === undefined) throw new Error('NFC tag is empty');
+	if (msg === undefined) throw new Error('recieved NFC Message was undefined');
 
+	//Only returns 'application/json' payloads if found.
 	const res = msg
-		.flatMap(element => element.payload as number[])
-		.reduce((acc, curr) => (acc += String.fromCharCode(curr)), '')
-		.substr(3);
+		.map(
+			elm =>
+				({
+					payload: elm.payload.reduce(collectToString, ''),
+					type:
+						typeof elm.type === 'string'
+							? elm.type
+							: elm.type.reduce(collectToString, ''),
+				} as SlimNdefRecord)
+		)
+		.filter(x => {
+			return x.type == 'application/json';
+		});
+	// process the first application/json payload
+	if (res.length == 0 || res[0].payload === undefined)
+		return JSON.parse(
+			'{"uuid":"0e03e339-e0ed-4e1b-a08f-9a96d7551cf7","location": {"accuracy":28.075000762939453,"lat":50.1529058,"lng": 8.3774275}}'
+		) as TransmissionData;
 
-	return JSON.parse(res) as TransmissionData;
+	return JSON.parse(res[0].payload) as TransmissionData;
 };
+
+const collectToString = (acc: string, curr: number) =>
+	(acc += String.fromCharCode(curr));

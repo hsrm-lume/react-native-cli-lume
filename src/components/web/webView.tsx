@@ -1,8 +1,21 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {WebView} from 'react-native-webview';
+import FullErrorView from '../error/fullErrorView';
 const CustomWebView = (props: {url: string}) => {
-	return <WebView source={{uri: props.url}} style={styles.WebView} />;
+	return (
+		<WebView
+			source={{uri: props.url}}
+			style={styles.WebView}
+			renderLoading={() =>
+				/* TODO: Loading view */
+				FullErrorView({
+					item: 'internet.map.loading',
+				})
+			}
+			startInLoadingState={true}
+		/>
+	);
 };
 
 const styles = StyleSheet.create({
