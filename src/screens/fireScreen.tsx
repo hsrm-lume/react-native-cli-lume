@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ErrorBar from '../components/error/errorBar';
@@ -42,7 +42,8 @@ export default function FireScreen() {
 
 	// position
 	const [pos, posChange] = useState<GeoLocation | undefined>(undefined);
-	useOnInit(() => {
+	useEffect(() => {
+		console.log('resubbing');
 		let sub: GeoServiceSubscription;
 		console.log('getting permission');
 		getPermission('android.permission.ACCESS_FINE_LOCATION').then(() => {
@@ -53,7 +54,7 @@ export default function FireScreen() {
 		return () => {
 			sub?.unsubscribe();
 		};
-	});
+	}, [repaint]);
 
 	// TODO initial tech checks
 	// display errors if there is at least one

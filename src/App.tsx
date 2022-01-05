@@ -9,6 +9,7 @@ import Map from './assets/map.svg';
 //////////////
 import {DevSettings} from 'react-native';
 import {userDataSchema} from './types/UserDataSchema';
+import {getDismissableErrors, getFullscreenErrors} from './services';
 
 if (__DEV__) {
 	DevSettings.addMenuItem('Clear Storage', () => {
@@ -23,6 +24,11 @@ if (__DEV__) {
 				})
 			)
 			.then(() => console.log('cleaned storage. Reload app to see changes.'));
+	});
+	DevSettings.addMenuItem('readout errorlist', () => {
+		console.log('ErrorList:');
+		getFullscreenErrors().forEach(console.log);
+		getDismissableErrors().forEach(console.log);
 	});
 }
 ////////////
@@ -42,8 +48,7 @@ export default function App() {
 					},
 					headerShown: false,
 					tabBarShowLabel: false,
-				})}
-			>
+				})}>
 				<bottomNav.Screen name="Fire" component={FireScreen} />
 
 				<bottomNav.Screen name="Web" component={WebScreen} />

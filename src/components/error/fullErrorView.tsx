@@ -4,13 +4,19 @@ import {remError} from '../../services';
 import {Errors, MessageKey} from '../../services/Errors';
 import {ErrorIcon} from './errorIcon';
 
+interface ErrorAction {
+	desc: string;
+	action: () => void;
+}
+
 /**
  * @param item the ErrorMessage to display
+ * @param action Button to fix or retry
  * @returns a jsx component that displays an error in full-screen
  */
-const FullErrorView = (props: {item: MessageKey; action?: () => void}) => {
+const FullErrorView = (props: {item: MessageKey; action?: ErrorAction}) => {
 	const m = Errors.getMessage(props.item);
-	const action = props.action || (() => remError(props.item)); // TODO register a button action that works as "fix the error" action
+	const a = props.action || {desc: 'retry', action: () => remError(props.item)};
 	return (
 		<View style={styles.ErrorView}>
 			<View style={styles.Image}>
@@ -24,16 +30,14 @@ const FullErrorView = (props: {item: MessageKey; action?: () => void}) => {
 					<Text style={styles.Message}>{m.desc}</Text>
 				</View>
 			) : null}
-			{action ? (
-				/* TODO: Add button with callback */ <View>
-					<TouchableHighlight
-						style={[styles.FixButton]}
-						underlayColor="#ffffff"
-						onPress={action}>
-						<Text style={styles.btnText}>FIX IT</Text>
-					</TouchableHighlight>
-				</View>
-			) : null}
+			<View>
+				<TouchableHighlight
+					style={[styles.FixButton]}
+					underlayColor="#ffffff"
+					onPress={a.action}>
+					<Text style={styles.btnText}>{a.desc}</Text>
+				</TouchableHighlight>
+			</View>
 		</View>
 	);
 };
@@ -78,19 +82,6 @@ const styles = StyleSheet.create({
 		marginTop: 60,
 		paddingRight: '10%',
 		paddingLeft: '10%',
-	},
-	FixButton: {
-		marginTop: '10%',
-		backgroundColor: '#FFFFFF',
-		borderRadius: 25,
-	},
-	btnText: {
-		color: '#000000',
-		fontSize: 18,
-		paddingRight: '10%',
-		paddingLeft: '10%',
-		paddingTop: '10%',
-		paddingBottom: '10%',
 	},
 });
 
