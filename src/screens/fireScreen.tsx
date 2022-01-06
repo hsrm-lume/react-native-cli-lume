@@ -119,7 +119,6 @@ export default function FireScreen() {
 									fire={userData.fireStatus}
 									updateQrStatus={switchQrStatus}
 								/>
-								<ErrorBar />
 								{Platform.OS == 'android' ? (
 									<FireOnLogic uuid={userData.uuid} location={pos} />
 								) : null}
@@ -155,6 +154,7 @@ export default function FireScreen() {
 				) : (
 					<FullErrorView item="loading" action={null}></FullErrorView>
 				)}
+				<ErrorBar />
 			</LinearGradient>
 		</>
 	);

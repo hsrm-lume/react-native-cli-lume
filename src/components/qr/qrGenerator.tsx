@@ -5,6 +5,7 @@ import {QrCodeData} from '../../types/TranmissionData';
 import QRCode from 'react-native-qrcode-svg';
 import ThinCross from '../../assets/thinCross.svg';
 import {Icon} from '../error/icon';
+import {handleError} from '../../services/ErrorHandler';
 
 const QRGenerator = (props: {
 	uid: string;
@@ -28,15 +29,11 @@ const QRGenerator = (props: {
 					action={props.updateQrStatus}
 					style={styles.closeWindow}
 				/>
-
 				<View style={styles.qrCode}>
 					<QRCode
 						size={250}
 						value={data}
-						onError={
-							() => console.warn('Error in QR Generator')
-							/* TODO: ErrorHandler */
-						}
+						onError={() => handleError('qr.invalid')}
 					/>
 				</View>
 				<View style={styles.textBox}>

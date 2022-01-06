@@ -4,6 +4,8 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RestClient, writeUserData} from '../../services';
 import {GeoLocation, HandledPromise} from '../../types';
 import {QrCodeData} from '../../types/TranmissionData';
+import ThinCross from '../../assets/thinCross.svg';
+import {Icon} from '../error/icon';
 
 const QRScanner = (props: {
 	uid: string;
@@ -16,6 +18,11 @@ const QRScanner = (props: {
 				<Text style={styles.headlineText}>ILLUMINATE YOUR FIRE!</Text>
 			</View>
 			<View style={styles.window}>
+				<Icon
+					icon={ThinCross}
+					action={props.updateQrStatus}
+					style={styles.closeWindow}
+				/>
 				<QRCodeScanner
 					onRead={event => {
 						// validation
