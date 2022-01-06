@@ -1,9 +1,11 @@
 import React from 'react';
-import {View, StyleSheet, TouchableHighlight, Text} from 'react-native';
-import {GeoLocation} from '../types';
-import {QrCodeData} from '../types/TranmissionData';
+import {View, StyleSheet, Text} from 'react-native';
+import {GeoLocation} from '../../types';
+import {QrCodeData} from '../../types/TranmissionData';
 import QRCode from 'react-native-qrcode-svg';
-import Close from '../assets/close.svg';
+import ThinCross from '../../assets/thinCross.svg';
+import {Icon} from '../error/icon';
+import {handleError} from '../../services/ErrorHandler';
 
 const QRGenerator = (props: {
 	uid: string;
@@ -22,20 +24,16 @@ const QRGenerator = (props: {
 				<Text style={styles.headlineText}>SHARE YOUR FIRE!</Text>
 			</View>
 			<View style={styles.window}>
-				<TouchableHighlight
+				<Icon
+					icon={ThinCross}
+					action={props.updateQrStatus}
 					style={styles.closeWindow}
-					underlayColor="#FFFFFF"
-					onPress={props.updateQrStatus}>
-					<Close width={50} height={50} />
-				</TouchableHighlight>
+				/>
 				<View style={styles.qrCode}>
 					<QRCode
 						size={250}
 						value={data}
-						onError={
-							() => console.warn('Error in QR Generator')
-							/* TODO: ErrorHandler */
-						}
+						onError={() => handleError('qr.invalid')}
 					/>
 				</View>
 				<View style={styles.textBox}>
@@ -82,6 +80,9 @@ const styles = StyleSheet.create({
 
 	closeWindow: {
 		alignSelf: 'flex-end',
+		width: '15%',
+		height: '15%',
+		paddingRight: '5%',
 	},
 });
 

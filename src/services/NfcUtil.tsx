@@ -85,6 +85,20 @@ export const nfcCleanupRead = () => {
 };
 
 /**
+ *
+ * @returns  a Promise that resolves if NFC is turned on
+ */
+export const isNfcEnabled = (): HandledPromise<void> =>
+	new HandledPromise('nfc.off', (resolve, reject) => {
+		NfcManager.isEnabled()
+			.then(enabled => {
+				if (enabled) return resolve();
+				else return reject(new Error('NFC is not enabled'));
+			})
+			.catch(reject);
+	});
+
+/**
  * @param tag NFC-Tag data to be processed
  * @returns TransmissionData Object from NFC-Tag
  */
@@ -110,9 +124,7 @@ const processNfcTag = (tag: TagEvent): TransmissionData => {
 		});
 	// process the first application/json payload
 	if (res.length == 0 || res[0].payload === undefined)
-		return JSON.parse(
-			'{"uuid":"0e03e339-e0ed-4e1b-a08f-9a96d7551cf7","location": {"accuracy":28.075000762939453,"lat":50.1529058,"lng": 8.3774275}}'
-		) as TransmissionData;
+		throw new Error('No valid payload found');
 
 	return JSON.parse(res[0].payload) as TransmissionData;
 };

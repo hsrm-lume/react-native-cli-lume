@@ -1,5 +1,5 @@
 import {MessageKey} from '../services';
-import {handleError} from '../services/ErrorHandler';
+import {handleError, remError} from '../services/ErrorHandler';
 
 type Executor<T> = (
 	resolve: (value: T | PromiseLike<T>) => void,
@@ -46,11 +46,9 @@ export class HandledPromise<T> {
 	protected addDefaultHandler() {
 		if (this.isLastInChain)
 			this.promise.catch(err => {
+				if (!this.mKey) return; // if no mKey, don't handle (undefined = ignore)
 				console.warn('HandledPromise: ', this.mKey, err);
-				// TODO check for mapping Error -> type
-				// although ts does typechecking to ensure the error type is known,
-				// Promises do always reject with any type. Therefore an unknown case could still occour
-				if (this.mKey) handleError(this.mKey);
+				handleError(this.mKey);
 			});
 	}
 

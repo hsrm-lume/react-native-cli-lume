@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Text, TouchableHighlight} from 'react-native';
+import nfcManager from 'react-native-nfc-manager';
 import {remError} from '../../services';
 import {Errors, MessageKey} from '../../services/Errors';
 import {ErrorIcon} from './errorIcon';
@@ -14,9 +15,24 @@ interface ErrorAction {
  * @param action Button to fix or retry
  * @returns a jsx component that displays an error in full-screen
  */
-const FullErrorView = (props: {item: MessageKey; action?: ErrorAction}) => {
+const FullErrorView = (props: {
+	item: MessageKey;
+	action?: ErrorAction | null;
+	details?: string;
+}) => {
 	const m = Errors.getMessage(props.item);
-	const a = props.action || {desc: 'retry', action: () => remError(props.item)};
+	let a: ErrorAction | null = props.action || {
+		desc: 'retry',
+		action: () => remError(props.item),
+	};
+	if (props.action == null) a = null; // dont spawn default action if null is passed
+	if (props.item == 'nfc.off')
+		// override action if error is nfc.off
+		a = {
+			desc: 'go to NFC settings',
+			action: () =>
+				nfcManager.goToNfcSetting().then(() => remError(props.item)),
+		};
 	return (
 		<View style={styles.ErrorView}>
 			<View style={styles.Image}>
@@ -25,19 +41,18 @@ const FullErrorView = (props: {item: MessageKey; action?: ErrorAction}) => {
 			<View>
 				<Text style={styles.Title}>{m.msg}</Text>
 			</View>
-			{m.desc ? (
-				<View>
-					<Text style={styles.Message}>{m.desc}</Text>
-				</View>
-			) : null}
-			<View>
+			{m.desc ? <Text style={styles.Message}>{m.desc}</Text> : null}
+			{a ? (
 				<TouchableHighlight
 					style={[styles.FixButton]}
-					underlayColor="#ffffff"
+					underlayColor="gray"
 					onPress={a.action}>
 					<Text style={styles.btnText}>{a.desc}</Text>
 				</TouchableHighlight>
-			</View>
+			) : null}
+			{props.details ? (
+				<Text style={styles.Details}>{props.details}</Text>
+			) : null}
 		</View>
 	);
 };
@@ -75,6 +90,11 @@ const styles = StyleSheet.create({
 		color: '#000000',
 		fontSize: 30,
 		marginTop: -20,
+	},
+	Details: {
+		color: '#cccccc',
+		marginTop: 40,
+		fontSize: 16,
 	},
 	Message: {
 		color: '#000000',

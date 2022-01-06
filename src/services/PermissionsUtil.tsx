@@ -1,10 +1,13 @@
-import {Platform} from 'react-native';
+import {
+	Permission as AndroidPermissions,
+	PermissionsAndroid,
+	Platform,
+} from 'react-native';
 import {Rationale} from 'react-native';
 import {
 	request,
 	check,
 	PERMISSIONS,
-	RESULTS,
 	Permission,
 } from 'react-native-permissions';
 import {HandledPromise} from '../types/HandledPromise';
@@ -54,7 +57,7 @@ const permissionMap: LumePerm = {
 	},
 };
 
-const mapPermission = (p: LumePermission): Permission => {
+export const mapPermission = (p: LumePermission): Permission => {
 	return Platform.OS === 'android'
 		? permissionMap[p].android
 		: permissionMap[p].ios;
@@ -87,33 +90,32 @@ export const getPermission = (p: LumePermission) =>
 			: 'location.permission',
 		(resolve, reject) => {
 			let permission = mapPermission(p);
-			check(permission)
-				.then(b => {
-					if (b == RESULTS.GRANTED) return resolve();
-					request(permission, getRationale(p))
-						.then(g => {
-							switch (g) {
-								case RESULTS.UNAVAILABLE:
-									reject(g + ' is Unavailable');
-									break;
-								case RESULTS.GRANTED:
-								case RESULTS.LIMITED:
-									resolve();
-									break;
-								case RESULTS.DENIED:
-									reject('Permission ' + g + ' denied');
-									break;
-
-								case RESULTS.BLOCKED:
-									reject('Permission ' + g + ' blocked');
-									break;
-								default:
-									reject('Permission' + g + ': ' + p);
-									break;
-							}
+			Platform.OS === 'android'
+				? PermissionsAndroid.check(permission as AndroidPermissions)
+						.then(x => {
+							if (x) return resolve();
+							PermissionsAndroid.request(
+								permission as AndroidPermissions,
+								getRationale(p)
+							).then(x => {
+								if (x === 'granted') resolve();
+								else reject(x);
+							});
 						})
-						.catch(reject);
-				})
-				.catch(reject);
+						.catch(reject)
+				: check(permission)
+						.then(b => {
+							console.log('b', b);
+							if (b === 'granted') return resolve();
+
+							request(permission, getRationale(p)).then(g => {
+								console.log('g', g);
+								if (g === 'granted') return resolve();
+								return reject(g);
+							});
+						})
+						.catch(() => {
+							console.log('xDDDDD');
+						});
 		}
 	);

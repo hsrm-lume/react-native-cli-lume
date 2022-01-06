@@ -6,7 +6,7 @@ import {environment} from '../env/environment';
 import {getUserData} from '../services';
 
 export default function WebScreen() {
-	var [uid, setUid] = useState('');
+	const [uid, setUid] = useState('');
 
 	getUserData().then(ud => setUid(ud.uuid));
 

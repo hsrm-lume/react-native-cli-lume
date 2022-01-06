@@ -4,7 +4,6 @@ export type MessageKey =
 	| 'internet.device'
 	| 'internet.api'
 	| 'internet.map'
-	| 'internet.map.loading'
 	// gps
 	| 'location.device'
 	| 'location.accuracy'
@@ -19,7 +18,10 @@ export type MessageKey =
 	// camera
 	| 'camera.permission'
 	// qr
-	| 'qr.invalid';
+	| 'qr.invalid'
+	// misc
+	| 'loading'
+	| 'loading.map';
 
 export const isFullscreenError = (x: MessageKey): boolean =>
 	!isDismissableError(x);
@@ -65,10 +67,6 @@ export class Errors {
 			msg: "Can't show the lume Map",
 			desc: 'The Map service seems to be offline. Please check back soon',
 		},
-		'internet.map.loading': {
-			msg: 'Loading...',
-			desc: 'Please be patient while the map is being prepared.',
-		},
 		// gps
 		'location.device': {
 			msg: 'GPS is turned off',
@@ -113,6 +111,15 @@ export class Errors {
 		storage: {
 			msg: 'Your profile Data could not be created',
 			desc: 'Please restart the app and try again.',
+		},
+		// misc
+		loading: {
+			msg: 'Loading...',
+			desc: 'Please be patient while the app is being prepared.',
+		},
+		'loading.map': {
+			msg: 'Loading...',
+			desc: 'Please be patient while the map is being prepared.',
 		},
 	};
 

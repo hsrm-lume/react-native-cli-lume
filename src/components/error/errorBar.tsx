@@ -1,6 +1,11 @@
 import React, {useState} from 'react';
 import {StyleSheet, ScrollView} from 'react-native';
-import {getDismissableErrors, MessageKey, remError} from '../../services';
+import {
+	getDismissableErrors,
+	MessageKey,
+	registerErrorsChangeSubscription,
+	remError,
+} from '../../services';
 import {ErrorIcon} from './errorIcon';
 import {ErrorWindow} from './errorWindow';
 
@@ -9,17 +14,22 @@ import {ErrorWindow} from './errorWindow';
  * The List can be clicked to open an ErrorWindow
  */
 const ErrorBar = () => {
-	var [bigSize, setBigSize] = useState(false);
+	const [bigSize, setBigSize] = useState(false);
 	const switchBigSize = () => setBigSize(!bigSize);
 
-	const [r, setRepaint] = useState(false);
+	const [repaint, setRepaint] = useState(true);
+	const repaintComponent = () => {
+		setRepaint(!repaint);
+	};
+	registerErrorsChangeSubscription(repaintComponent);
+
 	// removeMessage callback gets called as wrapper
 	// to trigger a repaint after a message got removed
 	const removeMessage = (errType: MessageKey) => {
 		remError(errType);
 		// close ErrorWindow if no errors are left
 		if (getDismissableErrors().length == 0) setBigSize(false);
-		setRepaint(!r);
+		repaintComponent();
 	};
 
 	return bigSize ? (
