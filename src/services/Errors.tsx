@@ -33,6 +33,7 @@ export const isDismissableError = (x: MessageKey): boolean =>
 		'nfc.write',
 		'camera.permission',
 		'qr.invalid',
+        'location.accuracy',
 	].includes(x);
 
 /**

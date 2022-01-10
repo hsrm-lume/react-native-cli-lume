@@ -78,8 +78,8 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	Image: {
-		height: 350,
-		width: 350,
+		height: '45%',
+		width: '100%',
 		marginTop: 40,
 	},
 	Svg: {
