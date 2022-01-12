@@ -49,12 +49,11 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		paddingTop: 64,
 	},
-
 	headlineText: {
+		fontFamily: 'Domus-Tilting',
 		fontSize: 30,
 		color: '#000000',
 	},
-
 	window: {
 		alignItems: 'center',
 		backgroundColor: '#FFFFFF',
@@ -63,21 +62,18 @@ const styles = StyleSheet.create({
 		width: 331,
 		marginTop: 35,
 	},
-
 	qrCode: {
 		paddingVertical: 45,
 	},
-
 	textBox: {
 		alignItems: 'center',
 		paddingBottom: 25,
 	},
-
 	text: {
+		fontFamily: 'Nexusa-Next-Std',
 		fontSize: 22,
 		color: '#000000',
 	},
-
 	closeWindow: {
 		alignSelf: 'flex-end',
 		width: '15%',

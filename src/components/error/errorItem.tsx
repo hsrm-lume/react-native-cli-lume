@@ -45,10 +45,12 @@ const styles = StyleSheet.create({
 		width: '75%',
 	},
 	text: {
+		fontFamily: 'Nexusa-Next-Std',
 		fontSize: 20,
 		color: '#000000',
 	},
 	header: {
+		fontFamily: 'Domus-Tilting',
 		fontSize: 20,
 		color: '#000000',
 		fontWeight: 'bold',

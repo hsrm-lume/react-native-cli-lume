@@ -165,22 +165,4 @@ const styles = StyleSheet.create({
 		height: '100%',
 		alignItems: 'center',
 	},
-	text1: {
-		fontSize: 30,
-		color: '#000000',
-	},
-	button: {
-		height: '10%',
-		width: '70%',
-		backgroundColor: '#abb0ba',
-		borderRadius: 10,
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	qrCode: {
-		flex: 1,
-		flexDirection: 'row',
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
 });
