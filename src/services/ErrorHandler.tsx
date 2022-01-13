@@ -24,12 +24,24 @@ export const getFullscreenErrors = (): MessageKey[] =>
 export const getDismissableErrors = (): MessageKey[] =>
 	errorList.filter(isDismissableError);
 
-let changeSubscription: () => void = () => {};
-/**
- * Register a new change subscription
- */
-export const registerErrorsChangeSubscription = (s: () => void) =>
-	(changeSubscription = s);
+class ChangeSubscriptions {
+	private changeSubscriptions: {bar?: () => void; fullscreen?: () => void} = {};
+	/**
+	 * Register a new change subscription
+	 */
+	registerSubscription(s: () => void,
+	from: 'bar' | 'fullscreen') {
+		this.changeSubscriptions[from] = s;
+	}
+	/**
+	 * Trigger all subscriptions
+	 */
+	trigger() {
+		this.changeSubscriptions.bar?.();
+		this.changeSubscriptions.fullscreen?.();
+	}
+}
+export const changeSubscriptions = new ChangeSubscriptions();
 
 /**
  * Adds a MessageKey with given parameters
@@ -39,7 +51,7 @@ export const handleError = (errorType: MessageKey) => {
 	if (errorList.some(x => x == errorType)) return;
 
 	errorList.push(errorType);
-	changeSubscription();
+	changeSubscriptions.trigger()
 };
 
 /**
@@ -51,5 +63,5 @@ export const remError = (errType: string, includeSubtypes: boolean = true) => {
 	errorList = errorList.filter(
 		e => !messageTypeEquals(e, errType, includeSubtypes)
 	);
-	changeSubscription();
+	changeSubscriptions.trigger()
 };

@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {StyleSheet, ScrollView} from 'react-native';
 import {
+	changeSubscriptions,
 	getDismissableErrors,
 	MessageKey,
-	registerErrorsChangeSubscription,
 	remError,
 } from '../../services';
 import {ErrorIcon} from './errorIcon';
@@ -21,16 +21,16 @@ const ErrorBar = () => {
 	const repaintComponent = () => {
 		setRepaint(!repaint);
 	};
-	registerErrorsChangeSubscription(repaintComponent);
+	changeSubscriptions.registerSubscription(repaintComponent, 'bar');
 
 	// removeMessage callback gets called as wrapper
 	// to trigger a repaint after a message got removed
 	const removeMessage = (errType: MessageKey) => {
 		remError(errType);
 		// close ErrorWindow if no errors are left
-		if (getDismissableErrors().length == 0) setBigSize(false);
 		repaintComponent();
 	};
+	if (getDismissableErrors().length == 0 && bigSize) setBigSize(false);
 
 	return bigSize ? (
 		<ErrorWindow close={switchBigSize} removeMsg={removeMessage} />

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {
+	changeSubscriptions,
 	getFullscreenErrors,
-	registerErrorsChangeSubscription,
 } from '../../services';
 import FullErrorView from './fullErrorView';
 
@@ -10,7 +10,7 @@ const FullscreenErrors = (props: {action: () => void}) => {
 	const repaintComponent = () => {
 		setRepaint(!repaint);
 	};
-	registerErrorsChangeSubscription(repaintComponent);
+	changeSubscriptions.registerSubscription(repaintComponent, 'fullscreen');
 
 	const e = getFullscreenErrors()[0];
 
