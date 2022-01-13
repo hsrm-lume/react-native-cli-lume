@@ -17,9 +17,15 @@ export class GeoServiceSubscription {
  * Index to count how often the accuracy is too bad
  */
 class GeoAccuracyIterator {
-	index: number;
-	constructor() {
-		this.index = 0;
+	private failIndex = 0;
+	isFine(): boolean {
+		return this.failIndex < 2; // two fails allowed before error is shown.
+	}
+	fail() {
+		this.failIndex++;
+	}
+	ok() {
+		this.failIndex = 0;
 	}
 }
 
@@ -50,14 +56,15 @@ const internalCallback = (
 	cb: (pos: GeoLocation) => void,
 	iterator: GeoAccuracyIterator
 ) => {
-	if (position.coords.accuracy > environment.GEO_THRESHOLD) {
-		// throw error if accuracy is too bad for the second time
-		if (iterator.index > 0) handleError('location.accuracy');
-		iterator.index += 1;
-	} else {
-		iterator.index = 0;
+	remError('location.device'); // if a position gets reported, geo has to be working
+
+	if (position.coords.accuracy > environment.GEO_THRESHOLD) iterator.fail();
+	else iterator.ok();
+
+	// perform actions dependent on iterator isFine state
+	if (!iterator.isFine()) handleError('location.accuracy');
+	else {
 		remError('location.accuracy');
-		remError('location.device');
 		cb({
 			accuracy: position.coords.accuracy,
 			lat: position.coords.latitude,
