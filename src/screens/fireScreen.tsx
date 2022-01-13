@@ -154,7 +154,6 @@ export default function FireScreen() {
 				) : (
 					<FullErrorView item="loading" action={null}></FullErrorView>
 				)}
-				<ErrorBar />
 			</LinearGradient>
 		</>
 	);

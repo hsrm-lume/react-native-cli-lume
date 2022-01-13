@@ -14,6 +14,22 @@ export class GeoServiceSubscription {
 }
 
 /**
+ * Index to count how often the accuracy is too bad
+ */
+class GeoAccuracyIterator {
+	private failIndex = 0;
+	isFine(): boolean {
+		return this.failIndex < 2; // two fails allowed before error is shown.
+	}
+	fail() {
+		this.failIndex++;
+	}
+	ok() {
+		this.failIndex = 0;
+	}
+}
+
+/**
  * Static options for Geolocation.watchPosition
  */
 const watchOptions: GeoWatchOptions = {
@@ -31,25 +47,30 @@ const watchOptions: GeoWatchOptions = {
 };
 
 /**
- * Internal callback to filter low accuracy poisitions
+ * Internal callback to filter bad accuracy positions
  * @param position to be passed to callback
  * @param cb callback accepting the position
  */
 const internalCallback = (
 	position: Geolocation.GeoPosition,
-	cb: (pos: GeoLocation) => void
+	cb: (pos: GeoLocation) => void,
+	iterator: GeoAccuracyIterator
 ) => {
-	if (position.coords.accuracy > environment.GEO_THRESHOLD) {
-		handleError('location.accuracy');
-		return;
+	remError('location.device'); // if a position gets reported, geo has to be working
+
+	if (position.coords.accuracy > environment.GEO_THRESHOLD) iterator.fail();
+	else iterator.ok();
+
+	// perform actions dependent on iterator isFine state
+	if (!iterator.isFine()) handleError('location.accuracy');
+	else {
+		remError('location.accuracy');
+		cb({
+			accuracy: position.coords.accuracy,
+			lat: position.coords.latitude,
+			lng: position.coords.longitude,
+		});
 	}
-	remError('location.accuracy');
-	remError('location.device');
-	cb({
-		accuracy: position.coords.accuracy,
-		lat: position.coords.latitude,
-		lng: position.coords.longitude,
-	});
 };
 
 /**
@@ -59,8 +80,9 @@ const internalCallback = (
 export const subscribePosition = (
 	callback: (pos: GeoLocation) => void
 ): GeoServiceSubscription => {
+	const iterator = new GeoAccuracyIterator();
 	const n = Geolocation.watchPosition(
-		pos => internalCallback(pos, callback),
+		pos => internalCallback(pos, callback, iterator),
 		e => {
 			handleError('location.device');
 			console.warn('Geolocation.watchPosition error', e);
