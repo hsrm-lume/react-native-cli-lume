@@ -62,5 +62,25 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Domus-Tilting-Bold.otf</string>
+		<string>Domus-Tilting-Extrabold.otf</string>
+		<string>Domus-Tilting-Extralight.otf</string>
+		<string>Domus-Tilting-Light.otf</string>
+		<string>Domus-Tilting-Medium.otf</string>
+		<string>Domus-Tilting-Semibold.otf</string>
+		<string>Domus-Tilting.otf</string>
+		<string>Nexusa-Next-Bold-Italic.otf</string>
+		<string>Nexusa-Next-Bold.otf</string>
+		<string>Nexusa-Next-Italic.otf</string>
+		<string>Nexusa-Next-Light-Italic.otf</string>
+		<string>Nexusa-Next-Light.otf</string>
+		<string>Nexusa-Next-Medium-Italic.otf</string>
+		<string>Nexusa-Next-Medium.otf</string>
+		<string>Nexusa-Next-Thin-Italic.otf</string>
+		<string>Nexusa-Next-Thin.otf</string>
+		<string>Nexusa-Next.otf</string>
+	</array>
 </dict>
 </plist>

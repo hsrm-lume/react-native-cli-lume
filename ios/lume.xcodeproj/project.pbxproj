@@ -15,6 +15,23 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8C6658848D430D33ED5C9E7B /* libPods-lume.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B6AD2A4648855E8A77020B52 /* libPods-lume.a */; };
 		99E10F0C7E9D1C9B3B4F915D /* libPods-lume-lumeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C30B40DA83F7B9BA4F8DB4A /* libPods-lume-lumeTests.a */; };
+		62449BBAF4424A369FD19C4A /* Domus-Tilting-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 36C23AB9C39E4E6F8AE0977C /* Domus-Tilting-Bold.otf */; };
+		641BC7C3707442668D182515 /* Domus-Tilting-Extrabold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 352F06E3C1C54F98A87D15B9 /* Domus-Tilting-Extrabold.otf */; };
+		D9656078488C43EDAC4135F5 /* Domus-Tilting-Extralight.otf in Resources */ = {isa = PBXBuildFile; fileRef = AA012A4D96B1497FAC2DE965 /* Domus-Tilting-Extralight.otf */; };
+		879C76EA417C4D4FB9CCADFD /* Domus-Tilting-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 466E544766C74AF799DC4B75 /* Domus-Tilting-Light.otf */; };
+		9BBE1DA2C6E64E1E9543BAB4 /* Domus-Tilting-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7A7B06FA056C4C19AAEC986E /* Domus-Tilting-Medium.otf */; };
+		4B72B5E404344A22A182FF5F /* Domus-Tilting-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5C813E55A0D8445DB3AA9483 /* Domus-Tilting-Semibold.otf */; };
+		2A0304ED070D43909DF794ED /* Domus-Tilting.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9C2D084F90B14E95A51DA8CE /* Domus-Tilting.otf */; };
+		900E5C80A9764EB5A4B77F3C /* Nexusa-Next-Bold-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4C4EDCDE2ED5452288C043EA /* Nexusa-Next-Bold-Italic.otf */; };
+		AC68BA29D5584242BB7C6366 /* Nexusa-Next-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = D96926DA7FA44BC6823718AC /* Nexusa-Next-Bold.otf */; };
+		F0830A941B574CE1A246FFF9 /* Nexusa-Next-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = CC4DDBCB6F244CA7A7647E20 /* Nexusa-Next-Italic.otf */; };
+		1D530FAE67AE44268C93AE1A /* Nexusa-Next-Light-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0BC58F82AC53448DAAFA76DF /* Nexusa-Next-Light-Italic.otf */; };
+		A54FDC1B51D444D18A007E99 /* Nexusa-Next-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = FC017E94FCDE4E2A8965B5F6 /* Nexusa-Next-Light.otf */; };
+		81DEA5A9FEBB4E5B96D54E21 /* Nexusa-Next-Medium-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7E60399043CB4BF0BE6598DA /* Nexusa-Next-Medium-Italic.otf */; };
+		E34326E8EB9947A7A146A1C4 /* Nexusa-Next-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = F7C4CD7E7B1F4F299A041616 /* Nexusa-Next-Medium.otf */; };
+		2BC78780ECE747358F34FA18 /* Nexusa-Next-Thin-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = D4985DD01C52447F9790F96E /* Nexusa-Next-Thin-Italic.otf */; };
+		D8D7A7E4B1AF4B8290563008 /* Nexusa-Next-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 93E37E073E0D4771915D5186 /* Nexusa-Next-Thin.otf */; };
+		3D80786CF1C04214B20A25D9 /* Nexusa-Next.otf in Resources */ = {isa = PBXBuildFile; fileRef = ECF0517781914715AB29B0A0 /* Nexusa-Next.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +64,23 @@
 		B6AD2A4648855E8A77020B52 /* libPods-lume.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lume.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FEC56FBBCDD6F42B545E60B9 /* Pods-lume.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lume.debug.xcconfig"; path = "Target Support Files/Pods-lume/Pods-lume.debug.xcconfig"; sourceTree = "<group>"; };
+		36C23AB9C39E4E6F8AE0977C /* Domus-Tilting-Bold.otf */ = {isa = PBXFileReference; name = "Domus-Tilting-Bold.otf"; path = "../src/assets/fonts/domus/Domus-Tilting-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		352F06E3C1C54F98A87D15B9 /* Domus-Tilting-Extrabold.otf */ = {isa = PBXFileReference; name = "Domus-Tilting-Extrabold.otf"; path = "../src/assets/fonts/domus/Domus-Tilting-Extrabold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		AA012A4D96B1497FAC2DE965 /* Domus-Tilting-Extralight.otf */ = {isa = PBXFileReference; name = "Domus-Tilting-Extralight.otf"; path = "../src/assets/fonts/domus/Domus-Tilting-Extralight.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		466E544766C74AF799DC4B75 /* Domus-Tilting-Light.otf */ = {isa = PBXFileReference; name = "Domus-Tilting-Light.otf"; path = "../src/assets/fonts/domus/Domus-Tilting-Light.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7A7B06FA056C4C19AAEC986E /* Domus-Tilting-Medium.otf */ = {isa = PBXFileReference; name = "Domus-Tilting-Medium.otf"; path = "../src/assets/fonts/domus/Domus-Tilting-Medium.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		5C813E55A0D8445DB3AA9483 /* Domus-Tilting-Semibold.otf */ = {isa = PBXFileReference; name = "Domus-Tilting-Semibold.otf"; path = "../src/assets/fonts/domus/Domus-Tilting-Semibold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		9C2D084F90B14E95A51DA8CE /* Domus-Tilting.otf */ = {isa = PBXFileReference; name = "Domus-Tilting.otf"; path = "../src/assets/fonts/domus/Domus-Tilting.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		4C4EDCDE2ED5452288C043EA /* Nexusa-Next-Bold-Italic.otf */ = {isa = PBXFileReference; name = "Nexusa-Next-Bold-Italic.otf"; path = "../src/assets/fonts/nexusa/Nexusa-Next-Bold-Italic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D96926DA7FA44BC6823718AC /* Nexusa-Next-Bold.otf */ = {isa = PBXFileReference; name = "Nexusa-Next-Bold.otf"; path = "../src/assets/fonts/nexusa/Nexusa-Next-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		CC4DDBCB6F244CA7A7647E20 /* Nexusa-Next-Italic.otf */ = {isa = PBXFileReference; name = "Nexusa-Next-Italic.otf"; path = "../src/assets/fonts/nexusa/Nexusa-Next-Italic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0BC58F82AC53448DAAFA76DF /* Nexusa-Next-Light-Italic.otf */ = {isa = PBXFileReference; name = "Nexusa-Next-Light-Italic.otf"; path = "../src/assets/fonts/nexusa/Nexusa-Next-Light-Italic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		FC017E94FCDE4E2A8965B5F6 /* Nexusa-Next-Light.otf */ = {isa = PBXFileReference; name = "Nexusa-Next-Light.otf"; path = "../src/assets/fonts/nexusa/Nexusa-Next-Light.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7E60399043CB4BF0BE6598DA /* Nexusa-Next-Medium-Italic.otf */ = {isa = PBXFileReference; name = "Nexusa-Next-Medium-Italic.otf"; path = "../src/assets/fonts/nexusa/Nexusa-Next-Medium-Italic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F7C4CD7E7B1F4F299A041616 /* Nexusa-Next-Medium.otf */ = {isa = PBXFileReference; name = "Nexusa-Next-Medium.otf"; path = "../src/assets/fonts/nexusa/Nexusa-Next-Medium.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D4985DD01C52447F9790F96E /* Nexusa-Next-Thin-Italic.otf */ = {isa = PBXFileReference; name = "Nexusa-Next-Thin-Italic.otf"; path = "../src/assets/fonts/nexusa/Nexusa-Next-Thin-Italic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		93E37E073E0D4771915D5186 /* Nexusa-Next-Thin.otf */ = {isa = PBXFileReference; name = "Nexusa-Next-Thin.otf"; path = "../src/assets/fonts/nexusa/Nexusa-Next-Thin.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		ECF0517781914715AB29B0A0 /* Nexusa-Next.otf */ = {isa = PBXFileReference; name = "Nexusa-Next.otf"; path = "../src/assets/fonts/nexusa/Nexusa-Next.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +172,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				27F698353565BC0655C37A0D /* Pods */,
+				7F6E02249AAD4E91849BCC26 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -152,6 +187,31 @@
 			);
 			name = Products;
 			sourceTree = "<group>";
+		};
+		7F6E02249AAD4E91849BCC26 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				36C23AB9C39E4E6F8AE0977C /* Domus-Tilting-Bold.otf */,
+				352F06E3C1C54F98A87D15B9 /* Domus-Tilting-Extrabold.otf */,
+				AA012A4D96B1497FAC2DE965 /* Domus-Tilting-Extralight.otf */,
+				466E544766C74AF799DC4B75 /* Domus-Tilting-Light.otf */,
+				7A7B06FA056C4C19AAEC986E /* Domus-Tilting-Medium.otf */,
+				5C813E55A0D8445DB3AA9483 /* Domus-Tilting-Semibold.otf */,
+				9C2D084F90B14E95A51DA8CE /* Domus-Tilting.otf */,
+				4C4EDCDE2ED5452288C043EA /* Nexusa-Next-Bold-Italic.otf */,
+				D96926DA7FA44BC6823718AC /* Nexusa-Next-Bold.otf */,
+				CC4DDBCB6F244CA7A7647E20 /* Nexusa-Next-Italic.otf */,
+				0BC58F82AC53448DAAFA76DF /* Nexusa-Next-Light-Italic.otf */,
+				FC017E94FCDE4E2A8965B5F6 /* Nexusa-Next-Light.otf */,
+				7E60399043CB4BF0BE6598DA /* Nexusa-Next-Medium-Italic.otf */,
+				F7C4CD7E7B1F4F299A041616 /* Nexusa-Next-Medium.otf */,
+				D4985DD01C52447F9790F96E /* Nexusa-Next-Thin-Italic.otf */,
+				93E37E073E0D4771915D5186 /* Nexusa-Next-Thin.otf */,
+				ECF0517781914715AB29B0A0 /* Nexusa-Next.otf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -249,6 +309,23 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				62449BBAF4424A369FD19C4A /* Domus-Tilting-Bold.otf in Resources */,
+				641BC7C3707442668D182515 /* Domus-Tilting-Extrabold.otf in Resources */,
+				D9656078488C43EDAC4135F5 /* Domus-Tilting-Extralight.otf in Resources */,
+				879C76EA417C4D4FB9CCADFD /* Domus-Tilting-Light.otf in Resources */,
+				9BBE1DA2C6E64E1E9543BAB4 /* Domus-Tilting-Medium.otf in Resources */,
+				4B72B5E404344A22A182FF5F /* Domus-Tilting-Semibold.otf in Resources */,
+				2A0304ED070D43909DF794ED /* Domus-Tilting.otf in Resources */,
+				900E5C80A9764EB5A4B77F3C /* Nexusa-Next-Bold-Italic.otf in Resources */,
+				AC68BA29D5584242BB7C6366 /* Nexusa-Next-Bold.otf in Resources */,
+				F0830A941B574CE1A246FFF9 /* Nexusa-Next-Italic.otf in Resources */,
+				1D530FAE67AE44268C93AE1A /* Nexusa-Next-Light-Italic.otf in Resources */,
+				A54FDC1B51D444D18A007E99 /* Nexusa-Next-Light.otf in Resources */,
+				81DEA5A9FEBB4E5B96D54E21 /* Nexusa-Next-Medium-Italic.otf in Resources */,
+				E34326E8EB9947A7A146A1C4 /* Nexusa-Next-Medium.otf in Resources */,
+				2BC78780ECE747358F34FA18 /* Nexusa-Next-Thin-Italic.otf in Resources */,
+				D8D7A7E4B1AF4B8290563008 /* Nexusa-Next-Thin.otf in Resources */,
+				3D80786CF1C04214B20A25D9 /* Nexusa-Next.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
