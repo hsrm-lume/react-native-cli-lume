@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
 		borderRadius: 25,
 	},
 	btnText: {
-		fontFamily: 'Nexusa-Next-Std',
+		fontFamily: 'Nexusa-Next',
 		color: '#000000',
 		fontSize: 18,
 		paddingRight: '10%',
@@ -94,13 +94,13 @@ const styles = StyleSheet.create({
 		marginTop: -20,
 	},
 	Details: {
-		fontFamily: 'Nexusa-Next-Std',
+		fontFamily: 'Nexusa-Next',
 		color: '#cccccc',
 		marginTop: 40,
 		fontSize: 16,
 	},
 	Message: {
-		fontFamily: 'Nexusa-Next-Std',
+		fontFamily: 'Nexusa-Next',
 		color: '#000000',
 		fontSize: 18,
 		marginTop: 60,

@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
 		paddingBottom: 25,
 	},
 	text: {
-		fontFamily: 'Nexusa-Next-Std',
+		fontFamily: 'Nexusa-Next',
 		fontSize: 22,
 		color: '#000000',
 	},
