@@ -11,10 +11,27 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		1D530FAE67AE44268C93AE1A /* Nexusa-Next-Light-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0BC58F82AC53448DAAFA76DF /* Nexusa-Next-Light-Italic.otf */; };
+		2A0304ED070D43909DF794ED /* Domus-Tilting.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9C2D084F90B14E95A51DA8CE /* Domus-Tilting.otf */; };
+		2BC78780ECE747358F34FA18 /* Nexusa-Next-Thin-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = D4985DD01C52447F9790F96E /* Nexusa-Next-Thin-Italic.otf */; };
+		3D80786CF1C04214B20A25D9 /* Nexusa-Next.otf in Resources */ = {isa = PBXBuildFile; fileRef = ECF0517781914715AB29B0A0 /* Nexusa-Next.otf */; };
+		62449BBAF4424A369FD19C4A /* Domus-Tilting-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 36C23AB9C39E4E6F8AE0977C /* Domus-Tilting-Bold.otf */; };
+		64214D5B2792EB39006D8812 /* Domus-Tilting-Extra-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 64214D5A2792EB39006D8812 /* Domus-Tilting-Extra-Bold.otf */; };
+		64214D5D2792EB47006D8812 /* Domus-Tilting-Extra-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 64214D5C2792EB47006D8812 /* Domus-Tilting-Extra-Light.otf */; };
+		64214D5F2792EB4E006D8812 /* Domus-Tilting-Semi-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 64214D5E2792EB4E006D8812 /* Domus-Tilting-Semi-Bold.otf */; };
 		64D4813C276B4AAF00F70A0A /* ForceBridgingHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64D4813B276B4AAF00F70A0A /* ForceBridgingHeader.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		81DEA5A9FEBB4E5B96D54E21 /* Nexusa-Next-Medium-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7E60399043CB4BF0BE6598DA /* Nexusa-Next-Medium-Italic.otf */; };
+		879C76EA417C4D4FB9CCADFD /* Domus-Tilting-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 466E544766C74AF799DC4B75 /* Domus-Tilting-Light.otf */; };
 		8C6658848D430D33ED5C9E7B /* libPods-lume.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B6AD2A4648855E8A77020B52 /* libPods-lume.a */; };
+		900E5C80A9764EB5A4B77F3C /* Nexusa-Next-Bold-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4C4EDCDE2ED5452288C043EA /* Nexusa-Next-Bold-Italic.otf */; };
 		99E10F0C7E9D1C9B3B4F915D /* libPods-lume-lumeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C30B40DA83F7B9BA4F8DB4A /* libPods-lume-lumeTests.a */; };
+		9BBE1DA2C6E64E1E9543BAB4 /* Domus-Tilting-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7A7B06FA056C4C19AAEC986E /* Domus-Tilting-Medium.otf */; };
+		A54FDC1B51D444D18A007E99 /* Nexusa-Next-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = FC017E94FCDE4E2A8965B5F6 /* Nexusa-Next-Light.otf */; };
+		AC68BA29D5584242BB7C6366 /* Nexusa-Next-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = D96926DA7FA44BC6823718AC /* Nexusa-Next-Bold.otf */; };
+		D8D7A7E4B1AF4B8290563008 /* Nexusa-Next-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 93E37E073E0D4771915D5186 /* Nexusa-Next-Thin.otf */; };
+		E34326E8EB9947A7A146A1C4 /* Nexusa-Next-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = F7C4CD7E7B1F4F299A041616 /* Nexusa-Next-Medium.otf */; };
+		F0830A941B574CE1A246FFF9 /* Nexusa-Next-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = CC4DDBCB6F244CA7A7647E20 /* Nexusa-Next-Italic.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,21 +48,38 @@
 		00E356EE1AD99517003FC87E /* lumeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lumeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* lumeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = lumeTests.m; sourceTree = "<group>"; };
+		0BC58F82AC53448DAAFA76DF /* Nexusa-Next-Light-Italic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nexusa-Next-Light-Italic.otf"; path = "../src/assets/fonts/nexusa/Nexusa-Next-Light-Italic.otf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* lume.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lume.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = lume/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = lume/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = lume/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = lume/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = lume/main.m; sourceTree = "<group>"; };
+		36C23AB9C39E4E6F8AE0977C /* Domus-Tilting-Bold.otf */ = {isa = PBXFileReference; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = file; name = "Domus-Tilting-Bold.otf"; path = "../src/assets/fonts/domus/Domus-Tilting-Bold.otf"; sourceTree = "<group>"; };
 		3B8F11A10AD519906C82710E /* Pods-lume-lumeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lume-lumeTests.release.xcconfig"; path = "Target Support Files/Pods-lume-lumeTests/Pods-lume-lumeTests.release.xcconfig"; sourceTree = "<group>"; };
+		466E544766C74AF799DC4B75 /* Domus-Tilting-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Domus-Tilting-Light.otf"; path = "../src/assets/fonts/domus/Domus-Tilting-Light.otf"; sourceTree = "<group>"; };
+		4C4EDCDE2ED5452288C043EA /* Nexusa-Next-Bold-Italic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nexusa-Next-Bold-Italic.otf"; path = "../src/assets/fonts/nexusa/Nexusa-Next-Bold-Italic.otf"; sourceTree = "<group>"; };
+		64214D5A2792EB39006D8812 /* Domus-Tilting-Extra-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Domus-Tilting-Extra-Bold.otf"; path = "../src/assets/fonts/domus/Domus-Tilting-Extra-Bold.otf"; sourceTree = "<group>"; };
+		64214D5C2792EB47006D8812 /* Domus-Tilting-Extra-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Domus-Tilting-Extra-Light.otf"; path = "../src/assets/fonts/domus/Domus-Tilting-Extra-Light.otf"; sourceTree = "<group>"; };
+		64214D5E2792EB4E006D8812 /* Domus-Tilting-Semi-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Domus-Tilting-Semi-Bold.otf"; path = "../src/assets/fonts/domus/Domus-Tilting-Semi-Bold.otf"; sourceTree = "<group>"; };
 		64D48138276B48D900F70A0A /* lume-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "lume-Bridging-Header.h"; sourceTree = "<group>"; };
 		64D4813B276B4AAF00F70A0A /* ForceBridgingHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ForceBridgingHeader.swift; path = lume/ForceBridgingHeader.swift; sourceTree = "<group>"; };
 		6C30B40DA83F7B9BA4F8DB4A /* libPods-lume-lumeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lume-lumeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C9B8B37EEF134BABB57F57B /* Pods-lume-lumeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lume-lumeTests.debug.xcconfig"; path = "Target Support Files/Pods-lume-lumeTests/Pods-lume-lumeTests.debug.xcconfig"; sourceTree = "<group>"; };
+		7A7B06FA056C4C19AAEC986E /* Domus-Tilting-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Domus-Tilting-Medium.otf"; path = "../src/assets/fonts/domus/Domus-Tilting-Medium.otf"; sourceTree = "<group>"; };
+		7E60399043CB4BF0BE6598DA /* Nexusa-Next-Medium-Italic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nexusa-Next-Medium-Italic.otf"; path = "../src/assets/fonts/nexusa/Nexusa-Next-Medium-Italic.otf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = lume/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		93E37E073E0D4771915D5186 /* Nexusa-Next-Thin.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nexusa-Next-Thin.otf"; path = "../src/assets/fonts/nexusa/Nexusa-Next-Thin.otf"; sourceTree = "<group>"; };
 		9A28D3D74B34C05EDCCE7ED2 /* Pods-lume.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lume.release.xcconfig"; path = "Target Support Files/Pods-lume/Pods-lume.release.xcconfig"; sourceTree = "<group>"; };
+		9C2D084F90B14E95A51DA8CE /* Domus-Tilting.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Domus-Tilting.otf"; path = "../src/assets/fonts/domus/Domus-Tilting.otf"; sourceTree = "<group>"; };
 		B6AD2A4648855E8A77020B52 /* libPods-lume.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lume.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC4DDBCB6F244CA7A7647E20 /* Nexusa-Next-Italic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nexusa-Next-Italic.otf"; path = "../src/assets/fonts/nexusa/Nexusa-Next-Italic.otf"; sourceTree = "<group>"; };
+		D4985DD01C52447F9790F96E /* Nexusa-Next-Thin-Italic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nexusa-Next-Thin-Italic.otf"; path = "../src/assets/fonts/nexusa/Nexusa-Next-Thin-Italic.otf"; sourceTree = "<group>"; };
+		D96926DA7FA44BC6823718AC /* Nexusa-Next-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nexusa-Next-Bold.otf"; path = "../src/assets/fonts/nexusa/Nexusa-Next-Bold.otf"; sourceTree = "<group>"; };
+		ECF0517781914715AB29B0A0 /* Nexusa-Next.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nexusa-Next.otf"; path = "../src/assets/fonts/nexusa/Nexusa-Next.otf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F7C4CD7E7B1F4F299A041616 /* Nexusa-Next-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nexusa-Next-Medium.otf"; path = "../src/assets/fonts/nexusa/Nexusa-Next-Medium.otf"; sourceTree = "<group>"; };
+		FC017E94FCDE4E2A8965B5F6 /* Nexusa-Next-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nexusa-Next-Light.otf"; path = "../src/assets/fonts/nexusa/Nexusa-Next-Light.otf"; sourceTree = "<group>"; };
 		FEC56FBBCDD6F42B545E60B9 /* Pods-lume.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lume.debug.xcconfig"; path = "Target Support Files/Pods-lume/Pods-lume.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,6 +156,30 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		7F6E02249AAD4E91849BCC26 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				36C23AB9C39E4E6F8AE0977C /* Domus-Tilting-Bold.otf */,
+				64214D5C2792EB47006D8812 /* Domus-Tilting-Extra-Light.otf */,
+				64214D5E2792EB4E006D8812 /* Domus-Tilting-Semi-Bold.otf */,
+				466E544766C74AF799DC4B75 /* Domus-Tilting-Light.otf */,
+				7A7B06FA056C4C19AAEC986E /* Domus-Tilting-Medium.otf */,
+				64214D5A2792EB39006D8812 /* Domus-Tilting-Extra-Bold.otf */,
+				9C2D084F90B14E95A51DA8CE /* Domus-Tilting.otf */,
+				4C4EDCDE2ED5452288C043EA /* Nexusa-Next-Bold-Italic.otf */,
+				D96926DA7FA44BC6823718AC /* Nexusa-Next-Bold.otf */,
+				CC4DDBCB6F244CA7A7647E20 /* Nexusa-Next-Italic.otf */,
+				0BC58F82AC53448DAAFA76DF /* Nexusa-Next-Light-Italic.otf */,
+				FC017E94FCDE4E2A8965B5F6 /* Nexusa-Next-Light.otf */,
+				7E60399043CB4BF0BE6598DA /* Nexusa-Next-Medium-Italic.otf */,
+				F7C4CD7E7B1F4F299A041616 /* Nexusa-Next-Medium.otf */,
+				D4985DD01C52447F9790F96E /* Nexusa-Next-Thin-Italic.otf */,
+				93E37E073E0D4771915D5186 /* Nexusa-Next-Thin.otf */,
+				ECF0517781914715AB29B0A0 /* Nexusa-Next.otf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -138,6 +196,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				27F698353565BC0655C37A0D /* Pods */,
+				7F6E02249AAD4E91849BCC26 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -249,6 +308,23 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				64214D5D2792EB47006D8812 /* Domus-Tilting-Extra-Light.otf in Resources */,
+				62449BBAF4424A369FD19C4A /* Domus-Tilting-Bold.otf in Resources */,
+				879C76EA417C4D4FB9CCADFD /* Domus-Tilting-Light.otf in Resources */,
+				9BBE1DA2C6E64E1E9543BAB4 /* Domus-Tilting-Medium.otf in Resources */,
+				2A0304ED070D43909DF794ED /* Domus-Tilting.otf in Resources */,
+				64214D5B2792EB39006D8812 /* Domus-Tilting-Extra-Bold.otf in Resources */,
+				900E5C80A9764EB5A4B77F3C /* Nexusa-Next-Bold-Italic.otf in Resources */,
+				AC68BA29D5584242BB7C6366 /* Nexusa-Next-Bold.otf in Resources */,
+				F0830A941B574CE1A246FFF9 /* Nexusa-Next-Italic.otf in Resources */,
+				1D530FAE67AE44268C93AE1A /* Nexusa-Next-Light-Italic.otf in Resources */,
+				A54FDC1B51D444D18A007E99 /* Nexusa-Next-Light.otf in Resources */,
+				81DEA5A9FEBB4E5B96D54E21 /* Nexusa-Next-Medium-Italic.otf in Resources */,
+				E34326E8EB9947A7A146A1C4 /* Nexusa-Next-Medium.otf in Resources */,
+				64214D5F2792EB4E006D8812 /* Domus-Tilting-Semi-Bold.otf in Resources */,
+				2BC78780ECE747358F34FA18 /* Nexusa-Next-Thin-Italic.otf in Resources */,
+				D8D7A7E4B1AF4B8290563008 /* Nexusa-Next-Thin.otf in Resources */,
+				3D80786CF1C04214B20A25D9 /* Nexusa-Next.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

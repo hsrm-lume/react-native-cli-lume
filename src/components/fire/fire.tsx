@@ -41,22 +41,19 @@ const styles = StyleSheet.create({
 		height: '80%',
 		width: '100%',
 	},
-
 	headlineBox: {
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'flex-end',
 	},
-
 	headlineText: {
+		fontFamily: 'Domus-Tilting',
 		fontSize: 30,
 		color: '#000000',
 	},
-
 	fire: {
 		flex: 4,
 	},
-
 	button: {
 		backgroundColor: '#FFFFFF',
 		borderRadius: 30,
@@ -67,7 +64,6 @@ const styles = StyleSheet.create({
 		width: 60,
 		bottom: 30,
 	},
-
 	icon: {
 		height: 40,
 		width: 40,

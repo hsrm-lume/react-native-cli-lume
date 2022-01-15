@@ -45,12 +45,13 @@ const styles = StyleSheet.create({
 		width: '75%',
 	},
 	text: {
+		fontFamily: 'Nexusa-Next',
 		fontSize: 20,
 		color: '#000000',
 	},
 	header: {
+		fontFamily: 'Nexusa-Next-Bold',
 		fontSize: 20,
 		color: '#000000',
-		fontWeight: 'bold',
 	},
 });
