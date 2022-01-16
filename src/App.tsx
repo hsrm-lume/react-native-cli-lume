@@ -10,6 +10,7 @@ import Map from './assets/map.svg';
 import {DevSettings} from 'react-native';
 import {userDataSchema} from './types/UserDataSchema';
 import {getDismissableErrors, getFullscreenErrors} from './services';
+import IntroScreen from './screens/introScreen';
 
 if (__DEV__) {
 	DevSettings.addMenuItem('Clear Storage', () => {
@@ -41,17 +42,24 @@ export default function App() {
 			<bottomNav.Navigator
 				screenOptions={({route}) => ({
 					tabBarIcon: () => {
-						if (route.name === 'Fire')
+						if (route.name === 'FireScreen')
 							return <Fire width={'100%'} height={'100%'} />;
-						else if (route.name === 'Web')
+						else if (route.name === 'WebScreen')
 							return <Map width={'100%'} height={'100%'} />;
+						else if (route.name === 'IntroScreen') return null;
+						else return null;
 					},
 					headerShown: false,
 					tabBarShowLabel: false,
 				})}>
-				<bottomNav.Screen name="Fire" component={FireScreen} />
+				<bottomNav.Screen name="FireScreen" component={FireScreen} />
 
-				<bottomNav.Screen name="Web" component={WebScreen} />
+				<bottomNav.Screen name="WebScreen" component={WebScreen} />
+				<bottomNav.Screen
+					name="IntroScreen"
+					component={IntroScreen}
+					options={{tabBarShowLabel: false, tabBarButton: props => null}}
+				/>
 			</bottomNav.Navigator>
 		</NavigationContainer>
 	);
