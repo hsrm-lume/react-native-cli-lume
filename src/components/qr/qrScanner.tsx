@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
-import QRCodeScanner from 'react-native-qrcode-scanner';
+// import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RestClient, writeUserData} from '../../services';
 import {GeoLocation, HandledPromise} from '../../types';
 import {QrCodeData} from '../../types/TranmissionData';
@@ -23,7 +23,9 @@ const QRScanner = (props: {
 					action={props.updateQrStatus}
 					style={styles.closeWindow}
 				/>
-				<QRCodeScanner
+				<Text style={styles.text}>Scanner currently under development</Text>
+				<Text style={styles.text}></Text>
+				{/* <QRCodeScanner
 					onRead={event => {
 						// validation
 						new HandledPromise<[QrCodeData, QrCodeData]>(
@@ -69,7 +71,7 @@ const QRScanner = (props: {
 					}}
 					containerStyle={styles.containerView}
 					cameraStyle={styles.cameraView}
-				/>
+				/> */}
 				<View style={styles.textBox}>
 					<Text style={styles.text}>Scan a lume QR-Code!</Text>
 				</View>
