@@ -18,13 +18,19 @@ export class GeoServiceSubscription {
  */
 class GeoAccuracyIterator {
 	private failIndex = 0;
-	isFine(): boolean {
-		return this.failIndex < 2; // two fails allowed before error is shown.
+	private okIndex = 0;
+	isFine(): boolean | undefined {
+		// two fails allowed before error is shown.
+		if(this.failIndex >= 2) return false;
+		if(this.okIndex < 2) return undefined;
+		return true;
 	}
 	fail() {
 		this.failIndex++;
+		this.okIndex = 0;
 	}
 	ok() {
+		this.okIndex++;
 		this.failIndex = 0;
 	}
 }
@@ -45,7 +51,6 @@ const watchOptions: GeoWatchOptions = {
 	forceRequestLocation: false,
 	forceLocationManager: false,
 };
-
 /**
  * Internal callback to filter bad accuracy positions
  * @param position to be passed to callback
@@ -62,14 +67,15 @@ const internalCallback = (
 	else iterator.ok();
 
 	// perform actions dependent on iterator isFine state
-	if (!iterator.isFine()) handleError('location.accuracy');
-	else {
+	if (iterator.isFine()){
 		remError('location.accuracy');
 		cb({
 			accuracy: position.coords.accuracy,
 			lat: position.coords.latitude,
 			lng: position.coords.longitude,
 		});
+	} else if(iterator.isFine() === false) {
+		handleError('location.accuracy');
 	}
 };
 
