@@ -20,13 +20,6 @@ const openRealm = async () =>
  */
 export const getUserData = (): HandledPromise<UserData> =>
 	new HandledPromise('storage', async resolve => {
-		///// WORKARROUND, TODO: remove this
-		return resolve({
-			uuid: 'd8f9f8f9-f8f9-f8f9-f8f9-f8f9f8f9f8f9',
-			fireStatus: false,
-		});
-		///// END WORKARROUND
-
 		// open the realm
 		const r = await openRealm();
 

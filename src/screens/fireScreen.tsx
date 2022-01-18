@@ -152,14 +152,7 @@ export default function FireScreen() {
 						</>
 					)
 				) : (
-					<FullErrorView
-						item="loading"
-						action={null}
-						details={JSON.stringify({
-							userData: userData,
-							pos: pos,
-							qrStatus: qrStatus,
-						})}></FullErrorView>
+					<FullErrorView item="loading" action={null}></FullErrorView>
 				)}
 			</LinearGradient>
 		</>
