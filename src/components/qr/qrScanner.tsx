@@ -1,20 +1,62 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
-// import QRCodeScanner from 'react-native-qrcode-scanner';
+import {
+	Camera,
+	CameraPermissionStatus,
+	useCameraDevices,
+	useFrameProcessor,
+} from 'react-native-vision-camera';
+import {
+	useScanBarcodes,
+	scanBarcodes,
+	BarcodeFormat,
+} from 'vision-camera-code-scanner';
 import {RestClient, writeUserData} from '../../services';
 import {GeoLocation, HandledPromise} from '../../types';
 import {QrCodeData} from '../../types/TranmissionData';
 import ThinCross from '../../assets/thinCross.svg';
 import {Icon} from '../error/icon';
+import {runOnJS} from 'react-native-reanimated';
 
 const QRScanner = (props: {
 	uid: string;
 	position: GeoLocation;
 	updateQrStatus: () => void;
 }) => {
+	const [cameraPermissionStatus, setCameraPermissionStatus] =
+		useState<CameraPermissionStatus>('not-determined');
+
+	Camera.getCameraPermissionStatus().then(result => {
+		console.log('get: ' + result);
+		setCameraPermissionStatus(result);
+	});
+
+	if (cameraPermissionStatus !== 'authorized') {
+		Camera.requestCameraPermission().then(result => {
+			console.log('request: ' + result);
+			setCameraPermissionStatus(result);
+		});
+	}
+
+	const devices = useCameraDevices('wide-angle-camera');
+	const device = devices.back;
+
+	const [frameProcessor, barcodes] = useScanBarcodes([BarcodeFormat.QR_CODE]);
+
+	if (device == null || cameraPermissionStatus !== 'authorized') return null;
 	return (
 		<>
-			<View style={styles.headlineBox}>
+			<Camera
+				style={StyleSheet.absoluteFill}
+				device={device}
+				isActive={true}
+				frameProcessor={frameProcessor}
+				frameProcessorFps={5}
+			/>
+			{barcodes.map((barcode, idx) => (
+				<Text key={idx}>{barcode.displayValue}</Text>
+			))}
+			{/*<View style={styles.headlineBox}>
 				<Text style={styles.headlineText}>ILLUMINATE YOUR FIRE!</Text>
 			</View>
 			<View style={styles.window}>
@@ -23,9 +65,8 @@ const QRScanner = (props: {
 					action={props.updateQrStatus}
 					style={styles.closeWindow}
 				/>
-				<Text style={styles.text}>Scanner currently under development</Text>
-				<Text style={styles.text}></Text>
-				{/* <QRCodeScanner
+				
+				<QRCodeScanner
 					onRead={event => {
 						// validation
 						new HandledPromise<[QrCodeData, QrCodeData]>(
@@ -71,11 +112,11 @@ const QRScanner = (props: {
 					}}
 					containerStyle={styles.containerView}
 					cameraStyle={styles.cameraView}
-				/> */}
+				/>
 				<View style={styles.textBox}>
 					<Text style={styles.text}>Scan a lume QR-Code!</Text>
 				</View>
-			</View>
+				</View>*/}
 		</>
 	);
 };

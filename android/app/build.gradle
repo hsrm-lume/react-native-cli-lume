@@ -79,6 +79,7 @@ import com.android.build.OutputFile
 
 project.ext.react = [
     enableHermes: false,  // clean and rebuild if changing
+    entryFile: "index.tsx",
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -126,6 +127,10 @@ def enableHermes = project.ext.react.get("enableHermes", false);
 def nativeArchitectures = project.getProperties().get("reactNativeDebugArchitectures")
 
 android {
+    packagingOptions {
+        pickFirst '**/*.so'
+    }
+    
     ndkVersion rootProject.ext.ndkVersion
 
     compileSdkVersion rootProject.ext.compileSdkVersion
