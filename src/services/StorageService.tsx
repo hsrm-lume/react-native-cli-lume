@@ -32,6 +32,7 @@ export const getUserData = (): HandledPromise<UserData> =>
 			r.create<UserData>('userData', {
 				uuid: uuid(),
 				fireStatus: false,
+				firstAppUse: true,
 			})
 		);
 		if (!newu) throw new Error('New user could not be created');
@@ -52,11 +53,10 @@ export const writeUserData = (
 		// fetch user to change
 		let u = r.objects<UserData>('userData')[0];
 
-		console.trace('show');
-
 		// modify user
 		r.write(() => {
 			if (data.fireStatus !== undefined) u.fireStatus = data.fireStatus;
+			if (data.firstAppUse !== undefined) u.firstAppUse = data.firstAppUse;
 			// allow uuid change only in dev mode
 			if (data.uuid !== undefined && environment.STAGE === 'dev')
 				u.uuid = data.uuid;

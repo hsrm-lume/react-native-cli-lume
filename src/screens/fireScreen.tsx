@@ -21,14 +21,22 @@ import {FireOnLogic} from '../components/fire/fireOnLogic';
 import LinearGradient from 'react-native-linear-gradient';
 import FullscreenErrors from '../components/error/fullscreenErrors';
 import FullErrorView from '../components/error/fullErrorView';
+import {useNavigation} from '@react-navigation/native';
 
 export default function FireScreen() {
+	const navigation = useNavigation();
 	// userData
 	const [userData, userDataChange] = useState<Partial<UserData>>({});
 	const fireStatusChange = (fs: boolean) => {
 		console.log('setting fire to: ' + fs);
 		userDataChange({uuid: userData.uuid, fireStatus: fs});
 	};
+
+	useEffect(() => {
+		if (userData !== undefined && userData.firstAppUse == true)
+			// @ts-ignore: react navigation does not know how to use itself
+			navigation.navigate('IntroScreen');
+	});
 
 	const [retryAfterError, doRetryAfterError] = useState(true);
 	const doRetry = () => {
@@ -102,7 +110,8 @@ export default function FireScreen() {
 				{pos &&
 				userData.uuid &&
 				qrStatus !== undefined &&
-				userData.fireStatus !== undefined ? ( // only render components if data ready
+				userData.fireStatus !== undefined &&
+				userData.firstAppUse !== undefined ? ( // only render components if data ready
 					userData.fireStatus ? (
 						// fire on
 						qrStatus ? (
@@ -144,6 +153,7 @@ export default function FireScreen() {
 									userData={{
 										uuid: userData.uuid,
 										fireStatus: userData.fireStatus,
+										firstAppUse: userData.firstAppUse,
 									}}
 									fireUpdater={fireStatusChange}
 									location={pos}

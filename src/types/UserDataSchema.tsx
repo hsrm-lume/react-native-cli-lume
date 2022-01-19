@@ -5,6 +5,7 @@ export const userDataSchema: Realm.ObjectSchema = {
 	properties: {
 		uuid: 'string',
 		fireStatus: 'bool',
+		firstAppUse: 'bool',
 	},
 	primaryKey: 'uuid',
 };
