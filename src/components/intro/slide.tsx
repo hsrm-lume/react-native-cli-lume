@@ -13,7 +13,7 @@ const SlideView = (props: {
 	};
 }) => {
 	return (
-		<>
+		<View style={styles.container}>
 			<View style={styles.headlineBox}>
 				<Text style={styles.headlineText}>{props.data.title}</Text>
 			</View>
@@ -43,23 +43,24 @@ const SlideView = (props: {
 					<Text style={styles.text}>Next</Text>
 				</TouchableHighlight>
 			</View>
-		</>
+		</View>
 	);
 };
-
 const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: 'space-between',
+		margin: '15%',
+		marginBottom: '30%',
+	},
 	headlineBox: {
-		marginTop: '20%',
-		alignItems: 'center',
-		justifyContent: 'flex-end',
-		alignSelf: 'center',
-		width: '80%',
+		marginBottom: '15%',
 	},
 	headlineText: {
 		fontFamily: 'Domus-Tilting',
 		fontSize: 40,
-		color: '#000000',
 		textAlign: 'center',
+		color: '#000000',
 	},
 	advanceContainer: {
 		marginTop: '10%',
@@ -78,18 +79,21 @@ const styles = StyleSheet.create({
 		backgroundColor: '#FFFFFF',
 	},
 	imageContainer: {
-		marginTop: '10%',
-		height: '35%',
-		alignSelf: 'center',
-		alignItems: 'center',
-		justifyContent: 'center',
+		height: '50%',
+		marginBottom: '15%',
 	},
 	imageStyles: {
+		width: '100%',
 		height: '100%',
-		width: 500,
 	},
-	descriptionContainer: {marginTop: '10%', width: '80%', alignSelf: 'center'},
-	description: {fontSize: 15, fontFamily: 'Nexusa-Next'},
+	descriptionContainer: {
+		marginBottom: '15%',
+		alignSelf: 'center',
+	},
+	description: {
+		fontSize: 15,
+		fontFamily: 'Nexusa-Next',
+	},
 	text: {
 		color: '#000000',
 		fontFamily: 'Nexusa-Next',
