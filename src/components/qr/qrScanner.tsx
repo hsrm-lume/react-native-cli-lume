@@ -15,56 +15,66 @@ import {GeoLocation, HandledPromise} from '../../types';
 import {QrCodeData} from '../../types/TranmissionData';
 import ThinCross from '../../assets/thinCross.svg';
 import {Icon} from '../error/icon';
+import FullErrorView from '../error/fullErrorView';
 
+/**
+ * @param uid uuid of current user
+ * @param position position of current user
+ * @param updateQrStatus callback to close QRScanner
+ */
 const QRScanner = (props: {
 	uid: string;
 	position: GeoLocation;
 	updateQrStatus: () => void;
 }) => {
+	// current detected QR-Code
+	const [qrCode, setQrCode] = useState<Barcode | undefined>(undefined);
+
 	const [cameraPermissionStatus, setCameraPermissionStatus] =
 		useState<CameraPermissionStatus>('not-determined');
 
-	const [qrCode, setQrCode] = useState<Barcode | undefined>(undefined);
-
+	// get permission
 	if (cameraPermissionStatus !== 'authorized') {
 		Camera.requestCameraPermission().then(result => {
-			console.log('request: ' + result);
 			setCameraPermissionStatus(result);
 		});
 	}
 
+	// get camera device of mobile phone
 	const devices = useCameraDevices('wide-angle-camera');
 	const device = devices.back;
 
+	// scan camera frames for QR-Codes
 	const [frameProcessor, barcodes] = useScanBarcodes([BarcodeFormat.QR_CODE]);
 
-	// check frames for new QR-Codes
+	// check barcodes for correct QR-Codes
 	useEffect(() => {
+		// check if barcodes array is empty
 		if (Array.isArray(barcodes) && barcodes.length) {
 			const barcode = barcodes[0];
+			// check if QR-Code has data
 			if (
 				barcode !== undefined &&
 				barcode.displayValue !== undefined &&
 				barcode.displayValue !== ''
 			) {
-				console.log('qrCodeValue: ' + barcode.displayValue);
+				// check if QR-Code is new
 				if (
 					qrCode === undefined ||
 					qrCode.displayValue === '' ||
 					barcode.displayValue !== qrCode.displayValue
 				) {
-					console.log('new QR-Code detected');
+					// set QR-Code as current detected QR-Code
 					setQrCode(barcode);
 				}
 			}
 		}
 	}, [barcodes]);
 
-	// process new QR-Code
+	// process new current detected QR-Code
 	useEffect(() => {
 		if (qrCode !== undefined && qrCode.displayValue !== undefined) {
 			const data = qrCode.displayValue;
-			console.log('qrCode: ' + data);
 			new HandledPromise<[QrCodeData, QrCodeData]>('qr.invalid', resolve => {
 				// validation of parameters
 				if (!props.uid) throw new Error('Torch not yet ready');
@@ -78,6 +88,7 @@ const QRScanner = (props: {
 						uuid: props.uid,
 						location: props.position,
 					};
+					// try parsing data string into QrCodeData object
 					received = JSON.parse(data);
 				} catch (error) {
 					throw new Error('QR-Code is invalid');
@@ -91,54 +102,51 @@ const QRScanner = (props: {
 					RestClient.postContact(received.uuid, self.uuid, self.location)
 				)
 				.then(() =>
-					// fs -> realm
+					// fireStatus -> realm
 					writeUserData({fireStatus: true})
+				)
+				.then(() =>
+					// close QRScanner
+					props.updateQrStatus()
 				);
-			// turn QR-Code Scanner off
-			props.updateQrStatus();
 		}
 	}, [qrCode]);
 
-	if (device == null || cameraPermissionStatus !== 'authorized') return null;
 	return (
 		<>
-			<Camera
-				style={StyleSheet.absoluteFill}
-				device={device}
-				isActive={true}
-				frameProcessor={frameProcessor}
-				frameProcessorFps={1}
-			/>
-			{/*
-			<View style={styles.headlineBox}>
-				<Text style={styles.headlineText}>ILLUMINATE YOUR FIRE!</Text>
-			</View>
-			<View style={styles.window}>
-				<Icon
-					icon={ThinCross}
-					action={props.updateQrStatus}
-					style={styles.closeWindow}
-				/>
-				
-				<QRCodeScanner
-					containerStyle={styles.containerView}
-					cameraStyle={styles.cameraView}
-				/>
-				<View style={styles.textBox}>
-					<Text style={styles.text}>Scan a lume QR-Code!</Text>
-				</View>
-				</View>
-				*/}
+			{device != null && cameraPermissionStatus === 'authorized' ? (
+				<>
+					<View style={styles.headlineBox}>
+						<Text style={styles.headlineText}>ILLUMINATE YOUR FIRE!</Text>
+					</View>
+					<View style={styles.window}>
+						<Icon
+							icon={ThinCross}
+							action={props.updateQrStatus}
+							style={styles.closeWindow}
+						/>
+						<View style={styles.cameraView}>
+							<Camera
+								style={styles.camera}
+								device={device}
+								isActive={true}
+								frameProcessor={frameProcessor}
+								frameProcessorFps={1}
+							/>
+						</View>
+						<View style={styles.textBox}>
+							<Text style={styles.text}>Scan a lume QR-Code!</Text>
+						</View>
+					</View>
+				</>
+			) : (
+				<FullErrorView item="loading" action={null}></FullErrorView>
+			)}
 		</>
 	);
 };
 
 const styles = StyleSheet.create({
-	barcodeTextURL: {
-		fontSize: 20,
-		color: 'white',
-		fontWeight: 'bold',
-	},
 	headlineBox: {
 		alignItems: 'center',
 		paddingTop: 64,
@@ -156,19 +164,18 @@ const styles = StyleSheet.create({
 		width: 331,
 		marginTop: 35,
 	},
-	containerView: {
-		marginTop: 0,
-	},
 	cameraView: {
-		overflow: 'hidden',
 		borderRadius: 20,
-		height: 300,
-		width: 250,
+		overflow: 'hidden',
+	},
+	camera: {
+		height: 320,
+		width: 280,
 		alignSelf: 'center',
 	},
 	textBox: {
 		alignItems: 'center',
-		paddingBottom: 25,
+		marginTop: 20,
 	},
 	text: {
 		fontFamily: 'Nexusa-Next',
@@ -177,8 +184,8 @@ const styles = StyleSheet.create({
 	},
 	closeWindow: {
 		alignSelf: 'flex-end',
-		width: '15%',
-		height: '15%',
+		width: '13%',
+		height: '13%',
 		paddingRight: '5%',
 	},
 });
