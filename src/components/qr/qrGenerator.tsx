@@ -7,16 +7,23 @@ import ThinCross from '../../assets/thinCross.svg';
 import {Icon} from '../error/icon';
 import {handleError} from '../../services/ErrorHandler';
 
+/**
+ * @param uid uuid of current user
+ * @param position position of current user
+ * @param updateQrStatus callback to close QRGenerator
+ */
 const QRGenerator = (props: {
 	uid: string;
 	position: GeoLocation;
 	updateQrStatus: () => void;
 }) => {
+	// initialize data to be written into QR-Code
 	const qrData: QrCodeData = {
 		ts: Math.floor(Date.now() / 1000),
 		uuid: props.uid,
 		location: props.position,
 	};
+	// convert json object to string
 	const data = JSON.stringify(qrData);
 	return (
 		<>
@@ -76,8 +83,8 @@ const styles = StyleSheet.create({
 	},
 	closeWindow: {
 		alignSelf: 'flex-end',
-		width: '15%',
-		height: '15%',
+		width: '13%',
+		height: '13%',
 		paddingRight: '5%',
 	},
 });
