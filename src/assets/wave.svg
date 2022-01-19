@@ -9,8 +9,9 @@
 	.st3{fill:#999999;}
 </style>
 <linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="-38.7171" y1="104.7537" x2="38.7958" y2="239.0101" gradientTransform="matrix(1 0 0 -1 85 256.9213)">
-	<stop  offset="0.2524" style="stop-color:#FF703A"/>
-	<stop  offset="1" style="stop-color:#FF3A3A"/>
+	<stop  offset="0" style="stop-color:#6F3FAF"/>
+	<stop  offset="0.2403" style="stop-color:#919DFC"/>
+	<stop  offset="1" style="stop-color:#92A1FF"/>
 </linearGradient>
 <circle class="st0" cx="85" cy="85" r="77.5"/>
 <linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="60.678" y1="131.9271" x2="111.3116" y2="44.2271">
