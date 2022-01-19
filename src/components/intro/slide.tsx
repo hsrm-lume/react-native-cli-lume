@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
 		backgroundColor: '#FFFFFF',
 	},
 	imageContainer: {
-		height: '50%',
+		height: '45%',
 		marginBottom: '15%',
 	},
 	imageStyles: {
