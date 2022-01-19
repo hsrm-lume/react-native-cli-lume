@@ -3,6 +3,7 @@ import SlideView from '../components/intro/slide';
 import Wave from '../assets/wave.svg';
 import Torch from '../assets/torch.svg';
 import ShareCamera from '../assets/shareCamera.svg';
+import ShareQr from '../assets/shareQr.svg';
 import ShareFlameFlipped from '../assets/shareFlameFlipped.svg';
 import Map from '../assets/map.svg';
 import ShareFlame from '../assets/shareFlame.svg';
@@ -47,7 +48,7 @@ export default function IntroScreen() {
 		},
 		{
 			title: 'sharing your flame',
-			image: QRCode,
+			image: ShareQr,
 			explanation:
 				'Alternatively press the QR code button to share a lume QR code and scan it with a camera',
 		},
@@ -78,7 +79,7 @@ export default function IntroScreen() {
 		},
 		{
 			title: 'sharing your flame',
-			image: ShareFlameFlipped,
+			image: ShareQr,
 			explanation:
 				'Sharing your torch is as simple as receiving it, just use the QR Code Button to bring up you lume code and share it with the world.',
 		},
