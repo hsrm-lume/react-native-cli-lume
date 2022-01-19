@@ -5,6 +5,7 @@ platform :ios, '11.0'
 
 flipperkit_version = '0.111.0'
 
+IOS_VERSION = '11.0'
 
 
 
@@ -22,7 +23,6 @@ target 'lume' do
     :hermes_enabled => false
   )
 
-  pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
 
   permissions_path = '../node_modules/react-native-permissions/ios'
   pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
@@ -39,9 +39,19 @@ target 'lume' do
   use_flipper!({ 'Flipper' => '0.91.1', 'Flipper-Folly' => '~> 2.6', 'Flipper-RSocket' => '~> 1.4' })
 
   post_install do |installer|
-    installer.pods_project.targets.each do |target|
+    installer.pods_project.targets.each do |target| 
+      #https://github.com/facebook/flipper/issues/834#issuecomment-899725463
       target.build_configurations.each do |config|
-        config.build_settings["ONLY_ACTIVE_ARCH"] = "NO"
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = IOS_VERSION
+        config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+        config.build_settings["ONLY_ACTIVE_ARCH"] = "YES"
+
+        case target.name
+        when 'RCT-Folly'
+          target.build_configurations.each do |config|
+            config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0'
+          end
+        end
       end
     end
     flipper_post_install(installer)
