@@ -4,10 +4,12 @@ import {SvgProps} from 'react-native-svg';
 import {Icon} from '../error/icon';
 const SlideView = (props: {
 	advance: () => void;
+	retreat: () => void;
 	data: {
 		title: string;
 		image: React.FC<SvgProps>;
 		explanation: string;
+		noPrev?: boolean;
 	};
 }) => {
 	return (
@@ -24,8 +26,18 @@ const SlideView = (props: {
 				</Text>
 			</View>
 			<View style={styles.advanceContainer}>
+				{props.data.noPrev == undefined ? (
+					<TouchableHighlight
+						style={styles.pageButtonsButton}
+						underlayColor="#FFFFFF"
+						onPress={props.retreat}>
+						<Text style={styles.text}>Previous</Text>
+					</TouchableHighlight>
+				) : (
+					<></>
+				)}
 				<TouchableHighlight
-					style={styles.advanceButton}
+					style={styles.pageButtonsButton}
 					underlayColor="#FFFFFF"
 					onPress={props.advance}>
 					<Text style={styles.text}>Next</Text>
@@ -47,24 +59,23 @@ const styles = StyleSheet.create({
 		fontFamily: 'Domus-Tilting',
 		fontSize: 40,
 		color: '#000000',
+		textAlign: 'center',
 	},
 	advanceContainer: {
 		marginTop: '10%',
-		borderRadius: 30,
 		alignSelf: 'center',
-		alignItems: 'center',
-		justifyContent: 'center',
-		width: 60,
-		backgroundColor: '#FFFFFF',
+		justifyContent: 'space-evenly',
+		flexDirection: 'row',
+		width: 200,
 		bottom: 30,
 	},
-	advanceButton: {
-		alignSelf: 'center',
+	pageButtonsButton: {
 		alignItems: 'center',
 		justifyContent: 'center',
 		height: 40,
-		width: 40,
-		borderRadius: 20,
+		width: 80,
+		borderRadius: 30,
+		backgroundColor: '#FFFFFF',
 	},
 	imageContainer: {
 		marginTop: '10%',

@@ -21,12 +21,13 @@ export default function IntroScreen() {
 			title: 'Hi!',
 			image: Wave,
 			explanation: 'lume is an App for sharing a digital Olympic Torch',
+			noPrev: true,
 		},
 		{
 			title: 'the torch',
 			image: Torch,
 			explanation:
-				'You always start here. With the torch view you can see if your torch is on or off and receive your torch',
+				'You always start here. With the torch view you can light your torch see if your torch is lit and also receive your torch',
 		},
 		{
 			title: 'receiving a torch',
@@ -38,7 +39,7 @@ export default function IntroScreen() {
 			title: 'using your camera',
 			image: ShareCamera,
 			explanation:
-				'Or use your camera. Press the camera button and use the pop-up window to scan a lume QR code, and your torch will be switched on in no time.',
+				'Or use your camera. Press the camera button and use the pop-up window to scan a lume QR code, and your torch will be lit in no time.',
 		},
 		{
 			title: 'sharing your flame',
@@ -64,6 +65,7 @@ export default function IntroScreen() {
 			title: 'Hi!',
 			image: Wave,
 			explanation: 'lume is an App for sharing a digital Olympic Torch',
+			noPrev: true,
 		},
 		{
 			title: 'the torch',
@@ -87,7 +89,7 @@ export default function IntroScreen() {
 			title: 'Are you hungry for more?',
 			image: Map,
 			explanation:
-				'View lume torch stats with the map view. How many times has it been passed on? Where has the torch gone\nHave fun exploring the map.',
+				'View lume torch stats with the map view. How many times has it been passed on? Where has the torch gone?\nHave fun exploring the map!',
 		},
 	];
 	if (Platform.OS == 'ios') {
@@ -112,9 +114,20 @@ export default function IntroScreen() {
 		updateSlide(getCurrentSlide(currentSlideNum + 1));
 		updateSlideNum(currentSlideNum + 1);
 	};
+
+	const retreat = () => {
+		if (getCurrentSlide(currentSlideNum - 1) == undefined) {
+			return;
+		}
+		updateSlide(getCurrentSlide(currentSlideNum - 1));
+		updateSlideNum(currentSlideNum - 1);
+	};
 	return (
 		<>
-			<SlideView advance={advance} data={currentSlide}></SlideView>
+			<SlideView
+				advance={advance}
+				retreat={retreat}
+				data={currentSlide}></SlideView>
 		</>
 	);
 }
