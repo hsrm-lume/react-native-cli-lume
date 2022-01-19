@@ -20,76 +20,76 @@ export default function IntroScreen() {
 		{
 			title: 'Hi!',
 			image: Wave,
-			explanation: 'lume is an App for sharing a digital Olympic Torch',
+			explanation: 'lume is an app for sharing a digital Olympic Torch',
 			noPrev: true,
 		},
 		{
 			title: 'the torch',
 			image: Torch,
 			explanation:
-				'You always start here. With the torch view you can light your torch see if your torch is lit and also receive your torch',
+				'You always start here.\nWith the torch view you can light your torch, see if your torch is lit and also receive your flame',
 		},
 		{
 			title: 'receiving a torch',
 			image: ShareFlame,
 			explanation:
-				'There are two ways of lighting your torch. Just hold 2 android phones together, and the sending phone will pass its torch to your phone.',
+				'There are two ways of lighting your torch.\nJust hold two android phones together, and the sending phone will pass its torch to your phone',
 		},
 		{
 			title: 'using your camera',
 			image: ShareCamera,
 			explanation:
-				'Or use your camera. Press the camera button and use the pop-up window to scan a lume QR code, and your torch will be lit in no time.',
+				'Or use your camera: Press the camera button and scan a lume QR code.\nYour torch will be lit in no-time',
 		},
 		{
 			title: 'sharing your flame',
 			image: ShareFlameFlipped,
 			explanation:
-				"Sharing is as simple as receiving a flame, just hold two android phones together and you phone will share it's flame with the receipient",
+				"Sharing is as simple as receiving a flame, just hold two android phones together and your phone will share it's flame with the recipient",
 		},
 		{
 			title: 'sharing your flame',
 			image: ShareQr,
 			explanation:
-				'Alternatively press the QR code button to share a lume QR code and scan it with a camera',
+				'Alternatively press the QR code button to share your fire with another person',
 		},
 		{
 			title: 'Are you hungry for more?',
 			image: Map,
 			explanation:
-				'View lume torch stats with the map view. How many times has it been passed on? Where has the torch gone\nHave fun exploring the map.',
+				'View lume torch stats with the map view.\nHow many times has it been passed on?\n Where has the torch gone?\nHave fun exploring the map!',
 		},
 	];
 	const iosSlides = [
 		{
 			title: 'Hi!',
 			image: Wave,
-			explanation: 'lume is an App for sharing a digital Olympic Torch',
+			explanation: 'lume is an app for sharing a digital Olympic Torch',
 			noPrev: true,
 		},
 		{
 			title: 'the torch',
 			image: Torch,
 			explanation:
-				'You always start here. With the torch view you can see if your torch is on or off and receive your torch',
+				'You always start here.\nWith the torch view you can light your torch, see if your torch is lit and also receive your flame',
 		},
 		{
 			title: 'using the camera',
 			image: ShareCamera,
 			explanation:
-				'Lighting your torch is easy. Press the camera button and use the pop-up window to scan a lume QR code, and your torch will be switched on in no time.',
+				'Lighting your torch is easy: Press the camera button and scan a lume QR code.\nYour torch will be lit in no time',
 		},
 		{
 			title: 'sharing your flame',
 			image: ShareQr,
 			explanation:
-				'Sharing your torch is as simple as receiving it, just use the QR Code Button to bring up you lume code and share it with the world.',
+				'Sharing your torch is as simple as receiving it, just use the QR Code button to bring up your lume code and share it with the world',
 		},
 		{
 			title: 'Are you hungry for more?',
 			image: Map,
 			explanation:
-				'View lume torch stats with the map view. How many times has it been passed on? Where has the torch gone?\nHave fun exploring the map!',
+				'View lume torch stats with the map view.\nHow many times has it been passed on?\n Where has the torch gone?\nHave fun exploring the map!',
 		},
 	];
 	if (Platform.OS == 'ios') {
