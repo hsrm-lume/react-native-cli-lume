@@ -21,26 +21,24 @@ const SlideView = (props: {
 				<Icon icon={props.data.image} style={styles.imageStyles}></Icon>
 			</View>
 			<View style={styles.descriptionContainer}>
-				<Text style={styles.description && styles.text}>
-					{props.data.explanation}
-				</Text>
+				<Text style={styles.description}>{props.data.explanation}</Text>
 			</View>
 			<View style={styles.advanceContainer}>
 				{props.data.noPrev == undefined ? (
 					<TouchableHighlight
-						style={styles.pageButtonsButton}
+						style={styles.pageButtons}
 						underlayColor="#FFFFFF"
 						onPress={props.retreat}>
-						<Text style={styles.text}>Previous</Text>
+						<Text style={styles.description}>Previous</Text>
 					</TouchableHighlight>
 				) : (
 					<></>
 				)}
 				<TouchableHighlight
-					style={styles.pageButtonsButton}
+					style={styles.pageButtons}
 					underlayColor="#FFFFFF"
 					onPress={props.advance}>
-					<Text style={styles.text}>Next</Text>
+					<Text style={styles.description}>Next</Text>
 				</TouchableHighlight>
 			</View>
 		</View>
@@ -51,7 +49,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'space-between',
 		margin: '15%',
-		marginBottom: '30%',
+		marginBottom: 90,
 	},
 	headlineBox: {
 		marginBottom: '15%',
@@ -63,14 +61,12 @@ const styles = StyleSheet.create({
 		color: '#000000',
 	},
 	advanceContainer: {
-		marginTop: '10%',
 		alignSelf: 'center',
 		justifyContent: 'space-evenly',
 		flexDirection: 'row',
 		width: 200,
-		bottom: 30,
 	},
-	pageButtonsButton: {
+	pageButtons: {
 		alignItems: 'center',
 		justifyContent: 'center',
 		height: 40,
@@ -78,24 +74,19 @@ const styles = StyleSheet.create({
 		borderRadius: 30,
 		backgroundColor: '#FFFFFF',
 	},
-	imageContainer: {
-		height: '45%',
-		marginBottom: '15%',
-	},
+	imageContainer: {flex: 1, marginBottom: '7%'},
 	imageStyles: {
 		width: '100%',
 		height: '100%',
 	},
 	descriptionContainer: {
-		marginBottom: '15%',
+		marginBottom: '10%',
 		alignSelf: 'center',
 	},
 	description: {
-		fontSize: 15,
-		fontFamily: 'Nexusa-Next',
-	},
-	text: {
+		lineHeight: 30,
 		color: '#000000',
+		fontSize: 18,
 		fontFamily: 'Nexusa-Next',
 	},
 });
