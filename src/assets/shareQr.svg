@@ -22,8 +22,8 @@
 	.st16{fill:url(#SVGID_12_);}
 </style>
 <linearGradient id="Background_1_" gradientUnits="userSpaceOnUse" x1="46.2829" y1="19.7537" x2="123.7958" y2="154.0101" gradientTransform="matrix(1 0 0 -1 0 171.9213)">
-	<stop  offset="0.4466" style="stop-color:#C06AFF"/>
-	<stop  offset="1" style="stop-color:#A400D4"/>
+	<stop  offset="0.1505" style="stop-color:#FF703A"/>
+	<stop  offset="0.7087" style="stop-color:#FF3A3A"/>
 </linearGradient>
 <circle id="Background_2_" class="st0" cx="85" cy="85" r="77.5"/>
 <g>

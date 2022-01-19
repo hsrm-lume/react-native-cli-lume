@@ -25,9 +25,9 @@
 	.st19{fill:url(#SVGID_9_);}
 	.st20{fill:url(#SVGID_10_);}
 </style>
-<linearGradient id="Background_1_" gradientUnits="userSpaceOnUse" x1="46.3015" y1="152.1354" x2="123.7773" y2="17.9433">
-	<stop  offset="0.4466" style="stop-color:#C06AFF"/>
-	<stop  offset="1" style="stop-color:#A400D4"/>
+<linearGradient id="Background_1_" gradientUnits="userSpaceOnUse" x1="123.7773" y1="17.9433" x2="46.3015" y2="152.1354">
+	<stop  offset="4.368932e-02" style="stop-color:#6F3FAF"/>
+	<stop  offset="0.5291" style="stop-color:#92A1FF"/>
 </linearGradient>
 <circle id="Background" class="st0" cx="85" cy="85" r="77.5"/>
 <g>
@@ -115,7 +115,7 @@
 			c-0.3,0-0.6-0.3-0.6-0.7c0-0.3,0-0.6,0-0.8C97.8,116.3,98,116,98.3,115.9z"/>
 	</g>
 </g>
-<image style="display:none;overflow:visible;" width="1013" height="1022" xlink:href="C5B79976.jpg"  transform="matrix(0.1679 0 0 0.1664 0 0)">
+<image style="display:none;overflow:visible;" width="1013" height="1022" xlink:href="C5B79975.jpg"  transform="matrix(0.1679 0 0 0.1664 0 0)">
 </image>
 <g>
 	<g id="Ebene_3">
