@@ -14,6 +14,7 @@ import {RestClient, writeUserData} from '../../services';
 import {GeoLocation, HandledPromise} from '../../types';
 import {QrCodeData} from '../../types/TranmissionData';
 import ThinCross from '../../assets/thinCross.svg';
+import Loading from '../../assets/loading.svg';
 import {Icon} from '../error/icon';
 import FullErrorView from '../error/fullErrorView';
 
@@ -140,7 +141,21 @@ const QRScanner = (props: {
 					</View>
 				</>
 			) : (
-				<FullErrorView item="loading" action={null}></FullErrorView>
+				<>
+					<View style={styles.headlineBox}>
+						<Text style={styles.headlineText}>ILLUMINATE YOUR FIRE!</Text>
+					</View>
+					<View style={styles.window}>
+						<View style={styles.loadingContainer}>
+							<Icon icon={Loading} style={styles.loadingIcon}></Icon>
+						</View>
+						<View style={styles.textBox}>
+							<Text style={styles.text}>
+								Please be patient while the camera loads.
+							</Text>
+						</View>
+					</View>
+				</>
 			)}
 		</>
 	);
@@ -187,6 +202,16 @@ const styles = StyleSheet.create({
 		width: '13%',
 		height: '13%',
 		paddingRight: '5%',
+	},
+	loadingContainer: {
+		height: 300,
+		width: '100%',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	loadingIcon: {
+		height: '80%',
+		width: '80%',
 	},
 });
 
