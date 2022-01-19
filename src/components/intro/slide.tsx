@@ -19,14 +19,16 @@ const SlideView = (props: {
 				<Icon icon={props.data.image} style={styles.imageStyles}></Icon>
 			</View>
 			<View style={styles.descriptionContainer}>
-				<Text style={styles.description}>{props.data.explanation}</Text>
+				<Text style={styles.description && styles.text}>
+					{props.data.explanation}
+				</Text>
 			</View>
 			<View style={styles.advanceContainer}>
 				<TouchableHighlight
 					style={styles.advanceButton}
 					underlayColor="#FFFFFF"
 					onPress={props.advance}>
-					<Text>Next</Text>
+					<Text style={styles.text}>Next</Text>
 				</TouchableHighlight>
 			</View>
 		</>
@@ -77,5 +79,9 @@ const styles = StyleSheet.create({
 	},
 	descriptionContainer: {marginTop: '10%', width: '80%', alignSelf: 'center'},
 	description: {fontSize: 15, fontFamily: 'Nexusa-Next'},
+	text: {
+		color: '#000000',
+		fontFamily: 'Nexusa-Next',
+	},
 });
 export default SlideView;
