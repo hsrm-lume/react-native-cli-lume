@@ -39,8 +39,8 @@ export function FireOffLogic(props: {
 				([received, self]) =>
 					new HandledPromise<void>('internet.api', res => {
 						RestClient.postContact(
-							self.uuid,
 							received.uuid,
+							self.uuid,
 							self.location.accuracy < received.location.accuracy
 								? self.location
 								: received.location
@@ -59,7 +59,9 @@ export function FireOffLogic(props: {
 			)
 			.finally(() => {
 				if (didUnmount) return; // dont do anything if component is unmounted
-				getUserData().then(ud => props.fireUpdater(ud.fireStatus));
+				getUserData().then(ud =>
+					ud.fireStatus ? props.fireUpdater(ud.fireStatus) : null
+				);
 				reReadNfc();
 			});
 		return () => {
