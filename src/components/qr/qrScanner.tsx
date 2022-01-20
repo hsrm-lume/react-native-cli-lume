@@ -118,7 +118,10 @@ const QRScanner = (props: {
 				<Text style={styles.headlineText}>ILLUMINATE YOUR FIRE!</Text>
 			</View>
 			<View style={styles.window}>
-				{device != undefined ? (
+				{device != undefined &&
+				device != null &&
+				cameraPermissionStatus === 'authorized' ? (
+					// render QR-Code Scanner if camera is ready and permission is granted
 					<>
 						<Icon
 							icon={ThinCross}
@@ -139,6 +142,7 @@ const QRScanner = (props: {
 						</View>
 					</>
 				) : (
+					// render loading screen if camera is not ready or permission is not granted
 					<>
 						<View style={styles.loadingContainer}>
 							<Icon icon={Loading} style={styles.loadingIcon}></Icon>
