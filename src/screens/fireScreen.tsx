@@ -37,7 +37,7 @@ export default function FireScreen(props: any) {
 	};
 
 	useEffect(() => {
-		if (userData.firstAppUse !== false)
+		if (userData.firstAppUse === true)
 			// @ts-ignore: react navigation does not know how to use itself
 			navigation.navigate('IntroScreen');
 	});

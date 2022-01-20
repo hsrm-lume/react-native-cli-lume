@@ -44,12 +44,13 @@ export class HandledPromise<T> {
 	}
 
 	protected addDefaultHandler() {
-		if (this.isLastInChain)
-			this.promise.catch(err => {
-				if (!this.mKey) return; // if no mKey, don't handle (undefined = ignore)
-				console.warn('HandledPromise: ', this.mKey, err);
-				handleError(this.mKey);
-			});
+		if (this.isLastInChain) console.log('defaultHandler');
+		if (this.isLastInChain) console.log('mkey:', this.mKey);
+		this.promise.catch(err => {
+			if (!this.mKey) return; // if no mKey, don't handle (undefined = ignore)
+			console.warn('HandledPromise: ', this.mKey, err);
+			handleError(this.mKey);
+		});
 	}
 
 	then<TResult1 = T, TResult2 = never>(
