@@ -9,7 +9,6 @@ import Map from '../assets/map.svg';
 import ShareFlame from '../assets/shareFlame.svg';
 import {writeUserData} from '../services';
 import {useNavigation} from '@react-navigation/native';
-import QRCode from '../assets/qrCode.svg';
 import {Platform} from 'react-native';
 
 export default function IntroScreen() {
@@ -107,7 +106,7 @@ export default function IntroScreen() {
 		if (getCurrentSlide(currentSlideNum + 1) == undefined) {
 			writeUserData({firstAppUse: false}).then(() => {
 				// @ts-ignore: react navigation does not know how to use itself
-				navigation.navigate('FireScreen');
+				navigation.navigate('FireScreen', {returningFromIntro: true});
 			});
 			return;
 		}

@@ -23,7 +23,7 @@ import FullscreenErrors from '../components/error/fullscreenErrors';
 import FullErrorView from '../components/error/fullErrorView';
 import {useNavigation} from '@react-navigation/native';
 
-export default function FireScreen() {
+export default function FireScreen(props: any) {
 	const navigation = useNavigation();
 	// userData
 	const [userData, userDataChange] = useState<Partial<UserData>>({});
@@ -33,7 +33,7 @@ export default function FireScreen() {
 	};
 
 	useEffect(() => {
-		if (userData !== undefined && userData.firstAppUse == true)
+		if (userData.firstAppUse !== false)
 			// @ts-ignore: react navigation does not know how to use itself
 			navigation.navigate('IntroScreen');
 	});
@@ -43,6 +43,14 @@ export default function FireScreen() {
 		console.log('repaint triggered');
 		doRetryAfterError(!retryAfterError);
 	};
+
+	if (props.route.params?.returningFromIntro) {
+		// @ts-ignore: react navigation does not know how to use itself
+		props.route.params.returningFromIntro = false;
+		console.log('returning from intro');
+		console.log('userDataIs', userData);
+		doRetry();
+	}
 
 	useEffect(() => {
 		getUserData().then(ud => {
@@ -57,12 +65,14 @@ export default function FireScreen() {
 		undefined
 	);
 	useEffect(() => {
+		console.log('try to get pos permission', userData, userData?.firstAppUse);
+		if (userData.firstAppUse !== false) return;
 		console.log('try get perm');
 		getPermission('lume.permissons.location').then(() => {
 			setPosPermission(true);
 			remError('location.permission');
 		});
-	}, [retryAfterError]);
+	}, [retryAfterError, userData]);
 
 	useEffect(() => {
 		console.log('try nfc on');
