@@ -112,13 +112,6 @@ const QRScanner = (props: {
 		}
 	}, [qrCode]);
 
-	let isMounted = false;
-	useEffect(() => {
-		isMounted = true;
-		return () => {
-			isMounted = false;
-		};
-	});
 	return (
 		<>
 			<View style={styles.headlineBox}>
@@ -137,7 +130,7 @@ const QRScanner = (props: {
 								style={styles.camera}
 								device={device}
 								isActive={true}
-								frameProcessor={isMounted ? frameProcessor : undefined}
+								frameProcessor={frameProcessor}
 								frameProcessorFps={1}
 							/>
 						</View>
