@@ -28,10 +28,6 @@ export function FireOffLogic(props: {
 	useEffect(() => {
 		console.log('nfc read');
 		nfcReadNext()
-			.then(tmd => {
-				console.log(tmd);
-				return tmd;
-			})
 			.then(tmd => [
 				tmd,
 				{
@@ -39,10 +35,6 @@ export function FireOffLogic(props: {
 					location: props.location,
 				} as TransmissionData,
 			])
-			.then(([received, self]) => {
-				console.log('self+res', received, self);
-				return [received, self];
-			})
 			.then(
 				([received, self]) =>
 					new HandledPromise<void>('internet.api', res => {
@@ -65,9 +57,6 @@ export function FireOffLogic(props: {
 				// fs -> realm
 				writeUserData({fireStatus: true})
 			)
-			.catch(e => {
-				console.log('Error', e);
-			})
 			.finally(() => {
 				if (didUnmount) return; // dont do anything if component is unmounted
 				getUserData().then(ud =>
@@ -76,7 +65,6 @@ export function FireOffLogic(props: {
 				reReadNfc();
 			});
 		return () => {
-			console.log('unmounfig FOL');
 			didUnmount = true;
 			nfcCleanupRead();
 		};

@@ -28,7 +28,6 @@ export class HandledPromise<T> {
 		return new HandledPromise(mKey, (res, rej) => p.then(res).catch(rej));
 	}
 
-	protected isLastInChain = true;
 	protected promise: Promise<T>;
 	protected mKey?: MessageKey;
 	/**
@@ -44,8 +43,6 @@ export class HandledPromise<T> {
 	}
 
 	protected addDefaultHandler() {
-		if (this.isLastInChain) console.log('defaultHandler');
-		if (this.isLastInChain) console.log('mkey:', this.mKey);
 		this.promise.catch(err => {
 			if (!this.mKey) return; // if no mKey, don't handle (undefined = ignore)
 			console.warn('HandledPromise: ', this.mKey, err);
@@ -57,7 +54,6 @@ export class HandledPromise<T> {
 		onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null,
 		onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null
 	): HandledPromise<TResult1 | TResult2> {
-		this.isLastInChain = false;
 		return HandledPromise.from<TResult1 | TResult2>(
 			this.mKey,
 			this.promise.then(onfulfilled, onrejected)
@@ -67,14 +63,12 @@ export class HandledPromise<T> {
 	catch<TResult = never>(
 		onrejected?: (reason: any) => TResult | PromiseLike<TResult>
 	): HandledPromise<T | TResult> {
-		this.isLastInChain = false;
 		return new HandledPromise(this.mKey, resolve =>
 			resolve(this.promise.catch(onrejected))
 		);
 	}
 
 	finally(onfinally?: (() => void) | undefined | null): HandledPromise<T> {
-		this.isLastInChain = false;
 		return new HandledPromise<T>(this.mKey, resolve =>
 			resolve(this.promise.finally(onfinally))
 		);
