@@ -32,12 +32,6 @@ const QRScanner = (props: {
 
 	const [cameraPermissionStatus, setCameraPermissionStatus] = useState(false);
 
-	/*if (cameraPermissionStatus == false) {
-		Camera.requestCameraPermission().then(result => {
-			setCameraPermissionStatus(result === 'authorized');
-		});
-	}*/
-
 	// get permission
 	useEffect(() => {
 		(async () => {
