@@ -16,7 +16,6 @@ import {QrCodeData} from '../../types/TranmissionData';
 import ThinCross from '../../assets/thinCross.svg';
 import Loading from '../../assets/loading.svg';
 import {Icon} from '../error/icon';
-import FullErrorView from '../error/fullErrorView';
 
 /**
  * @param uid uuid of current user
@@ -113,14 +112,21 @@ const QRScanner = (props: {
 		}
 	}, [qrCode]);
 
+	let isMounted = false;
+	useEffect(() => {
+		isMounted = true;
+		return () => {
+			isMounted = false;
+		};
+	});
 	return (
 		<>
-			{device != null && cameraPermissionStatus === 'authorized' ? (
-				<>
-					<View style={styles.headlineBox}>
-						<Text style={styles.headlineText}>ILLUMINATE YOUR FIRE!</Text>
-					</View>
-					<View style={styles.window}>
+			<View style={styles.headlineBox}>
+				<Text style={styles.headlineText}>ILLUMINATE YOUR FIRE!</Text>
+			</View>
+			<View style={styles.window}>
+				{device != undefined ? (
+					<>
 						<Icon
 							icon={ThinCross}
 							action={props.updateQrStatus}
@@ -131,21 +137,16 @@ const QRScanner = (props: {
 								style={styles.camera}
 								device={device}
 								isActive={true}
-								frameProcessor={frameProcessor}
+								frameProcessor={isMounted ? frameProcessor : undefined}
 								frameProcessorFps={1}
 							/>
 						</View>
 						<View style={styles.textBox}>
 							<Text style={styles.text}>Scan a lume QR-Code!</Text>
 						</View>
-					</View>
-				</>
-			) : (
-				<>
-					<View style={styles.headlineBox}>
-						<Text style={styles.headlineText}>ILLUMINATE YOUR FIRE!</Text>
-					</View>
-					<View style={styles.window}>
+					</>
+				) : (
+					<>
 						<View style={styles.loadingContainer}>
 							<Icon icon={Loading} style={styles.loadingIcon}></Icon>
 						</View>
@@ -154,9 +155,9 @@ const QRScanner = (props: {
 								Please be patient while the camera loads.
 							</Text>
 						</View>
-					</View>
-				</>
-			)}
+					</>
+				)}
+			</View>
 		</>
 	);
 };
