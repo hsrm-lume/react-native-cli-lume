@@ -29,7 +29,11 @@ export default function FireScreen(props: any) {
 	const [userData, userDataChange] = useState<Partial<UserData>>({});
 	const fireStatusChange = (fs: boolean) => {
 		console.log('setting fire to: ' + fs);
-		userDataChange({uuid: userData.uuid, fireStatus: fs});
+		userDataChange({
+			uuid: userData.uuid,
+			fireStatus: fs,
+			firstAppUse: userData.firstAppUse,
+		});
 	};
 
 	useEffect(() => {
@@ -54,7 +58,11 @@ export default function FireScreen(props: any) {
 
 	useEffect(() => {
 		getUserData().then(ud => {
-			if (ud.fireStatus == userData.fireStatus && ud.uuid == userData.uuid)
+			if (
+				ud.fireStatus == userData.fireStatus &&
+				ud.uuid == userData.uuid &&
+				ud.firstAppUse == userData.firstAppUse
+			)
 				return; // no change if values already match
 			userDataChange(ud);
 			console.log('fetched', ud);
