@@ -30,15 +30,15 @@ const QRScanner = (props: {
 	// current detected QR-Code
 	const [qrCode, setQrCode] = useState<Barcode | undefined>(undefined);
 
-	const [cameraPermissionStatus, setCameraPermissionStatus] =
-		useState<CameraPermissionStatus>('not-determined');
+	const [cameraPermissionStatus, setCameraPermissionStatus] = useState(false);
 
 	// get permission
-	if (cameraPermissionStatus !== 'authorized') {
-		Camera.requestCameraPermission().then(result => {
-			setCameraPermissionStatus(result);
-		});
-	}
+	useEffect(() => {
+		(async () => {
+			const status = await Camera.requestCameraPermission();
+			setCameraPermissionStatus(status === 'authorized');
+		})();
+	}, []);
 
 	// get camera device of mobile phone
 	const devices = useCameraDevices('wide-angle-camera');
@@ -118,7 +118,8 @@ const QRScanner = (props: {
 				<Text style={styles.headlineText}>ILLUMINATE YOUR FIRE!</Text>
 			</View>
 			<View style={styles.window}>
-				{device != undefined ? (
+				{device != undefined && device != null && cameraPermissionStatus ? (
+					// render QR-Code Scanner if camera is ready and permission is granted
 					<>
 						<Icon
 							icon={ThinCross}
@@ -139,6 +140,7 @@ const QRScanner = (props: {
 						</View>
 					</>
 				) : (
+					// render loading screen if camera is not ready or permission is not granted
 					<>
 						<View style={styles.loadingContainer}>
 							<Icon icon={Loading} style={styles.loadingIcon}></Icon>
