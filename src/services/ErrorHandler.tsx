@@ -13,8 +13,8 @@ const messageTypeEquals = (
 	includeSubtypes: boolean
 ): boolean => {
 	if (includeSubtypes)
-		return msg == type || (msg.startsWith(type) && msg[type.length] == '.');
-	else return msg == type;
+		return msg === type || (msg.startsWith(type) && msg[type.length] === '.');
+	else return msg === type;
 };
 
 let errorList: MessageKey[] = [];
@@ -29,8 +29,7 @@ class ChangeSubscriptions {
 	/**
 	 * Register a new change subscription
 	 */
-	registerSubscription(s: () => void,
-	from: 'bar' | 'fullscreen') {
+	registerSubscription(s: () => void, from: 'bar' | 'fullscreen') {
 		this.changeSubscriptions[from] = s;
 	}
 	/**
@@ -48,10 +47,10 @@ export const changeSubscriptions = new ChangeSubscriptions();
  * unless some Message with same key already exists
  */
 export const handleError = (errorType: MessageKey) => {
-	if (errorList.some(x => x == errorType)) return;
+	if (errorList.some(x => x === errorType)) return;
 
 	errorList.push(errorType);
-	changeSubscriptions.trigger()
+	changeSubscriptions.trigger();
 };
 
 /**
@@ -63,5 +62,5 @@ export const remError = (errType: string, includeSubtypes: boolean = true) => {
 	errorList = errorList.filter(
 		e => !messageTypeEquals(e, errType, includeSubtypes)
 	);
-	changeSubscriptions.trigger()
+	changeSubscriptions.trigger();
 };

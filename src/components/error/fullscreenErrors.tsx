@@ -1,8 +1,5 @@
 import React, {useState} from 'react';
-import {
-	changeSubscriptions,
-	getFullscreenErrors,
-} from '../../services';
+import {changeSubscriptions, getFullscreenErrors} from '../../services';
 import FullErrorView from './fullErrorView';
 
 const FullscreenErrors = (props: {action: () => void}) => {

@@ -21,8 +21,8 @@ class GeoAccuracyIterator {
 	private okIndex = 0;
 	isFine(): boolean | undefined {
 		// two fails allowed before error is shown.
-		if(this.failIndex >= 2) return false;
-		if(this.okIndex < 2) return undefined;
+		if (this.failIndex >= 2) return false;
+		if (this.okIndex < 2) return undefined;
 		return true;
 	}
 	fail() {
@@ -67,16 +67,14 @@ const internalCallback = (
 	else iterator.ok();
 
 	// perform actions dependent on iterator isFine state
-	if (iterator.isFine()){
+	if (iterator.isFine()) {
 		remError('location.accuracy');
 		cb({
 			accuracy: position.coords.accuracy,
 			lat: position.coords.latitude,
 			lng: position.coords.longitude,
 		});
-	} else if(iterator.isFine() === false) {
-		handleError('location.accuracy');
-	}
+	} else if (iterator.isFine() === false) handleError('location.accuracy');
 };
 
 /**

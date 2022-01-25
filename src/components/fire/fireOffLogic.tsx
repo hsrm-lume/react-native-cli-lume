@@ -1,5 +1,4 @@
 import {useEffect, useState} from 'react';
-import {environment} from '../../env/environment';
 import {
 	getUserData,
 	nfcCleanupRead,
@@ -19,20 +18,23 @@ export function FireOffLogic(props: {
 	userData: UserData;
 	fireUpdater: (b: boolean) => void;
 }) {
+	const {location, userData, fireUpdater} = props;
+
 	const [nfcReaderLoop, updateRead] = useState(false); // used to refresh NFC reader loop
-	let didUnmount = false;
-	const reReadNfc = () => {
-		updateRead(!nfcReaderLoop);
-	};
 	// NFC read
 	useEffect(() => {
+		let didUnmount = false;
+		const reReadNfc = () => {
+			updateRead(!nfcReaderLoop);
+		};
+
 		console.log('nfc read');
 		nfcReadNext()
 			.then(tmd => [
 				tmd,
 				{
-					uuid: props.userData.uuid,
-					location: props.location,
+					uuid: userData.uuid,
+					location: location,
 				} as TransmissionData,
 			])
 			.then(
@@ -60,7 +62,7 @@ export function FireOffLogic(props: {
 			.finally(() => {
 				if (didUnmount) return; // dont do anything if component is unmounted
 				getUserData().then(ud =>
-					ud.fireStatus ? props.fireUpdater(ud.fireStatus) : null
+					ud.fireStatus ? fireUpdater(ud.fireStatus) : null
 				);
 				reReadNfc();
 			});
@@ -68,6 +70,6 @@ export function FireOffLogic(props: {
 			didUnmount = true;
 			nfcCleanupRead();
 		};
-	}, [nfcReaderLoop]);
+	}, [nfcReaderLoop, location, fireUpdater, userData]);
 	return null;
 }

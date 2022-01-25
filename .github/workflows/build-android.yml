@@ -1,4 +1,4 @@
-name: android-build-apk
+name: Build Android APK
 on:
   workflow_dispatch: # build apk without release
   release:
@@ -24,7 +24,7 @@ jobs:
             ${{ runner.os }}-gradle-caches-
       - name: Install yarn dependencies
         run: |
-          yarn install --frozen-lockfile --network-concurrency 1 
+          yarn install --frozen-lockfile --network-concurrency 1
       - name: Build Android Release
         run: |
           cd android && ./gradlew assembleRelease

@@ -18,13 +18,13 @@ const SlideView = (props: {
 				<Text style={styles.headlineText}>{props.data.title}</Text>
 			</View>
 			<View style={styles.imageContainer}>
-				<Icon icon={props.data.image} style={styles.imageStyles}></Icon>
+				<Icon icon={props.data.image} style={styles.imageStyles} />
 			</View>
 			<View style={styles.descriptionContainer}>
 				<Text style={styles.description}>{props.data.explanation}</Text>
 			</View>
 			<View style={styles.advanceContainer}>
-				{props.data.noPrev == undefined ? (
+				{props.data.noPrev === undefined ? (
 					<TouchableHighlight
 						style={styles.pageButtons}
 						underlayColor="#FFFFFF"

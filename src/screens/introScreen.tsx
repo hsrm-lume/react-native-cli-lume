@@ -91,11 +91,9 @@ export default function IntroScreen() {
 				'View lume torch stats with the map view.\nHow many times has it been passed on?\n Where has the torch gone?\nHave fun exploring the map!',
 		},
 	];
-	if (Platform.OS == 'ios') {
-		slides = iosSlides;
-	} else {
-		slides = androidSlides;
-	}
+	if (Platform.OS === 'ios') slides = iosSlides;
+	else slides = androidSlides;
+
 	const getCurrentSlide = (num: number) => {
 		return slides[num];
 	};
@@ -103,7 +101,7 @@ export default function IntroScreen() {
 	const [currentSlide, updateSlide] = useState(getCurrentSlide(0));
 	const [currentSlideNum, updateSlideNum] = useState(0);
 	const advance = () => {
-		if (getCurrentSlide(currentSlideNum + 1) == undefined) {
+		if (getCurrentSlide(currentSlideNum + 1) === undefined) {
 			writeUserData({firstAppUse: false}).then(() => {
 				// @ts-ignore: react navigation does not know how to use itself
 				navigation.navigate('FireScreen', {returningFromIntro: true});
@@ -115,18 +113,14 @@ export default function IntroScreen() {
 	};
 
 	const retreat = () => {
-		if (getCurrentSlide(currentSlideNum - 1) == undefined) {
-			return;
-		}
+		if (getCurrentSlide(currentSlideNum - 1) === undefined) return;
+
 		updateSlide(getCurrentSlide(currentSlideNum - 1));
 		updateSlideNum(currentSlideNum - 1);
 	};
 	return (
 		<>
-			<SlideView
-				advance={advance}
-				retreat={retreat}
-				data={currentSlide}></SlideView>
+			<SlideView advance={advance} retreat={retreat} data={currentSlide} />
 		</>
 	);
 }

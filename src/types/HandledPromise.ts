@@ -1,5 +1,5 @@
 import {MessageKey} from '../services';
-import {handleError, remError} from '../services/ErrorHandler';
+import {handleError} from '../services/ErrorHandler';
 
 type Executor<T> = (
 	resolve: (value: T | PromiseLike<T>) => void,
@@ -21,10 +21,10 @@ export class HandledPromise<T> {
 	 * construct a HandledPromise from a Promise
 	 * @param promise the promise to be handled
 	 */
-	static from<T>(
+	static from<K>(
 		mKey: MessageKey | undefined,
-		p: Promise<T>
-	): HandledPromise<T> {
+		p: Promise<K>
+	): HandledPromise<K> {
 		return new HandledPromise(mKey, (res, rej) => p.then(res).catch(rej));
 	}
 

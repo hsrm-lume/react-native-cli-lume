@@ -19,8 +19,7 @@ export const Icon = (props: {
 	<TouchableHighlight
 		style={[styles.icon, props.style]}
 		underlayColor="#ffffff"
-		onPress={props.action}
-	>
+		onPress={props.action}>
 		<props.icon width={'100%'} height={'100%'} />
 	</TouchableHighlight>
 );

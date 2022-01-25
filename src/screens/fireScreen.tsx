@@ -59,15 +59,20 @@ export default function FireScreen(props: any) {
 	useEffect(() => {
 		getUserData().then(ud => {
 			if (
-				ud.fireStatus == userData.fireStatus &&
-				ud.uuid == userData.uuid &&
-				ud.firstAppUse == userData.firstAppUse
+				ud.fireStatus === userData.fireStatus &&
+				ud.uuid === userData.uuid &&
+				ud.firstAppUse === userData.firstAppUse
 			)
 				return; // no change if values already match
 			userDataChange(ud);
 			console.log('fetched', ud);
 		});
-	}, [retryAfterError]);
+	}, [
+		retryAfterError,
+		userData.fireStatus,
+		userData.firstAppUse,
+		userData.uuid,
+	]);
 
 	const [posPermission, setPosPermission] = useState<boolean | undefined>(
 		undefined
@@ -95,9 +100,9 @@ export default function FireScreen(props: any) {
 			return;
 		}
 		let sub: GeoServiceSubscription;
-		sub = subscribePosition(pos => {
-			console.log(pos);
-			posChange(pos);
+		sub = subscribePosition(posUpdate => {
+			console.log(posUpdate);
+			posChange(posUpdate);
 		});
 		return () => {
 			sub?.unsubscribe();
@@ -146,7 +151,7 @@ export default function FireScreen(props: any) {
 									fire={userData.fireStatus}
 									updateQrStatus={switchQrStatus}
 								/>
-								{Platform.OS == 'android' ? (
+								{Platform.OS === 'android' ? (
 									<FireOnLogic uuid={userData.uuid} location={pos} />
 								) : null}
 							</>
@@ -166,7 +171,7 @@ export default function FireScreen(props: any) {
 								fire={userData.fireStatus}
 								updateQrStatus={switchQrStatus}
 							/>
-							{Platform.OS == 'android' ? (
+							{Platform.OS === 'android' ? (
 								<FireOffLogic
 									userData={{
 										uuid: userData.uuid,
@@ -180,7 +185,7 @@ export default function FireScreen(props: any) {
 						</>
 					)
 				) : (
-					<FullErrorView item="loading" action={null}></FullErrorView>
+					<FullErrorView item="loading" action={null} />
 				)}
 				<ErrorBar />
 			</LinearGradient>

@@ -3,9 +3,10 @@ import {CloseableHCESession, nfcStartWrite} from '../../services';
 import {GeoLocation, HandledPromise, TransmissionData} from '../../types';
 
 export function FireOnLogic(props: {location: GeoLocation; uuid: string}) {
-	let nfcWriteSession: CloseableHCESession | undefined;
 	// NFC write
 	useEffect(() => {
+		let nfcWriteSession: CloseableHCESession | undefined;
+
 		new HandledPromise<TransmissionData>('nfc.write', resolve => {
 			resolve({
 				uuid: props.uuid,
@@ -18,6 +19,6 @@ export function FireOnLogic(props: {location: GeoLocation; uuid: string}) {
 		return () => {
 			nfcWriteSession?.close();
 		};
-	}, [props.location.lat, props.location.lng]);
+	}, [props.location.lat, props.location.lng, props.location, props.uuid]);
 	return null;
 }

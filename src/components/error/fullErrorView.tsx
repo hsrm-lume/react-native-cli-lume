@@ -26,7 +26,7 @@ const FullErrorView = (props: {
 		action: () => remError(props.item),
 	};
 	if (props.action == null) a = null; // dont spawn default action if null is passed
-	if (props.item == 'nfc.off')
+	if (props.item === 'nfc.off')
 		// override action if error is nfc.off
 		a = {
 			desc: 'go to NFC settings',

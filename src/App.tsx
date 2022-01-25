@@ -1,6 +1,7 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Realm from 'realm';
 import FireScreen from './screens/fireScreen';
 import WebScreen from './screens/webScreen';
 import Fire from './assets/fire.svg';
@@ -58,7 +59,7 @@ export default function App() {
 				<bottomNav.Screen
 					name="IntroScreen"
 					component={IntroScreen}
-					options={{tabBarShowLabel: false, tabBarButton: props => null}}
+					options={{tabBarShowLabel: false, tabBarButton: _ => null}}
 				/>
 			</bottomNav.Navigator>
 		</NavigationContainer>

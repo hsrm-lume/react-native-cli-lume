@@ -1,10 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
-import {
-	Camera,
-	CameraPermissionStatus,
-	useCameraDevices,
-} from 'react-native-vision-camera';
+import {Camera, useCameraDevices} from 'react-native-vision-camera';
 import {
 	useScanBarcodes,
 	BarcodeFormat,
@@ -52,24 +48,23 @@ const QRScanner = (props: {
 		// check if barcodes array is empty
 		if (Array.isArray(barcodes) && barcodes.length) {
 			const barcode = barcodes[0];
-			// check if QR-Code has data
+
 			if (
+				// check if QR-Code has data
 				barcode !== undefined &&
 				barcode.displayValue !== undefined &&
 				barcode.displayValue !== ''
-			) {
-				// check if QR-Code is new
+			)
 				if (
+					// check if QR-Code is new
 					qrCode === undefined ||
 					qrCode.displayValue === '' ||
 					barcode.displayValue !== qrCode.displayValue
-				) {
+				)
 					// set QR-Code as current detected QR-Code
 					setQrCode(barcode);
-				}
-			}
 		}
-	}, [barcodes]);
+	}, [barcodes, qrCode]);
 
 	// process new current detected QR-Code
 	useEffect(() => {
@@ -110,7 +105,7 @@ const QRScanner = (props: {
 					props.updateQrStatus()
 				);
 		}
-	}, [qrCode]);
+	}, [qrCode, props]);
 
 	return (
 		<>
@@ -118,7 +113,7 @@ const QRScanner = (props: {
 				<Text style={styles.headlineText}>ILLUMINATE YOUR FIRE!</Text>
 			</View>
 			<View style={styles.window}>
-				{device != undefined && device != null && cameraPermissionStatus ? (
+				{device !== undefined && device !== null && cameraPermissionStatus ? (
 					// render QR-Code Scanner if camera is ready and permission is granted
 					<>
 						<Icon
@@ -143,7 +138,7 @@ const QRScanner = (props: {
 					// render loading screen if camera is not ready or permission is not granted
 					<>
 						<View style={styles.loadingContainer}>
-							<Icon icon={Loading} style={styles.loadingIcon}></Icon>
+							<Icon icon={Loading} style={styles.loadingIcon} />
 						</View>
 						<View style={styles.textBox}>
 							<Text style={styles.text}>

@@ -97,8 +97,8 @@ export const getPermission = (p: LumePermission) =>
 							PermissionsAndroid.request(
 								permission as AndroidPermissions,
 								getRationale(p)
-							).then(x => {
-								if (x === 'granted') resolve();
+							).then(pResult => {
+								if (pResult === 'granted') resolve();
 								else reject(x);
 							});
 						})

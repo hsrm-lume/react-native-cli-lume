@@ -2,11 +2,7 @@ import HCESession, {
 	NFCContentType,
 	NFCTagType4,
 } from '@hsrm-lume/react-native-hce';
-import NfcManager, {
-	NdefRecord,
-	NfcTech,
-	TagEvent,
-} from 'react-native-nfc-manager';
+import NfcManager, {NfcTech, TagEvent} from 'react-native-nfc-manager';
 import {HandledPromise} from '../types/HandledPromise';
 import {TransmissionData} from '../types/TranmissionData';
 type SlimNdefRecord = {
@@ -37,9 +33,9 @@ export const nfcStartWrite = (
 	oldSession?: CloseableHCESession
 ): HandledPromise<CloseableHCESession> =>
 	new HandledPromise('nfc.write', (resolve, reject) => {
-		new Promise<void>((resolve, reject) => {
-			if (!oldSession || !oldSession.isOpen()) resolve();
-			else oldSession.close().then(resolve).catch(reject);
+		new Promise<void>((res, rej) => {
+			if (!oldSession || !oldSession.isOpen()) res();
+			else oldSession.close().then(rej).catch(reject);
 		})
 			.then(() => new HCESession())
 			.then(s =>
@@ -120,10 +116,10 @@ const processNfcTag = (tag: TagEvent): TransmissionData => {
 				} as SlimNdefRecord)
 		)
 		.filter(x => {
-			return x.type == 'application/json';
+			return x.type === 'application/json';
 		});
 	// process the first application/json payload
-	if (res.length == 0 || res[0].payload === undefined)
+	if (res.length === 0 || res[0].payload === undefined)
 		throw new Error('No valid payload found');
 
 	return JSON.parse(res[0].payload) as TransmissionData;

@@ -30,7 +30,7 @@ const ErrorBar = () => {
 		// close ErrorWindow if no errors are left
 		repaintComponent();
 	};
-	if (getDismissableErrors().length == 0 && bigSize) setBigSize(false);
+	if (getDismissableErrors().length === 0 && bigSize) setBigSize(false);
 
 	return bigSize ? (
 		<ErrorWindow close={switchBigSize} removeMsg={removeMessage} />
