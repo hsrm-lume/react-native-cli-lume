@@ -9,7 +9,7 @@ import Map from './assets/map.svg';
 
 //////////////
 import {DevSettings} from 'react-native';
-import {userDataSchema} from './types/UserDataSchema';
+import {userDataSchema} from './types/UserData';
 import {getDismissableErrors, getFullscreenErrors} from './services';
 import IntroScreen from './screens/introScreen';
 

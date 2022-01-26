@@ -118,9 +118,5 @@ export default function IntroScreen() {
 		updateSlide(getCurrentSlide(currentSlideNum - 1));
 		updateSlideNum(currentSlideNum - 1);
 	};
-	return (
-		<>
-			<SlideView advance={advance} retreat={retreat} data={currentSlide} />
-		</>
-	);
+	return <SlideView advance={advance} retreat={retreat} data={currentSlide} />;
 }
