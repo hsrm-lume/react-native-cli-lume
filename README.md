@@ -1,6 +1,6 @@
 # LUME React-Native App
 
-Whis is the repository of the lume App for Android and iOS.
+This is the repository of the lume App for Android and iOS.
 
 For instructions on how to get setup development environment, please refer to the Guides for [Android](README-Android.md) and [iOS](README-iOD.md).
 
