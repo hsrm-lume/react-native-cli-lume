@@ -5,6 +5,10 @@ import TorchOff from '../../assets/torchOff.svg';
 import QRCode from '../../assets/qrCode.svg';
 import Camera from '../../assets/camera.svg';
 
+/**
+ * Shows the torch icon and the QR-Code button
+ * @param props fire state and callback to change qr-window status
+ */
 const FireView = (props: {fire: boolean; updateQrStatus: () => void}) => (
 	<>
 		<View style={styles.container}>

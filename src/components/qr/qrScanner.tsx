@@ -75,8 +75,8 @@ const QRScanner = (props: {
 				if (!props.uid) throw new Error('Torch not yet ready');
 				if (!props.position) throw new Error('Position not accurate enough');
 				if (!data) throw new Error('QR-Code is empty');
-				var self: QrCodeData;
-				var received: QrCodeData;
+				let self: QrCodeData;
+				let received: QrCodeData;
 				try {
 					self = {
 						ts: Math.floor(Date.now() / 1000),

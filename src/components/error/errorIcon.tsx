@@ -8,6 +8,7 @@ import {StyleProp, ViewStyle} from 'react-native';
 import {MessageKey} from '../../services';
 
 /**
+ * Maps error types to icons with defined rules
  * @param t The type to be displayed
  * @returns the Icon for type t
  */

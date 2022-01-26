@@ -8,8 +8,10 @@ import {
 import {SvgProps} from 'react-native-svg';
 
 /**
- * @param item the ErrorMessage to display the icon for
- * @returns a jsx component that displays just the Error Icon
+ * @param icon the svg to display
+ * @param action the callback for clicking the icon
+ * @param style the style overrides for the icon
+ * @returns a jsx component that displays just the Icon
  */
 export const Icon = (props: {
 	icon: React.FC<SvgProps>;

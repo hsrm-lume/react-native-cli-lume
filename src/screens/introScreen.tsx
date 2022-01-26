@@ -11,10 +11,13 @@ import {writeUserData} from '../services';
 import {useNavigation} from '@react-navigation/native';
 import {Platform} from 'react-native';
 
+/**
+ * Screen for the intro slides to onboard new users
+ * @returns JSX Intro Screen
+ */
 export default function IntroScreen() {
-	//writeUserData({firstAppUse: false});
 	const navigation = useNavigation();
-	var slides: any[] = [];
+	// messages are different for iOS and Android
 	const androidSlides = [
 		{
 			title: 'Hi!',
@@ -91,8 +94,7 @@ export default function IntroScreen() {
 				'View lume torch stats with the map view.\nHow many times has it been passed on?\n Where has the torch gone?\nHave fun exploring the map!',
 		},
 	];
-	if (Platform.OS === 'ios') slides = iosSlides;
-	else slides = androidSlides;
+	const slides = Platform.OS === 'ios' ? iosSlides : androidSlides;
 
 	const getCurrentSlide = (num: number) => {
 		return slides[num];
@@ -100,8 +102,11 @@ export default function IntroScreen() {
 
 	const [currentSlide, updateSlide] = useState(getCurrentSlide(0));
 	const [currentSlideNum, updateSlideNum] = useState(0);
+
+	// on next-button press
 	const advance = () => {
 		if (getCurrentSlide(currentSlideNum + 1) === undefined) {
+			// if last slide, write user data to Realm and navigate to FireScreen
 			writeUserData({firstAppUse: false}).then(() => {
 				// @ts-ignore: react navigation does not know how to use itself
 				navigation.navigate('FireScreen', {returningFromIntro: true});
@@ -112,8 +117,9 @@ export default function IntroScreen() {
 		updateSlideNum(currentSlideNum + 1);
 	};
 
+	// on prev-button press
 	const retreat = () => {
-		if (getCurrentSlide(currentSlideNum - 1) === undefined) return;
+		if (getCurrentSlide(currentSlideNum - 1) === undefined) return; // there is no previous slide
 
 		updateSlide(getCurrentSlide(currentSlideNum - 1));
 		updateSlideNum(currentSlideNum - 1);

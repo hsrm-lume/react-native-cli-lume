@@ -127,7 +127,7 @@ export default function FireScreen(props: any) {
 
 	return (
 		<>
-			{/* Show the full screen errors wrapper component above all others */}
+			{/* Show the full screen errors wrapper component above everything else */}
 			<FullscreenErrors action={doRetry} />
 			<LinearGradient
 				colors={
@@ -144,7 +144,7 @@ export default function FireScreen(props: any) {
 						qrStatus ? (
 							// render QR Code Generator
 							<QRGenerator
-								uid={userData.uuid}
+								uuid={userData.uuid}
 								position={pos}
 								updateQrStatus={switchQrStatus}
 							/>
