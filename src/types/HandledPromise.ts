@@ -51,6 +51,7 @@ export class HandledPromise<T> {
 
 	/**
 	 * construct a HandledPromise from an executor
+	 * @param mKey the messageKey to be used if the promise is rejected
 	 * @param executor The Executor to be ran in a HandledPromise
 	 */
 	constructor(mKey: MessageKey | undefined, executor: Executor<T>) {

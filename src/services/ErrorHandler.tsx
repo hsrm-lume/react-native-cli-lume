@@ -17,17 +17,24 @@ const messageTypeEquals = (
 	else return msg === type;
 };
 
+/**
+ * A global list of errors occoured
+ */
 let errorList: MessageKey[] = [];
 
+// helpers for convenience to determine if the error should be shown full screen
 export const getFullscreenErrors = (): MessageKey[] =>
 	errorList.filter(isFullscreenError);
 export const getDismissableErrors = (): MessageKey[] =>
 	errorList.filter(isDismissableError);
 
+/**
+ * Internal class to notify the ErrorBar and Fullscreen error views, if the error list changes
+ */
 class ChangeSubscriptions {
 	private changeSubscriptions: {bar?: () => void; fullscreen?: () => void} = {};
 	/**
-	 * Register a new change subscription
+	 * Register a new change subscription for either the ErrorBar or Fullscreen error view
 	 */
 	registerSubscription(s: () => void, from: 'bar' | 'fullscreen') {
 		this.changeSubscriptions[from] = s;

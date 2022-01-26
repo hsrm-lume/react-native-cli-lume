@@ -1,4 +1,6 @@
-// The available error types
+/**
+ * MessageKeys that define Error types in the app
+ */
 export type MessageKey =
 	// internet
 	| 'internet.device'
@@ -23,9 +25,7 @@ export type MessageKey =
 	| 'loading'
 	| 'loading.map';
 
-export const isFullscreenError = (x: MessageKey): boolean =>
-	!isDismissableError(x);
-// make the collowing errors dismissable, others not
+// make the following errors dismissable, others not
 export const isDismissableError = (x: MessageKey): boolean =>
 	[
 		'nfc.empty',
@@ -34,6 +34,8 @@ export const isDismissableError = (x: MessageKey): boolean =>
 		'camera.permission',
 		'qr.invalid',
 	].includes(x);
+export const isFullscreenError = (x: MessageKey): boolean =>
+	!isDismissableError(x);
 
 /**
  * @member msg Message as string
@@ -50,6 +52,9 @@ interface MessageDetails {
 	desc: string;
 }
 
+/**
+ * Class to define titles and descriptions for error messages
+ */
 export class Errors {
 	// mapping from error type to message
 	private static messages: {[key in MessageKey]: MessageDetails} = {
@@ -130,7 +135,6 @@ export class Errors {
 				// use the message from dict or fallback to unknown error
 				msg: 'Unknown Error!',
 				desc: 'An unknown error occoured. Please try restarting the app.',
-				fullscreen: true,
 			}
 		);
 	}

@@ -1,8 +1,4 @@
-import {
-	Permission as AndroidPermissions,
-	PermissionsAndroid,
-	Platform,
-} from 'react-native';
+import {Platform} from 'react-native';
 import {Rationale} from 'react-native';
 import {
 	request,
@@ -13,66 +9,45 @@ import {
 import {HandledPromise} from '../types/HandledPromise';
 
 /**
- * Dict to store title and reason for each permission prompt
+ * lume internal Permission type containing keys for the needed permissions
+ */
+type LumePermission = 'lume.permissons.location' | 'lume.permissons.camera';
+
+/**
+ * Type to store title and reason for each permission prompt
  */
 type PermDescriptions = {
-	// For each Permission store title and message for prompt
-	[Key in LumePermission]?: {title: string; message: string};
+	[Key in LumePermission]: {title: string; message: string; perm: Permission};
 };
-const requiredPermissionDescriptions: PermDescriptions = {
+// Messages to use for the permission prompts
+const requiredPermissions: PermDescriptions = {
 	'lume.permissons.location': {
 		title: 'Location Permission',
 		message: 'Location permission is required to use this app.',
+		perm:
+			Platform.OS === 'android'
+				? PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
+				: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
 	},
 	'lume.permissons.camera': {
 		title: 'Camera Permission',
 		message: 'Camera permission is required to use this app.',
+		perm:
+			Platform.OS === 'android'
+				? PERMISSIONS.ANDROID.CAMERA
+				: PERMISSIONS.IOS.CAMERA,
 	},
-};
-
-/**
- * lume Permission store in order to map the permissions
- * lume needs to the OS native permissions
- */
-export type LumePermission =
-	| 'lume.permissons.location'
-	| 'lume.permissons.camera';
-
-type LumePerm = {
-	//Map each LumePermission to a ios and android permission
-	[Key in LumePermission]: {ios: Permission; android: Permission};
-};
-/*
- * PermissionMap for the lume permissions to their
- * OS native counterparts
- */
-const permissionMap: LumePerm = {
-	'lume.permissons.camera': {
-		ios: PERMISSIONS.IOS.CAMERA,
-		android: PERMISSIONS.ANDROID.CAMERA,
-	},
-	'lume.permissons.location': {
-		ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
-		android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-	},
-};
-
-export const mapPermission = (p: LumePermission): Permission => {
-	return Platform.OS === 'android'
-		? permissionMap[p].android
-		: permissionMap[p].ios;
 };
 
 /**
  * Converts a lume permission to a rationale object
- * using the description from the requiredPermissionDescriptions object
+ * using the description from the requiredPermissions object
  * @param p Permission to get rationale for
- * @returns Rationale object if it exists
+ * @returns Rationale object
  */
-const getRationale = (p: LumePermission): Rationale | undefined => {
-	if (!requiredPermissionDescriptions[p]) return undefined;
+const getRationale = (p: LumePermission): Rationale => {
 	return {
-		...requiredPermissionDescriptions[p],
+		...requiredPermissions[p],
 		buttonNegative: 'Cancel',
 		buttonPositive: 'OK',
 	} as Rationale;
@@ -82,40 +57,27 @@ const getRationale = (p: LumePermission): Rationale | undefined => {
  * @param p Permission to request
  * @returns Promise that resolves if permission is granted
  */
-
 export const getPermission = (p: LumePermission) =>
 	new HandledPromise<void>(
+		// detect the messageKey from the permission
 		p === 'lume.permissons.camera'
 			? 'camera.permission'
 			: 'location.permission',
 		(resolve, reject) => {
-			let permission = mapPermission(p);
-			Platform.OS === 'android'
-				? PermissionsAndroid.check(permission as AndroidPermissions)
-						.then(x => {
-							if (x) return resolve();
-							PermissionsAndroid.request(
-								permission as AndroidPermissions,
-								getRationale(p)
-							).then(pResult => {
-								if (pResult === 'granted') resolve();
-								else reject(x);
-							});
-						})
-						.catch(reject)
-				: check(permission)
-						.then(b => {
-							console.log('b', b);
-							if (b === 'granted') return resolve();
-
-							request(permission, getRationale(p)).then(g => {
-								console.log('g', g);
-								if (g === 'granted') return resolve();
-								return reject(g);
-							});
-						})
-						.catch(() => {
-							console.log('xDDDDD');
-						});
+			// get the permission data
+			const permission = requiredPermissions[p];
+			// check if its already granted
+			check(permission.perm)
+				.then(b => {
+					// if yes, resolve
+					if (b === 'granted') return resolve();
+					// if not, request it
+					request(permission.perm, getRationale(p)).then(g =>
+						// resolve only if user has granted it
+						g === 'granted' ? resolve() : reject(g)
+					);
+				})
+				// if something goes wrong, reject the HandledPromise
+				.catch(reject);
 		}
 	);

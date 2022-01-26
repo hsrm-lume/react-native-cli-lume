@@ -5,10 +5,24 @@ import HCESession, {
 import NfcManager, {NfcTech, TagEvent} from 'react-native-nfc-manager';
 import {HandledPromise} from '../types/HandledPromise';
 import {TransmissionData} from '../types/TranmissionData';
+
+/**
+ * NdefRecord with mime type and payload
+ */
 type SlimNdefRecord = {
 	payload: string;
 	type: string;
 };
+
+/**
+ * Helper function, that collects chars by char code in a string
+ * @param acc accumulator
+ * @param curr current char code
+ * @returns accumulated string
+ */
+const collectToString = (acc: string, curr: number) =>
+	(acc += String.fromCharCode(curr));
+
 /**
  * Wrapper class to close a HCE session
  */
@@ -33,16 +47,24 @@ export const nfcStartWrite = (
 	oldSession?: CloseableHCESession
 ): HandledPromise<CloseableHCESession> =>
 	new HandledPromise('nfc.write', (resolve, reject) => {
-		new Promise<void>((res, rej) => {
+		new Promise<void>(res => {
+			// if there is no old session, resolve immediately
 			if (!oldSession || !oldSession.isOpen()) res();
-			else oldSession.close().then(rej).catch(reject);
+			// if there is one, close it
+			else oldSession.close().then(res).catch(reject);
 		})
+			// setup a new session
 			.then(() => new HCESession())
+			// set the tag data to be written
 			.then(s =>
+				// torch data
 				s.addTag(new NFCTagType4(NFCContentType.JSON, JSON.stringify(tmd)))
 			)
+			// app-tag to open lume on the touched device if its not open
 			.then(s => s.addTag(new NFCTagType4(NFCContentType.APP, 'com.lume')))
+			// start the session
 			.then(s => s.start())
+			// wrap the session in a closeable session
 			.then(s => new CloseableHCESession(s))
 			.then(resolve)
 			.catch(reject);
@@ -53,6 +75,8 @@ export const nfcStartWrite = (
  */
 export const nfcReadNext = (): HandledPromise<TransmissionData> =>
 	HandledPromise.from<NfcTech | null>(
+		// do not report this error to the user, because usual
+		// cancelation makes the promise reject but thats intended
 		undefined,
 		new Promise<NfcTech | null>(async resolve => {
 			try {
@@ -61,9 +85,11 @@ export const nfcReadNext = (): HandledPromise<TransmissionData> =>
 			resolve(NfcManager.requestTechnology([NfcTech.Ndef]));
 		})
 	)
+		// await the next tag touched
 		.then(() => NfcManager.getTag())
 		.then(
 			data =>
+				// wrap this processing in a HandledPromise to ensure error handling on the processing part
 				new HandledPromise('nfc.empty', resolve => {
 					if (!data) throw new Error('No nfc data read');
 					const tag = processNfcTag(data);
@@ -74,14 +100,14 @@ export const nfcReadNext = (): HandledPromise<TransmissionData> =>
 		);
 
 /**
- * reading Cleanup function, to be run whe the "parent" component is unmounted
+ * reading Cleanup function, that closes the read session
  */
 export const nfcCleanupRead = () => {
 	return NfcManager.cancelTechnologyRequest();
 };
 
 /**
- *
+ * Function that checks if the nfc technology is turned on
  * @returns  a Promise that resolves if NFC is turned on
  */
 export const isNfcEnabled = (): HandledPromise<void> =>
@@ -95,6 +121,7 @@ export const isNfcEnabled = (): HandledPromise<void> =>
 	});
 
 /**
+ * Helper procedure to process a nfc tag
  * @param tag NFC-Tag data to be processed
  * @returns TransmissionData Object from NFC-Tag
  */
@@ -124,6 +151,3 @@ const processNfcTag = (tag: TagEvent): TransmissionData => {
 
 	return JSON.parse(res[0].payload) as TransmissionData;
 };
-
-const collectToString = (acc: string, curr: number) =>
-	(acc += String.fromCharCode(curr));

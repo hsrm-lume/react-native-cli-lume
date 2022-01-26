@@ -5,6 +5,9 @@ import {UserData, userDataSchema} from '../types/UserData';
 import {environment} from '../env/environment';
 import {HandledPromise} from '../types/HandledPromise';
 
+/**
+ * @returns a promise that resolves with an opened Realm
+ */
 const openRealm = async () =>
 	await Realm.open({
 		path: 'userOptions',

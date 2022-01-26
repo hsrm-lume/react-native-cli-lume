@@ -24,7 +24,13 @@ import FullErrorView from '../components/error/fullErrorView';
 import {useNavigation} from '@react-navigation/native';
 
 export default function FireScreen(props: any) {
-	const navigation = useNavigation();
+	// repaint this component and rerun all checks on doRetry calls
+	const [retryAfterError, doRetryAfterError] = useState(true);
+	const doRetry = () => {
+		console.log('repaint triggered');
+		doRetryAfterError(!retryAfterError);
+	};
+
 	// userData
 	const [userData, userDataChange] = useState<Partial<UserData>>({});
 	const fireStatusChange = (fs: boolean) => {
@@ -35,27 +41,7 @@ export default function FireScreen(props: any) {
 			firstAppUse: userData.firstAppUse,
 		});
 	};
-
-	useEffect(() => {
-		if (userData.firstAppUse === true)
-			// @ts-ignore: react navigation does not know how to use itself
-			navigation.navigate('IntroScreen');
-	});
-
-	const [retryAfterError, doRetryAfterError] = useState(true);
-	const doRetry = () => {
-		console.log('repaint triggered');
-		doRetryAfterError(!retryAfterError);
-	};
-
-	if (props.route.params?.returningFromIntro) {
-		// @ts-ignore: react navigation does not know how to use itself
-		props.route.params.returningFromIntro = false;
-		console.log('returning from intro');
-		console.log('userDataIs', userData);
-		doRetry();
-	}
-
+	// load the userData from Realm when the component is mounted
 	useEffect(() => {
 		getUserData().then(ud => {
 			if (
@@ -74,25 +60,49 @@ export default function FireScreen(props: any) {
 		userData.uuid,
 	]);
 
+	// navigate to the IntroScreen on first app use
+	const navigation = useNavigation();
+	useEffect(() => {
+		if (userData.firstAppUse === true)
+			// @ts-ignore: react navigation does not know how to use itself
+			navigation.navigate('IntroScreen');
+	});
+	if (props.route.params?.returningFromIntro) {
+		// @ts-ignore: react navigation does not know how to use itself
+		props.route.params.returningFromIntro = false;
+		console.log('returning from intro');
+		console.log('userDataIs', userData);
+		doRetry();
+	}
+
+	////// TECHNOLOGIES CHECK //////
+	// check if position is permitted and a position is reported
 	const [posPermission, setPosPermission] = useState<boolean | undefined>(
 		undefined
 	);
 	useEffect(() => {
-		console.log('try to get pos permission', userData, userData?.firstAppUse);
+		console.log('try to get pos permission', userData, userData.firstAppUse);
 		if (userData.firstAppUse !== false) return;
 		console.log('try get perm');
 		getPermission('lume.permissons.location').then(() => {
 			setPosPermission(true);
 			remError('location.permission');
 		});
-	}, [retryAfterError, userData]);
+	}, [retryAfterError, userData.firstAppUse]);
 
+	// check if nfc is on
 	useEffect(() => {
 		console.log('try nfc on');
 		isNfcEnabled().then(() => remError('nfc.off'));
 	}, [retryAfterError]);
 
-	// position
+	// check if internet is reachable
+	checkConnected().then(res => {
+		if (!res) handleError('internet.device');
+		else remError('internet.device');
+	});
+
+	// position subscription
 	const [pos, posChange] = useState<GeoLocation | undefined>(undefined);
 	useEffect(() => {
 		if (!posPermission) {
@@ -109,21 +119,15 @@ export default function FireScreen(props: any) {
 		};
 	}, [posPermission, retryAfterError]);
 
-	// TODO initial tech checks
-	checkConnected().then(res => {
-		if (!res) handleError('internet.device');
-		else remError('internet.device');
-	});
-
-	// qrStatus
+	// toggle for the qr scanner/code
 	const [qrStatus, setQrStatus] = useState(false);
 	const switchQrStatus = () => {
 		setQrStatus(!qrStatus);
 	};
 
-	// display fire view if no errors present
 	return (
 		<>
+			{/* Show the full screen errors wrapper component above all others */}
 			<FullscreenErrors action={doRetry} />
 			<LinearGradient
 				colors={
@@ -135,7 +139,7 @@ export default function FireScreen(props: any) {
 				qrStatus !== undefined &&
 				userData.fireStatus !== undefined &&
 				userData.firstAppUse !== undefined ? ( // only render components if data ready
-					userData.fireStatus ? (
+					userData.fireStatus ? ( // do render dependent on fire status
 						// fire on
 						qrStatus ? (
 							// render QR Code Generator
@@ -185,8 +189,10 @@ export default function FireScreen(props: any) {
 						</>
 					)
 				) : (
+					// display an error view if not all data is present but tech checks passed
 					<FullErrorView item="loading" action={null} />
 				)}
+				{/* Error bar for showing dismissable errors */}
 				<ErrorBar />
 			</LinearGradient>
 		</>

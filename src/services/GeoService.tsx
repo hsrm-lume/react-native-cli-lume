@@ -7,9 +7,9 @@ import {GeoLocation} from '../types/GeoLocation';
  * Wrapper class to unsubscribe from the GeoLocation watch
  */
 export class GeoServiceSubscription {
-	constructor(private n: number) {}
+	constructor(private watch: number) {}
 	public unsubscribe() {
-		Geolocation.clearWatch(this.n);
+		Geolocation.clearWatch(this.watch);
 	}
 }
 
@@ -45,12 +45,13 @@ const watchOptions: GeoWatchOptions = {
 	},
 	enableHighAccuracy: true,
 	distanceFilter: 0,
-	interval: 10000,
-	fastestInterval: 2000,
+	interval: 5000,
+	fastestInterval: 1000,
 	showLocationDialog: true,
 	forceRequestLocation: false,
 	forceLocationManager: false,
 };
+
 /**
  * Internal callback to filter bad accuracy positions
  * @param position to be passed to callback
@@ -63,18 +64,20 @@ const internalCallback = (
 ) => {
 	remError('location.device'); // if a position gets reported, geo has to be working
 
+	// report to the iterator if the accuracy is fine
 	if (position.coords.accuracy > environment.GEO_THRESHOLD) iterator.fail();
 	else iterator.ok();
 
 	// perform actions dependent on iterator isFine state
 	if (iterator.isFine()) {
-		remError('location.accuracy');
+		remError('location.accuracy'); // acurracy has to be accurate enough if we are here
+		// execute callback function given by the subscriber with GeoLocation as parameter
 		cb({
 			accuracy: position.coords.accuracy,
 			lat: position.coords.latitude,
 			lng: position.coords.longitude,
 		});
-	} else if (iterator.isFine() === false) handleError('location.accuracy');
+	} else if (iterator.isFine() === false) handleError('location.accuracy'); // else add the accuracy error
 };
 
 /**
@@ -84,14 +87,19 @@ const internalCallback = (
 export const subscribePosition = (
 	callback: (pos: GeoLocation) => void
 ): GeoServiceSubscription => {
+	// generate a sepearate iterator for each subscription
 	const iterator = new GeoAccuracyIterator();
-	const n = Geolocation.watchPosition(
+	// subscribe the position
+	const watch = Geolocation.watchPosition(
+		// on report, first do the wrapping internal callback to check if the accuracy is fine
 		pos => internalCallback(pos, callback, iterator),
 		e => {
+			// on error getting position, add the error to the error handler
 			handleError('location.device');
 			console.warn('Geolocation.watchPosition error', e);
 		},
 		watchOptions
 	);
-	return new GeoServiceSubscription(n);
+	// wrap the subscription in a class to be able to unsubscribe later
+	return new GeoServiceSubscription(watch);
 };

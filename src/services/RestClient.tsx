@@ -4,12 +4,12 @@ import {GeoLocation} from '../types';
 import {HandledPromise} from '../types/HandledPromise';
 
 export class RestClient {
-	/*
-    "uuidParent": <uuid>,  // UUID of the already lit device
-    "uuidChild":  <uuid>,  // UUID of the device to light
-    "position": {
-        "lat": <float>,    // Latitude  between - 90 & + 90
-        "lng": <float>     // Longitude between -180 & +180*/
+	/**
+	 * @param uuidParent uuid of the parent node
+	 * @param uuidChild uuid of the new child node
+	 * @param position position of the child node
+	 * @returns HandledPromise to catch eventual errors while posting
+	 */
 	static postContact(
 		uuidParent: string,
 		uuidChild: string,
@@ -27,6 +27,7 @@ export class RestClient {
 		});
 	}
 
+	// some private wrappers for the axios methods
 	private static post(route: string, body?: object) {
 		return axios.post(route, body);
 	}
