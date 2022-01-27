@@ -95,7 +95,7 @@ startSimulation();
 
 This is piece of software is invoked inside of the [`fireScreen.tsx`](src/screens/fireScreen.tsx) where the [fireOnLogic](src/components/fire/fireOnLogic.tsx) component loads up the HCE-Module of the phone with the correct data.
 
-Find more Documentation on the HCE-Fork [here](https://github.com/hsrm-lume/react-native-hce).
+Find more documentation on the HCE-Fork [here](https://github.com/hsrm-lume/react-native-hce).
 
 ## Dependencies
 
