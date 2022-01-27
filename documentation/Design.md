@@ -32,17 +32,19 @@ We chose black for text for contrast reasons, as all backgrounds are bright colo
 ## Icons
 
 We then began creating the icons needed for our app. We began with the flame.
-
-![](https://raw.githubusercontent.com/hsrm-lume/react-native-cli-lume/main/src/assets/fire.svg)
+<img src=https://raw.githubusercontent.com/hsrm-lume/react-native-cli-lume/main/src/assets/fire.svg style="width:100px"/>
 
 As many apps use flames as icons (most notably Tinder), we wanted to differentiate our flame from other apps. Differentiating was especially important, as lume should not make people think of another app. We, therefore, chose a three-headed flame with one primary and two secondary fires. We also used a gradient to achieve the signature lume look inside the flame. To make the flame portray a little more fun, we added a small flame in white at the centre of the flame, which loosely adheres to the shape of the outer flame.
 
 We then created the torch.
-![](https://raw.githubusercontent.com/hsrm-lume/react-native-cli-lume/main/src/assets/torch.svg)
+
+<img src=https://raw.githubusercontent.com/hsrm-lume/react-native-cli-lume/main/src/assets/torch.svg style="width:100px"/>
+
 As it needed to bring up the image of a torch in the heads of our users, we created a simple torch shape. Again, we employed our gradient policy, which meant using base colours and shifting slightly away from them over the shape they cover.
 
 Going over to our map icon, we see another often-used pattern throughout the app's design.
-![](https://raw.githubusercontent.com/hsrm-lume/react-native-cli-lume/main/src/assets/map.svg)
+
+<img src=https://raw.githubusercontent.com/hsrm-lume/react-native-cli-lume/main/src/assets/map.svg style="width:100px"/>
 
 If there is no real need to use specific colours for an object, we use the primary and secondary colours at a 60° angle over the icon's main shape.
 
@@ -53,3 +55,7 @@ Regarding the app's general structure, we wanted to create a unified look for th
 ### WebApp
 
 Concerning the Web App, the implementation of the design was a little easier. This required: creating an Angular Design sheet, modifying some of the overlays and bringing in the icons
+
+### Full Design file
+
+In order to create the design Adobe XD was used. The design file is located [here](lume.xd).

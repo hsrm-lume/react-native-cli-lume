@@ -3,6 +3,7 @@
 This is the repository of the lume App for Android and iOS.
 
 For instructions on how to get setup development environment, please refer to the Guides for [Android](README-Android.md) and [iOS](README-iOD.md).
+For more general documentation on specific components used throughout the app, please consult the documentation folder.
 
 ## Project structure
 
