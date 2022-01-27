@@ -11,7 +11,7 @@ import {GeoLocation, HandledPromise} from '../../types';
 import {QrCodeData} from '../../types/TranmissionData';
 import ThinCross from '../../assets/thinCross.svg';
 import Loading from '../../assets/loading.svg';
-import {Icon} from '../error/icon';
+import {Icon} from '../icon';
 
 /**
  * @param uid uuid of current user

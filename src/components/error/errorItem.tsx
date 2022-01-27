@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Errors, MessageKey} from '../../services';
-import {Icon} from './icon';
+import {Icon} from '../icon';
 import CloseIcon from '../../assets/thinCross.svg';
 import {ErrorIcon} from './errorIcon';
 

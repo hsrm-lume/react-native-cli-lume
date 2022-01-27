@@ -1,5 +1,5 @@
 import React from 'react';
-import {Icon} from './icon';
+import {Icon} from '../icon';
 import WarningIcon from '../../assets/warning.svg';
 import InternetWarningIcon from '../../assets/internetWarning.svg';
 import LocationWarningIcon from '../../assets/locationWarning.svg';

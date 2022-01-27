@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableHighlight, View} from 'react-native';
 import {SvgProps} from 'react-native-svg';
-import {Icon} from '../error/icon';
+import {Icon} from '../icon';
 
 /**
  * Shows an intro slide with icon, text and buttons to navigate forwards or backwards.

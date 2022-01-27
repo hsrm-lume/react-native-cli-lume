@@ -8,7 +8,7 @@ import {
 import {getDismissableErrors, MessageKey} from '../../services';
 import ArrowDown from '../../assets/arrowSmallDown.svg';
 import {ErrorItem} from './errorItem';
-import {Icon} from './icon';
+import {Icon} from '../icon';
 
 /**
  * @param close a callback that closes the ErrorWindow
