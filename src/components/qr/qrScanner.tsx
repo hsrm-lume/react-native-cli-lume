@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, Platform} from 'react-native';
 import {Camera, useCameraDevices} from 'react-native-vision-camera';
 import {
 	useScanBarcodes,
@@ -117,6 +117,7 @@ const QRScanner = (props: {
 	}, []);
 	const [didDryLoad, setDidDryLoad] = useState(0); // pattern to delay the loading of the camera to avoid race conditions
 	const getFrameProcessor = () => {
+		if (Platform.OS == 'ios') return frameProcessor; // dont do the scuffed fix on ios
 		if (didDryLoad === 0) {
 			setDidDryLoad(1);
 			setTimeout(() => {
