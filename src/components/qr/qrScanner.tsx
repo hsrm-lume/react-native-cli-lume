@@ -43,18 +43,6 @@ const QRScanner = (props: {
 	// scan camera frames for QR-Codes
 	const [frameProcessor, barcodes] = useScanBarcodes([BarcodeFormat.QR_CODE]);
 
-	// const loadProcessorIterations = useRef(0);
-	const [didDryLoad, setDidDryLoad] = useState(0);
-	const getFrameProcessor = () => {
-		if (didDryLoad === 0) {
-			setDidDryLoad(1);
-			setTimeout(() => {
-				setDidDryLoad(2);
-			}, 200);
-		} else if (didDryLoad === 2) return frameProcessor;
-		return undefined;
-	};
-
 	// check barcodes for correct QR-Codes
 	useEffect(() => {
 		// check if barcodes array is empty
@@ -118,6 +106,25 @@ const QRScanner = (props: {
 				);
 		}
 	}, [qrCode, props]);
+
+	// following block is a fix for https://github.com/mrousavy/react-native-vision-camera/issues/626
+	const mounted = useRef(false); // track here if component is (still) mounted
+	useEffect(() => {
+		mounted.current = true;
+		return () => {
+			mounted.current = false;
+		};
+	}, []);
+	const [didDryLoad, setDidDryLoad] = useState(0); // pattern to delay the loading of the camera to avoid race conditions
+	const getFrameProcessor = () => {
+		if (didDryLoad === 0) {
+			setDidDryLoad(1);
+			setTimeout(() => {
+				if (mounted.current) setDidDryLoad(2);
+			}, 200);
+		} else if (didDryLoad === 2) return frameProcessor; // return the frame processor delayed
+		return undefined;
+	};
 
 	return (
 		<>
