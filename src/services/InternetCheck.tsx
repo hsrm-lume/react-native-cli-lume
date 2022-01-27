@@ -4,8 +4,7 @@ import {HandledPromise} from '../types';
 
 export const checkConnected = (): HandledPromise<void> => {
 	return new HandledPromise('internet.device', (resolve, reject) => {
-		const unsubscribe = NetInfo.addEventListener(state => {
-			if (unsubscribe) unsubscribe();
+		NetInfo.fetch().then(state => {
 			if (Platform.OS == 'ios' ? state.isConnected : state.isInternetReachable)
 				resolve();
 			else reject(state);
