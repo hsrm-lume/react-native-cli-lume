@@ -19,7 +19,7 @@ In order to create this central handling, we declared a message key that uniquel
 All MessageKeys follow the same naming convention. We give increasingly specific descriptions of the error after a period.
 Using this pattern enables actions (e.g. deletion or display control) to be carried out on a group of errors by addressing them with the keyword internet, for example.
 
-For a list of MessageKeys and their descriptions used in the App, refer to [`services/Errors.tsx`](../services/Errors.tsx) where the MessageKeys are defined.
+For a list of MessageKeys and their descriptions in the App, refer to [`services/Errors.tsx`](../services/Errors.tsx) where the MessageKeys are defined.
 
 ### `errorhandler.tsx`
 
