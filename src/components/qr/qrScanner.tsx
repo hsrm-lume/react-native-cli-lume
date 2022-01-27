@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {Camera, useCameraDevices} from 'react-native-vision-camera';
 import {
@@ -42,6 +42,18 @@ const QRScanner = (props: {
 
 	// scan camera frames for QR-Codes
 	const [frameProcessor, barcodes] = useScanBarcodes([BarcodeFormat.QR_CODE]);
+
+	// const loadProcessorIterations = useRef(0);
+	const [didDryLoad, setDidDryLoad] = useState(0);
+	const getFrameProcessor = () => {
+		if (didDryLoad === 0) {
+			setDidDryLoad(1);
+			setTimeout(() => {
+				setDidDryLoad(2);
+			}, 200);
+		} else if (didDryLoad === 2) return frameProcessor;
+		return undefined;
+	};
 
 	// check barcodes for correct QR-Codes
 	useEffect(() => {
@@ -126,7 +138,7 @@ const QRScanner = (props: {
 								style={styles.camera}
 								device={device}
 								isActive={true}
-								frameProcessor={frameProcessor}
+								frameProcessor={getFrameProcessor()}
 								frameProcessorFps={1}
 							/>
 						</View>
