@@ -97,9 +97,8 @@ export default function FireScreen(props: any) {
 	}, [retryAfterError]);
 
 	// check if internet is reachable
-	checkConnected().then(res => {
-		if (!res) handleError('internet.device');
-		else remError('internet.device');
+	checkConnected().then(() => {
+		remError('internet.device');
 	});
 
 	// position subscription
