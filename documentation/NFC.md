@@ -2,7 +2,7 @@
 
 ## About
 
-NFC is lume's main technology to share lit flames. To boot, the [`fireScreen.tsx`](src/screens/fireScreen.tsx) spawn the [fireOffLogic](src/components/fire/fireOffLogic.tsx) component. This component utilizes react-natives useState and useEffect hooks to render a stricly logical component, that manages reading NFC Tags. As soon as the NFC-Reader reads a lume-NFC-enabled device in writing mode, it reads the data from the companion devices and starts the flame-lighting process, utilizing the features of the [`RestClient`](src/services/RestClient.tsx).
+NFC is lume's main technology to share lit flames. To boot, the [`fireScreen.tsx`](src/screens/fireScreen.tsx) spawns the [fireOffLogic](src/components/fire/fireOffLogic.tsx) component. This component utilizes react-natives useState and useEffect hooks to render a stricly logical component, that manages reading NFC Tags. As soon as the NFC-Reader reads a lume-NFC-enabled device in writing mode, it reads the data from the companion device and starts the flame-lighting process, utilizing the features of the [`RestClient`](src/services/RestClient.tsx).
 
 ## Usage
 
@@ -93,7 +93,7 @@ const startSimulation = async () => {
 startSimulation();
 ```
 
-This is piece of software is invoked inside of the [`fireScreen.tsx`](src/screens/fireScreen.tsx) where the [fireOnLogic](src/components/fire/fireOnLogic.tsx) component loads up the HCE-Module of the phone with the correct data.
+This piece of software is invoked inside of the [`fireScreen.tsx`](src/screens/fireScreen.tsx) where the [fireOnLogic](src/components/fire/fireOnLogic.tsx) component loads up the HCE-Module of the phone with the correct data.
 
 Find more documentation on the HCE-Fork [here](https://github.com/hsrm-lume/react-native-hce).
 
