@@ -22,7 +22,7 @@ Following this component declaration, the icon is ready to be used in the JSX pa
 ## Wrapper component
 
 In order to avoid code redundancy, there exists a wrapper component [`icon.tsx`](../components/icon.tsx).
-There, a wrapping component is created that receives an SVG component, style parameters and a click-action as parameters:
+There, we created a wrapping component receiving an SVG component, JSX-style attributes and a click-action as parameters:
 
 **Usage**:
 
