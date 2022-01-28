@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import React, {useState, useEffect, useRef} from 'react';
+import {View, StyleSheet, Text, Platform} from 'react-native';
 import {Camera, useCameraDevices} from 'react-native-vision-camera';
 import {
 	useScanBarcodes,
@@ -107,6 +107,26 @@ const QRScanner = (props: {
 		}
 	}, [qrCode, props]);
 
+	// following block is a fix for https://github.com/mrousavy/react-native-vision-camera/issues/626
+	const mounted = useRef(false); // track here if component is (still) mounted
+	useEffect(() => {
+		mounted.current = true;
+		return () => {
+			mounted.current = false;
+		};
+	}, []);
+	const [didDryLoad, setDidDryLoad] = useState(0); // pattern to delay the loading of the camera to avoid race conditions
+	const getFrameProcessor = () => {
+		if (Platform.OS === 'ios') return frameProcessor; // dont do the scuffed fix on ios
+		if (didDryLoad === 0) {
+			setDidDryLoad(1);
+			setTimeout(() => {
+				if (mounted.current) setDidDryLoad(2);
+			}, 200);
+		} else if (didDryLoad === 2) return frameProcessor; // return the frame processor delayed
+		return undefined;
+	};
+
 	return (
 		<>
 			<View style={styles.headlineBox}>
@@ -126,7 +146,7 @@ const QRScanner = (props: {
 								style={styles.camera}
 								device={device}
 								isActive={true}
-								frameProcessor={frameProcessor}
+								frameProcessor={getFrameProcessor()}
 								frameProcessorFps={1}
 							/>
 						</View>
