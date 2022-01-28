@@ -1,46 +1,22 @@
 # LUME React-Native App
 
-## Run the App on WSL
+This is the repository of the lume App for Android and iOS.
 
-```bash
-yarn install
-yarn run start   # <- this shell will be blocked
-yarn run android
-```
+For instructions on how to get setup development environment, please refer to the Guides for [Android](documentation/Android.md) and [iOS](documentation/iOS.md).
+For more general documentation on specific components used throughout the app, please consult the [documentation folder](documentation/).
 
----
+## Project structure
 
-## Installation (on WSL)
+Common code (cross platform) is located in the [src](./src) directory, platform specific code and configuration files can be found in the respective [android](./android) and [ios](./ios) directories.
 
-1.  clone the repo
-    ```bash
-    git clone git@github.com:hsrm-lume/react-native-cli-lume.git
-    ```
+Main parts of the app are separated into further subdirectories of src:
 
-2.  ```bash
-    cd react-native-cli-lume
-    ./install.sh
-    ```
+| Name       | Description                                             |
+| ---------- | ------------------------------------------------------- |
+| assets     | Media files like svg, png and fonts go here             |
+| components | Reusable UI and fuctional pieces of the app             |
+| env        | configuration for the app                               |
+| screens    | Screens the user can navigate to, using ReactNavigation |
+| types      | Types and classes that serve as utilities for the app   |
 
-3.  establish connection via ADB  
-    Android >= 11:
-    ```bash
-    adb pair <ip>:<port>     # from wifi adb PAIR menu in dev options
-    adb connect <ip>:<port>  # from wifi adb in dev options
-    ```
-    Android <= 10:
-    - [download](https://developer.android.com/studio/releases/platform-tools) platform-tools.zip & unzip on windows host
-    - connect android device to PC via USB
-    - enable USB-Debugging on Android device
-    - launch PS in directory where adb.exe is located
-        ```powershell
-        .\adb.exe devices     # should list your device
-        .\adb.exe tcpip 5555  # forwards the connection on port 5555
-        ```  
-    - lauch terminal in wsl  
-    
-        ```bash
-        adb connect <phone ip>:5555
-        ```  
-        (if prompted for debug-permission run `adb kill-server` and repeat last two steps)
-
+The project got bootstrapped with `react-native-cli`.

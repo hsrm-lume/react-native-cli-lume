@@ -27,11 +27,11 @@ const ErrorBar = () => {
 	// to trigger a repaint after a message got removed
 	const removeMessage = (errType: MessageKey) => {
 		remError(errType);
-		// close ErrorWindow if no errors are left
-		repaintComponent();
 	};
-	if (getDismissableErrors().length == 0 && bigSize) setBigSize(false);
+	// auto close window if no errors are found
+	if (getDismissableErrors().length === 0 && bigSize) setBigSize(false);
 
+	// show bar or window dependent on bigSize flag
 	return bigSize ? (
 		<ErrorWindow close={switchBigSize} removeMsg={removeMessage} />
 	) : (

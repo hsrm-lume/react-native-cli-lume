@@ -11,7 +11,7 @@
 	},
 	"dependencies": {
 		"@hsrm-lume/react-native-hce": "https://github.com/hsrm-lume/react-native-hce.git",
-		"@react-native-community/netinfo": "^7.1.7",
+		"@react-native-community/netinfo": "~6.2.1",
 		"@react-navigation/bottom-tabs": "^6.0.9",
 		"@react-navigation/native": "^6.0.6",
 		"@types/uuid": "^8.3.3",

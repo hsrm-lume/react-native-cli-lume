@@ -1,11 +1,13 @@
 import {v4 as uuid} from 'uuid';
 import 'react-native-get-random-values';
 import Realm from 'realm';
-import {userDataSchema} from '../types/UserDataSchema';
-import {UserData} from '../types/UserData';
+import {UserData, userDataSchema} from '../types/UserData';
 import {environment} from '../env/environment';
 import {HandledPromise} from '../types/HandledPromise';
 
+/**
+ * @returns a promise that resolves with an opened Realm
+ */
 const openRealm = async () =>
 	await Realm.open({
 		path: 'userOptions',

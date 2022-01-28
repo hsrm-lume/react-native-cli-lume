@@ -1,9 +1,10 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Errors, MessageKey} from '../../services';
-import {Icon} from './icon';
+import {Icon} from '../icon';
 import CloseIcon from '../../assets/thinCross.svg';
 import {ErrorIcon} from './errorIcon';
+
 /**
  * @param item the ErrorMessage to display
  * @param removeMsg a callback to remove the message
@@ -13,7 +14,9 @@ export const ErrorItem = (props: {
 	item: MessageKey;
 	removeMsg: (errType: MessageKey) => void;
 }) => {
+	// get the message details for the passed key
 	const m = Errors.getMessage(props.item);
+
 	return (
 		<View style={styles.message}>
 			<ErrorIcon errType={props.item} />

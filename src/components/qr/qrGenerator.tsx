@@ -4,23 +4,23 @@ import {GeoLocation} from '../../types';
 import {QrCodeData} from '../../types/TranmissionData';
 import QRCode from 'react-native-qrcode-svg';
 import ThinCross from '../../assets/thinCross.svg';
-import {Icon} from '../error/icon';
+import {Icon} from '../icon';
 import {handleError} from '../../services/ErrorHandler';
 
 /**
- * @param uid uuid of current user
+ * @param uuid uuid of current user
  * @param position position of current user
  * @param updateQrStatus callback to close QRGenerator
  */
 const QRGenerator = (props: {
-	uid: string;
+	uuid: string;
 	position: GeoLocation;
 	updateQrStatus: () => void;
 }) => {
 	// initialize data to be written into QR-Code
 	const qrData: QrCodeData = {
 		ts: Math.floor(Date.now() / 1000),
-		uuid: props.uid,
+		uuid: props.uuid,
 		location: props.position,
 	};
 	// convert json object to string

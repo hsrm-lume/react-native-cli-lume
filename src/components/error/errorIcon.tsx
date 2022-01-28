@@ -1,5 +1,5 @@
 import React from 'react';
-import {Icon} from './icon';
+import {Icon} from '../icon';
 import WarningIcon from '../../assets/warning.svg';
 import InternetWarningIcon from '../../assets/internetWarning.svg';
 import LocationWarningIcon from '../../assets/locationWarning.svg';
@@ -8,6 +8,7 @@ import {StyleProp, ViewStyle} from 'react-native';
 import {MessageKey} from '../../services';
 
 /**
+ * Maps error types to icons with defined rules
  * @param t The type to be displayed
  * @returns the Icon for type t
  */

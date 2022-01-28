@@ -1,3 +1,6 @@
+/**
+ * Adds svgs as importable React components
+ */
 declare module '*.svg' {
 	import React from 'react';
 	import {SvgProps} from 'react-native-svg';

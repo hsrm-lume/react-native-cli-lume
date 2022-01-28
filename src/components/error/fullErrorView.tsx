@@ -20,19 +20,24 @@ const FullErrorView = (props: {
 	action?: ErrorAction | null;
 	details?: string;
 }) => {
+	// get the message details for the passed key
 	const m = Errors.getMessage(props.item);
+
+	// load the action
 	let a: ErrorAction | null = props.action || {
 		desc: 'retry',
 		action: () => remError(props.item),
 	};
-	if (props.action == null) a = null; // dont spawn default action if null is passed
-	if (props.item == 'nfc.off')
-		// override action if error is nfc.off
+	// dont spawn default action if explicitly null is passed
+	if (props.action == null) a = null;
+	// override action if error is nfc.off
+	if (props.item === 'nfc.off')
 		a = {
 			desc: 'go to NFC settings',
 			action: () =>
 				nfcManager.goToNfcSetting().then(() => remError(props.item)),
 		};
+
 	return (
 		<View style={styles.ErrorView}>
 			<View style={styles.Image}>

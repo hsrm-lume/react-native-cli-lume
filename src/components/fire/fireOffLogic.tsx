@@ -1,5 +1,4 @@
 import {useEffect, useState} from 'react';
-import {environment} from '../../env/environment';
 import {
 	getUserData,
 	nfcCleanupRead,
@@ -14,27 +13,35 @@ import {
 	UserData,
 } from '../../types';
 
+/**
+ * Functional component for logic to run, when the fire is off
+ */
 export function FireOffLogic(props: {
 	location: GeoLocation;
 	userData: UserData;
 	fireUpdater: (b: boolean) => void;
 }) {
+	// deconstruct props
+	const {location, userData, fireUpdater} = props;
+
 	const [nfcReaderLoop, updateRead] = useState(false); // used to refresh NFC reader loop
-	let didUnmount = false;
-	const reReadNfc = () => {
-		updateRead(!nfcReaderLoop);
-	};
-	// NFC read
+
+	// NFC reader loop
 	useEffect(() => {
+		let didUnmount = false; // used to prevent further processing after the component got unmounted
+
 		console.log('nfc read');
+		// get next NFC tag
 		nfcReadNext()
+			// zip retrieved data with data of this device
 			.then(tmd => [
 				tmd,
 				{
-					uuid: props.userData.uuid,
-					location: props.location,
+					uuid: userData.uuid,
+					location: location,
 				} as TransmissionData,
 			])
+			// send data to server
 			.then(
 				([received, self]) =>
 					new HandledPromise<void>('internet.api', res => {
@@ -47,27 +54,30 @@ export function FireOffLogic(props: {
 						).then(res);
 					})
 			)
+			// update fire status in the Realm
 			.then(
 				() =>
 					new HandledPromise<void>('storage', res => {
 						writeUserData({fireStatus: true}).then(() => res());
 					})
 			)
-			.then(() =>
-				// fs -> realm
-				writeUserData({fireStatus: true})
-			)
 			.finally(() => {
-				if (didUnmount) return; // dont do anything if component is unmounted
+				// dont do anything if component is unmounted
+				if (didUnmount) return;
+				// fetch previously saved user data from Realm
+				// decide if we got in finally becaues of an error or a successful request
 				getUserData().then(ud =>
-					ud.fireStatus ? props.fireUpdater(ud.fireStatus) : null
+					// run the update callback
+					ud.fireStatus ? fireUpdater(ud.fireStatus) : null
 				);
-				reReadNfc();
+				// trigger rerender of NFC reader loop
+				updateRead(!nfcReaderLoop);
 			});
 		return () => {
+			// mark component as unmounted and stop NFC reader session
 			didUnmount = true;
 			nfcCleanupRead();
 		};
-	}, [nfcReaderLoop]);
+	}, [nfcReaderLoop, location, fireUpdater, userData]);
 	return null;
 }
