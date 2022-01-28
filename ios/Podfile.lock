@@ -341,7 +341,7 @@ PODS:
     - React-Core
   - react-native-hce (0.2.0):
     - React
-  - react-native-netinfo (7.1.7):
+  - react-native-netinfo (6.2.1):
     - React-Core
   - react-native-nfc-manager (3.11.5):
     - React
@@ -715,7 +715,7 @@ SPEC CHECKSUMS:
   react-native-geolocation-service: c0efb872258ed9240f1003a70fca9e9757e5c785
   react-native-get-random-values: 30b3f74ca34e30e2e480de48e4add2706a40ac8f
   react-native-hce: d08b891801d9ef5eb44148c1e9337b52bc343638
-  react-native-netinfo: 27f287f2d191693f3b9d01a4273137fcf91c3b5d
+  react-native-netinfo: 3d3769f0d65de15c83a9bf1346f8be71de5a24bf
   react-native-nfc-manager: bbb5419748bcc94968746f9dd5f210eabd5dd7fb
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
   react-native-version-info: a106f23009ac0db4ee00de39574eb546682579b9
