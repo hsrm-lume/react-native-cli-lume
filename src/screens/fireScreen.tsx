@@ -3,7 +3,6 @@ import {
 	getPermission,
 	getUserData,
 	subscribePosition,
-	handleError,
 	remError,
 	isNfcEnabled,
 } from '../services';
@@ -88,7 +87,7 @@ export default function FireScreen(props: any) {
 			setPosPermission(true);
 			remError('location.permission');
 		});
-	}, [retryAfterError, userData.firstAppUse]);
+	}, [retryAfterError, userData.firstAppUse, userData]);
 
 	// check if nfc is on
 	useEffect(() => {
